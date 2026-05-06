@@ -1,21 +1,20 @@
 import { useState, useEffect } from 'react'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import axiosClient from './api/axiosClient'
+import Register from './pages/Register'
 
-function App() { 
+function Home() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Hàm này để "chạy đi lấy dữ liệu"
     axiosClient.get('/test-events') 
       .then(res => {
-        console.log("Dữ liệu về rồi nè:", res.data);
         setEvents(res.data);
         setLoading(false);
       })
       .catch(err => {
-        console.error("Lỗi rồi:", err);
         setError(err.message);
         setLoading(false);
       });
@@ -36,6 +35,19 @@ function App() {
         </div>
       ))}
     </div>
+  );
+}
+
+function App() { 
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/register" element={<Register />} />
+        {/* Placeholder for Login */}
+        <Route path="/login" element={<div>Trang Đăng nhập (Sắp ra mắt)</div>} />
+      </Routes>
+    </Router>
   )
 }
 
