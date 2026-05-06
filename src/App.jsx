@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import axiosClient from './api/axiosClient'
 import Register from './pages/Register'
 import Login from './pages/Login'
+import CreateEvent from './pages/CreateEvent'
 
 // Protected Route component (RQ-03)
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -53,13 +54,14 @@ function Home() {
         <div key={ev.id} style={{ border: '1px solid white', margin: '10px', padding: '10px' }}>
           <h3>{ev.name}</h3>
           <p>{ev.description}</p>
-          <p>📍 {ev.location}</p>
-          <p>📅 {ev.event_date}</p>
+          <p>{ev.location}</p>
+          <p>{ev.event_date}</p>
         </div>
       ))}
     </div>
   );
 }
+
 
 function App() {
   return (
@@ -69,14 +71,28 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/403" element={<div style={{ padding: '50px', textAlign: 'center' }}><h2>403 - Không có quyền truy cập</h2></div>} />
+        <Route path="/create-event" element={
+          <ProtectedRoute allowedRoles={['organizer']}>
+            <CreateEvent />
+          </ProtectedRoute>
+        } />
         <Route path="/organizer" element={
           <ProtectedRoute allowedRoles={['organizer']}>
-            <div style={{ padding: '20px' }}><h2>Organizer Dashboard (Sắp ra mắt)</h2></div>
+            <div style={{ padding: '20px' }}>
+              <h2>Organizer Dashboard</h2>
+              <p>Chào mừng Organizer! Tại đây bạn có thể quản lý sự kiện của mình.</p>
+              <a href="/create-event" style={{ padding: '10px 15px', backgroundColor: '#007bff', color: 'white', textDecoration: 'none', borderRadius: '4px', display: 'inline-block', marginTop: '10px' }}>
+                + Tạo sự kiện mới
+              </a>
+              <br/><br/>
+              <a href="/" style={{ textDecoration: 'none', color: '#007bff' }}>&larr; Về trang chủ xem tất cả sự kiện</a>
+            </div>
           </ProtectedRoute>
         } />
       </Routes>
     </Router>
   )
 }
+
 
 export default App;
