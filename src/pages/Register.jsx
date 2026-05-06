@@ -17,10 +17,9 @@ const Register = () => {
     e.preventDefault();
     setError(null);
     try {
-      const response = await axiosClient.post('/register', formData);
-      localStorage.setItem('token', response.data.access_token);
-      localStorage.setItem('user', JSON.stringify(response.data.data));
-      navigate('/');
+      await axiosClient.post('/register', formData);
+      alert('Đăng ký thành công! Vui lòng đăng nhập.');
+      navigate('/login');
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed');
     }
