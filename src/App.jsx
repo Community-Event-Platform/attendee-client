@@ -1,82 +1,18 @@
-import { useState, useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import axiosClient from './api/axiosClient'
-import Register from './pages/Register'
-import Login from './pages/Login'
-
-// Protected Route component (RQ-03)
-const ProtectedRoute = ({ children, allowedRoles }) => {
-  const token = localStorage.getItem('token');
-  const user = JSON.parse(localStorage.getItem('user') || 'null');
-
-  if (!token || !user) return <Navigate to="/login" />;
-  if (allowedRoles && !allowedRoles.includes(user.role)) return <Navigate to="/403" />;
-
-  return children;
-};
-
-function Home() {
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const user = JSON.parse(localStorage.getItem('user') || 'null');
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    window.location.href = '/login';
-  };
-
-  useEffect(() => {
-    axiosClient.get('/test-events')
-      .then(res => { setEvents(res.data); setLoading(false); })
-      .catch(err => { setError(err.message); setLoading(false); });
-  }, []);
-
-  return (
-    <div style={{ padding: '20px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1>Danh sách sự kiện</h1>
-        {user ? (
-          <div>
-            <span>Xin chào, {user.name} ({user.role}) </span>
-            <button onClick={handleLogout} style={{ marginLeft: '10px', padding: '5px 10px' }}>Đăng xuất</button>
-          </div>
-        ) : (
-          <a href="/login">Đăng nhập</a>
-        )}
-      </div>
-      {loading && <p>Đang tải dữ liệu...</p>}
-      {error && <p style={{ color: 'red' }}>Lỗi: {error}</p>}
-      {!loading && !error && events.length === 0 && <p>Không có sự kiện nào.</p>}
-      {events.map(ev => (
-        <div key={ev.id} style={{ border: '1px solid white', margin: '10px', padding: '10px' }}>
-          <h3>{ev.name}</h3>
-          <p>{ev.description}</p>
-          <p>📍 {ev.location}</p>
-          <p>📅 {ev.event_date}</p>
-        </div>
-      ))}
-    </div>
-  );
-}
+import Header from "./components/Header";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/403" element={<div style={{ padding: '50px', textAlign: 'center' }}><h2>403 - Không có quyền truy cập</h2></div>} />
-        <Route path="/organizer" element={
-          <ProtectedRoute allowedRoles={['organizer']}>
-            <div style={{ padding: '20px' }}><h2>Organizer Dashboard (Sắp ra mắt)</h2></div>
-          </ProtectedRoute>
-        } />
-      </Routes>
-    </Router>
-  )
+    <div>
+      <Header />
+      <Navbar />
+
+      <h1>Homepage</h1>
+
+      <Footer />
+    </div>
+  );
 }
 
 export default App;
