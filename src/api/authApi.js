@@ -1,6 +1,7 @@
-export const loginApi = async (data) => {
-  console.log("Login Data:", data);
+import axios from "axios";
 
-  // Sau này gọi backend
-  // return axios.post("http://localhost:8080/login", data)
+const API_URL = "http://127.0.0.1:8000/api";
+
+export const loginApi = async (data) => {
+  return axios.post(`${API_URL}/login`, data);
 };
