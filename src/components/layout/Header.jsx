@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function Header() {
   return (
     <header className="bg-light border-bottom">
@@ -14,27 +16,27 @@ function Header() {
           <ul className="d-flex gap-4 list-unstyled m-0">
 
             <li>
-              <a href="#" className="text-dark text-decoration-none">
+              <Link to="/" className="text-dark text-decoration-none">
                 Home
-              </a>
+              </Link>
             </li>
 
             <li>
-              <a href="#" className="text-dark text-decoration-none">
+              <Link to="/events" className="text-dark text-decoration-none">
                 Event
-              </a>
+              </Link>
             </li>
 
             <li>
-              <a href="#" className="text-dark text-decoration-none">
+              <Link to="/about" className="text-dark text-decoration-none">
                 About
-              </a>
+              </Link>
             </li>
 
             <li>
-              <a href="#" className="text-dark text-decoration-none">
+              <Link to="/contact" className="text-dark text-decoration-none">
                 Contact
-              </a>
+              </Link>
             </li>
 
           </ul>
@@ -42,13 +44,13 @@ function Header() {
 
         {/* Button */}
         <div>
-          <button className="btn btn-outline-primary me-2">
+          <Link to="/login" className="btn btn-outline-primary me-2">
             Login
-          </button>
+          </Link>
 
-          <button className="btn btn-outline-primary me-2">
+          <Link to="/register" className="btn btn-outline-primary me-2">
             Register
-          </button>
+          </Link>
         </div>
 
       </div>

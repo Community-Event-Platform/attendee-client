@@ -35,7 +35,10 @@ function Login() {
           
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label className="form-label">Email</label>
+              <label className="form-label d-flex align-items-center gap-3">
+                <i className="bi bi-envelope"></i>
+                Email
+              </label>
               <input
                 type="email"
                 name="email"
@@ -47,7 +50,10 @@ function Login() {
             </div>
 
             <div className="mb-3">
-              <label className="form-label">Password</label>
+              <label className="form-label d-flex align-items-center gap-3">
+                <i className="bi bi-lock"></i>
+                Password
+              </label>
               <input
                 type="password"
                 name="password"
@@ -102,7 +108,8 @@ function Login() {
   <div className="w-100">
 
     <div className="bg-white rounded-4 shadow-sm p-3 mb-3">
-      <h5 className="fw-bold text-primary mb-2">
+      <h5 className="fw-bold text-primary mb-2 d-flex align-items-center gap-3">
+        <i className="bi bi-calendar-event-fill"></i>
         Khám phá sự kiện
       </h5>
 
@@ -112,7 +119,8 @@ function Login() {
     </div>
 
     <div className="bg-white rounded-4 shadow-sm p-3 mb-3">
-      <h5 className="fw-bold text-primary mb-2">
+      <h5 className="fw-bold text-primary mb-2 d-flex align-items-center gap-3">
+        <i className="bi bi-people-fill"></i>
         Kết nối và chia sẻ
       </h5>
 
@@ -122,7 +130,8 @@ function Login() {
     </div>
 
     <div className="bg-white rounded-4 shadow-sm p-3">
-      <h5 className="fw-bold text-primary mb-2">
+      <h5 className="fw-bold text-primary mb-2 d-flex align-items-center gap-3">
+        <i className="bi bi-ticket-detailed-fill"></i>
         Dễ dàng & an toàn
       </h5>
 
