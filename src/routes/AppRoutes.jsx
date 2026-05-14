@@ -1,14 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 
+import Home from "../pages/Home";
 import Login from "../pages/Login";
-
-function HomePage() {
-  return (
-    <div className="container py-5">
-      <h1>Homepage</h1>
-    </div>
-  );
-}
 
 function RegisterPage() {
   return (
@@ -22,7 +15,7 @@ function AppRoutes() {
   return (
     <Routes>
 
-      <Route path="/" element={<HomePage />} />
+      <Route path="/" element={<Home />} />
 
       <Route path="/login" element={<Login />} />
 
