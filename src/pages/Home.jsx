@@ -54,7 +54,7 @@ function Home() {
 
   return (
 
-    <main className="container py-5 text-start">
+    <main className="container-fluid px-4 px-lg-5 py-5 text-start flex-grow-1">
 
       <section className="mb-5">
 

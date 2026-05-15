@@ -2,15 +2,13 @@
 
 import { Link, useNavigate } from "react-router-dom";
 import { logoutApi } from "../../api/authApi";
+import logoIcon from "../../assets/iconhomepage.png";
 
 function Header() {
 
   const navigate = useNavigate();
-
   const token = localStorage.getItem("token");
-
   const user = JSON.parse(localStorage.getItem("user"));
-
   const handleLogout = async () => {
 
     try {
@@ -35,12 +33,20 @@ function Header() {
 
     <header className="bg-light border-bottom">
 
-      <div className="container d-flex justify-content-between align-items-center py-3">
+      <div className="container-fluid px-4 px-lg-5 d-flex justify-content-between align-items-center py-3">
 
         {/* LOGO */}
-        <h2 className="text-primary fw-bold">
-          EventHub
-        </h2>
+        <Link to="/" className="d-flex align-items-center text-decoration-none">
+          <img 
+            src={logoIcon} 
+            alt="EventHub Logo" 
+            className="me-2" 
+            style={{ width: '40px', height: '40px', objectFit: 'contain' }} 
+          />
+          <h2 className="text-primary fw-bold m-0">
+            EventHub
+          </h2>
+        </Link>
 
         {/* NAVBAR */}
         <nav>
