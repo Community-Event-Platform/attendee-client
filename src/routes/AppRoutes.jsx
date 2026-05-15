@@ -5,7 +5,7 @@ import Login from "../pages/Login";
 
 function RegisterPage() {
   return (
-    <div className="container py-5">
+    <div className="container-fluid px-4 px-lg-5 py-5">
       <h1>Register Page</h1>
     </div>
   );

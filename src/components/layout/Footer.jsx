@@ -1,74 +1,83 @@
 import "../../styles/footer.css";
+import logoIcon from "../../assets/iconhomepage.png";
+// Bạn có thể dùng FontAwesome hoặc Bootstrap Icons cho các icon mạng xã hội
+// Ở đây mình dùng class của FontAwesome phổ biến
+import { FaFacebook, FaTwitter, FaInstagram, FaYoutube, FaEnvelope, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa"; 
 
 function Footer() {
   return (
-    <footer className="footer">
-
-      <div className="container">
-
+    <footer className="footer py-5" style={{ backgroundColor: "#e1f0ff" }}>
+      <div className="container-fluid px-4 px-lg-5">
         <div className="row">
 
-          {/* Logo + Description */}
-          <div className="col-md-4 mb-4">
-            <h2 className="footer-logo">
-              EventHub
-            </h2>
+          {/* Cột 1: Logo + Description + Social Icons */}
+          <div className="col-md-3 mb-4">
+            <div className="d-flex align-items-center mb-3">
+              <img 
+                src={logoIcon} 
+                alt="EventHub Logo" 
+                style={{ width: '30px', height: '30px', objectFit: 'contain', marginRight: '10px' }} 
+              />
+              <h4 className="fw-bold mb-0" style={{ color: "#000" }}>
+                EventHub
+              </h4>
+            </div>
 
-            <p className="footer-text">
-              Nền tảng kết nối và quản lý sự kiện hiện đại,
-              giúp bạn khám phá các sự kiện nổi bật
-              và tham gia cộng đồng năng động.
+            <p className="text-muted small mb-4">
+              Nền tảng kết nối và quản lý sự kiện hàng đầu Việt Nam. 
+              Mang đến trải nghiệm tuyệt vời cho cả ban tổ chức và người tham dự.
             </p>
+
+            <div className="d-flex gap-3 social-icons">
+              <FaFacebook size={24} color="#3b5998" style={{ cursor: 'pointer' }} />
+              <FaTwitter size={24} color="#1DA1F2" style={{ cursor: 'pointer' }} />
+              <FaInstagram size={24} color="#E1306C" style={{ cursor: 'pointer' }} />
+              <FaYoutube size={24} color="#FF0000" style={{ cursor: 'pointer' }} />
+            </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="col-md-2 mb-4">
-            <h5 className="footer-title">
-              Khám phá
-            </h5>
-
-            <ul className="footer-list">
-              <li>Sự kiện âm nhạc</li>
-              <li>Hội thảo công nghệ</li>
-              <li>Giải chạy Marathon</li>
-              <li>Triển lãm tranh</li>
+          {/* Cột 2: Khám phá */}
+          <div className="col-md-3 mb-4 ps-md-5">
+            <h5 className="fw-bold mb-3">Khám phá</h5>
+            <ul className="list-unstyled footer-list text-muted small">
+              <li className="mb-2">Sự kiện âm nhạc</li>
+              <li className="mb-2">Hội thảo công nghệ</li>
+              <li className="mb-2">Giải chạy Marathon</li>
+              <li className="mb-2">Triển lãm nghệ thuật</li>
             </ul>
           </div>
 
-          {/* Categories */}
+          {/* Cột 3: Hỗ trợ */}
           <div className="col-md-3 mb-4">
-            <h5 className="footer-title">
-              Hỗ trợ
-            </h5>
-
-            <ul className="footer-list">
-              <li>Trung tâm trợ giúp</li>
-              <li>Điều khoản dịch vụ</li>
-              <li>Chính sách bảo mật</li>
-              <li>Quy định hoàn tiền</li>
+            <h5 className="fw-bold mb-3">Hỗ Trợ</h5>
+            <ul className="list-unstyled footer-list text-muted small">
+              <li className="mb-2">Trung tâm trợ giúp</li>
+              <li className="mb-2">Điều khoản dịch vụ</li>
+              <li className="mb-2">Chính sách bảo mật</li>
+              <li className="mb-2">Quy định hoàn tiền</li>
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Cột 4: Bản tin & Liên hệ */}
           <div className="col-md-3 mb-4">
-            <h5 className="footer-title">
-              Bản tin & Liên hệ
-            </h5>
-
-            <ul className="footer-list">
-              <li>Email: support@eventhub.com</li>
-              <li>Phone: +84 999 999 999</li>
-              <li>Da Nang, Viet Nam</li>
+            <h5 className="fw-bold mb-3">Bản tin & Liên hệ</h5>
+            <ul className="list-unstyled text-muted small">
+              <li className="mb-3 d-flex align-items-center">
+                <FaEnvelope className="me-2 text-primary" /> 
+                Email: support@eventhub.com
+              </li>
+              <li className="mb-3 d-flex align-items-center">
+                <FaPhoneAlt className="me-2 text-primary" /> 
+                Phone: +84 999 999 999
+              </li>
+              <li className="d-flex align-items-center">
+                <FaMapMarkerAlt className="me-2 text-primary" /> 
+                Da Nang, Viet Nam
+              </li>
             </ul>
           </div>
 
         </div>
-
-        {/* Bottom */}
-        <div className="footer-bottom">
-          © 2026 EventHub. All rights reserved.
-        </div>
-
       </div>
     </footer>
   );

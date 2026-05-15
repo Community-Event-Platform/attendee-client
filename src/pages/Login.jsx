@@ -62,7 +62,7 @@ function Login() {
   };
 
   return (
-    <div className="container py-5">
+    <div className="container-fluid px-4 px-lg-5 py-5">
 
       <div className="row justify-content-center align-items-stretch shadow rounded-4 overflow-hidden bg-white">
 
@@ -79,50 +79,50 @@ function Login() {
 
           <form onSubmit={handleSubmit}>
 
-          {/* EMAIL */}
-          <div className="mb-3 text-start"> {/* Thêm text-start vào đây */}
-            <label className="form-label d-block text-start">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              className="form-control"
-              placeholder="Nhập email"
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </div>
+        {/* EMAIL */}
+        <div className="mb-3 text-start"> {/* Thêm text-start vào đây */}
+          <label className="form-label d-block text-start">
+            Email
+          </label>
+          <input
+            type="email"
+            name="email"
+            className="form-control"
+            placeholder="Nhập email"
+            value={formData.email}
+            onChange={handleChange}
+          />
+        </div>
 
-          {/* PASSWORD */}
-          <div className="mb-3 text-start">
-            <label className="form-label d-block text-start">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              className="form-control"
-              placeholder="Nhập mật khẩu"
-              value={formData.password}
-              onChange={handleChange}
-            />
-          </div>
+        {/* PASSWORD */}
+        <div className="mb-3 text-start">
+          <label className="form-label d-block text-start">
+            Password
+          </label>
+          <input
+            type="password"
+            name="password"
+            className="form-control"
+            placeholder="Nhập mật khẩu"
+            value={formData.password}
+            onChange={handleChange}
+          />
+        </div>
 
-          {/* REMEMBER */}
-          <div className="form-check mb-4 text-start"> {/* Thêm text-start ở đây */}
-            <input
-              type="checkbox"
-              name="remember"
-              className="form-check-input"
-              checked={formData.remember}
-              onChange={handleChange}
-              id="rememberMe"
-            />
-            <label className="form-check-label" htmlFor="rememberMe">
-              Remember me
-            </label>
-          </div>
+        {/* REMEMBER */}
+        <div className="form-check mb-4 text-start"> {/* Thêm text-start ở đây */}
+          <input
+            type="checkbox"
+            name="remember"
+            className="form-check-input"
+            checked={formData.remember}
+            onChange={handleChange}
+            id="rememberMe"
+          />
+          <label className="form-check-label" htmlFor="rememberMe">
+            Remember me
+          </label>
+        </div>
 
             <button
               type="submit"
