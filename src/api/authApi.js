@@ -1,7 +1,13 @@
-import axios from "axios";
+import axiosClient from "./axiosClient";
 
-const API_URL = "http://127.0.0.1:8000/api";
+export const loginApi = (data) => {
+  return axiosClient.post("/login", data);
+};
 
-export const loginApi = async (data) => {
-  return axios.post(`${API_URL}/login`, data);
+export const registerApi = (data) => {
+  return axiosClient.post("/register", data);
+};
+
+export const logoutApi = () => {
+  return axiosClient.post("/logout");
 };
