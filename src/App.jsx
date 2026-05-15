@@ -1,17 +1,16 @@
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
+import AppRoutes from "./routes/AppRoutes";
 
 function App() {
   return (
     <>
       <Header />
 
-      <div className="container py-5">
-        <h1>Homepage</h1>
-      </div>
+      <AppRoutes />
 
       <Footer />
-    </>
+    </> 
   );
 }
 
