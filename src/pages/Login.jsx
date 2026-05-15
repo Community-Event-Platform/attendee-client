@@ -79,58 +79,50 @@ function Login() {
 
           <form onSubmit={handleSubmit}>
 
-            {/* EMAIL */}
-            <div className="mb-3">
+          {/* EMAIL */}
+          <div className="mb-3 text-start"> {/* Thêm text-start vào đây */}
+            <label className="form-label d-block text-start">
+              Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              className="form-control"
+              placeholder="Nhập email"
+              value={formData.email}
+              onChange={handleChange}
+            />
+          </div>
 
-              <label className="form-label">
-                Email
-              </label>
+          {/* PASSWORD */}
+          <div className="mb-3 text-start">
+            <label className="form-label d-block text-start">
+              Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              className="form-control"
+              placeholder="Nhập mật khẩu"
+              value={formData.password}
+              onChange={handleChange}
+            />
+          </div>
 
-              <input
-                type="email"
-                name="email"
-                className="form-control"
-                placeholder="Nhập email"
-                value={formData.email}
-                onChange={handleChange}
-              />
-
-            </div>
-
-            {/* PASSWORD */}
-            <div className="mb-3">
-
-              <label className="form-label">
-                Password
-              </label>
-
-              <input
-                type="password"
-                name="password"
-                className="form-control"
-                placeholder="Nhập mật khẩu"
-                value={formData.password}
-                onChange={handleChange}
-              />
-
-            </div>
-
-            {/* REMEMBER */}
-            <div className="form-check mb-4">
-
-              <input
-                type="checkbox"
-                name="remember"
-                className="form-check-input"
-                checked={formData.remember}
-                onChange={handleChange}
-              />
-
-              <label className="form-check-label">
-                Remember me
-              </label>
-
-            </div>
+          {/* REMEMBER */}
+          <div className="form-check mb-4 text-start"> {/* Thêm text-start ở đây */}
+            <input
+              type="checkbox"
+              name="remember"
+              className="form-check-input"
+              checked={formData.remember}
+              onChange={handleChange}
+              id="rememberMe"
+            />
+            <label className="form-check-label" htmlFor="rememberMe">
+              Remember me
+            </label>
+          </div>
 
             <button
               type="submit"

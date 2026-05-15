@@ -59,6 +59,18 @@ function Header() {
               </Link>
             </li>
 
+              <li>
+              <Link to="/contact" className="text-dark text-decoration-none">
+                Contact
+              </Link>
+            </li>
+
+              <li>
+              <Link to="/about" className="text-dark text-decoration-none">
+                About
+              </Link>
+            </li>
+
           </ul>
 
         </nav>
