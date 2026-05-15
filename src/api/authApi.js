@@ -5,7 +5,10 @@ export const loginApi = (data) => {
 };
 
 export const registerApi = (data) => {
-  return axiosClient.post("/register", data);
+  return axiosClient.post("/register", data).then(response => {
+    // Return the full response for proper handling
+    return response;
+  });
 };
 
 export const logoutApi = () => {

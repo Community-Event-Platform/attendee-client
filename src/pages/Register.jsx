@@ -1,18 +1,123 @@
 import homepageImg from "../assets/homepage.png";
 import { useState } from "react";
-
+import { registerApi } from "../api/authApi";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    full_name: "",
+    email: "",
+    password: "",
+    password_confirmation: "",
+    role: ""
+  });
+  
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [apiError, setApiError] = useState("");
 
   // Bảng màu chính xác từ thiết kế
   const colors = {
-    bgLight: '#EAF5FF',      // Màu nền xanh nhạt của bo tròn lớn ngoài cùng
-    btnPrimary: '#4D5EE3',   // Màu nút Sign up và checkbox
-    cardRightBg: '#F3F7FA',  // Màu nền của khung chứa các tính năng bên phải
-    inputPlaceholder: '#C4CCD4', // Màu placeholder xám nhạt vừa phải
-    labelColor: '#000000'    // Màu đen đậm cho các tiêu đề label
+    bgLight: '#EAF5FF',
+    btnPrimary: '#4D5EE3',
+    cardRightBg: '#F3F7FA',
+    inputPlaceholder: '#C4CCD4',
+    labelColor: '#000000'
+  };
+
+  // Handle input change
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    // Clear error for this field
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: "" }));
+    }
+    setApiError("");
+  };
+
+  // Validate form
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!formData.full_name.trim()) {
+      newErrors.full_name = "Full name is required";
+    }
+    
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Please provide a valid email address";
+    }
+    
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+    
+    if (!formData.password_confirmation) {
+      newErrors.password_confirmation = "Password confirmation is required";
+    } else if (formData.password !== formData.password_confirmation) {
+      newErrors.password_confirmation = "Password confirmation does not match";
+    }
+    
+    if (!formData.role) {
+      newErrors.role = "Please select a role";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsLoading(true);
+    setApiError("");
+
+    try {
+      const response = await registerApi({
+        full_name: formData.full_name,
+        email: formData.email,
+        password: formData.password,
+        password_confirmation: formData.password_confirmation,
+        role: formData.role
+      });
+
+      // Store token if returned
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+      }
+
+      // Redirect to login page on success
+      alert("Registration successful! Please login to continue.");
+      navigate("/login");
+    } catch (error) {
+      if (error.response && error.response.data) {
+        // Handle Laravel validation errors
+        const errorData = error.response.data;
+        if (errorData.errors) {
+          setErrors(errorData.errors);
+        } else if (errorData.message) {
+          setApiError(errorData.message);
+        }
+      } else {
+        setApiError("Registration failed. Please try again.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -30,7 +135,14 @@ const Register = () => {
             Hãy tham gia cộng đồng của chúng tôi và bắt đầu khám phá những sự kiện tuyệt vời.
           </p>
 
-          <form onSubmit={(e) => e.preventDefault()} className="w-100">
+          {/* API Error Alert */}
+          {apiError && (
+            <div className="alert alert-danger py-2 mb-3 text-start" role="alert">
+              {apiError}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="w-100">
             {/* Full Name */}
             <div className="mb-3 text-start">
               <label className="form-label fw-bold small mb-1" style={{ color: colors.labelColor }}>
@@ -42,38 +154,77 @@ const Register = () => {
                 </span>
                 <input 
                   type="text" 
-                  className="form-control border-start-0 border-dark rounded-end-3 py-2" 
+                  name="full_name"
+                  className={`form-control border-start-0 border-dark rounded-end-3 py-2 ${errors.full_name ? 'is-invalid' : ''}`} 
                   placeholder="Enter full name"
+                  value={formData.full_name}
+                  onChange={handleChange}
                 />
               </div>
+              {errors.full_name && <small className="text-danger">{errors.full_name}</small>}
             </div>
 
             {/* Email */}
             <div className="mb-3 text-start">
-              <label className="form-label fw-bold small mb-1" style={{ color: colors.labelColor }}>Email</label>
+              <label className="form-label fw-bold small mb-1" style={{ color: colors.labelColor }}>
+                Email <span className="text-danger">*</span>
+              </label>
               <div className="input-group">
                 <span className="input-group-text bg-white border-end-0 border-dark rounded-start-3 px-3">
                   <i className="bi bi-envelope text-secondary"></i>
                 </span>
                 <input 
                   type="email" 
-                  className="form-control border-start-0 border-dark rounded-end-3 py-2" 
-                  placeholder="Enter you email"
+                  name="email"
+                  className={`form-control border-start-0 border-dark rounded-end-3 py-2 ${errors.email ? 'is-invalid' : ''}`} 
+                  placeholder="Enter your email"
+                  value={formData.email}
+                  onChange={handleChange}
                 />
               </div>
+              {errors.email && <small className="text-danger">{errors.email}</small>}
+            </div>
+
+            {/* Role Selection */}
+            <div className="mb-3 text-start">
+              <label className="form-label fw-bold small mb-1" style={{ color: colors.labelColor }}>
+                Role <span className="text-danger">*</span>
+              </label>
+              <div className="input-group">
+                <span className="input-group-text bg-white border-end-0 border-dark rounded-start-3 px-3">
+                  <i className="bi bi-person-badge text-secondary"></i>
+                </span>
+                <select
+                  name="role"
+                  className={`form-control border-start-0 border-dark rounded-end-3 py-2 ${errors.role ? 'is-invalid' : ''}`}
+                  value={formData.role}
+                  onChange={handleChange}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <option value="">Select your role</option>
+                  <option value="attendee">Attendee</option>
+                  <option value="organizer">Organizer</option>
+                </select>
+              </div>
+              {errors.role && <small className="text-danger">{errors.role}</small>}
             </div>
 
             {/* Password */}
             <div className="mb-3 text-start">
-              <label className="form-label fw-bold small mb-1" style={{ color: colors.labelColor }}>Pasword</label>
+              <label className="form-label fw-bold small mb-1" style={{ color: colors.labelColor }}>
+                Password <span className="text-danger">*</span>
+              </label>
               <div className="input-group">
                 <span className="input-group-text bg-white border-end-0 border-dark rounded-start-3 px-3">
                   <i className="bi bi-lock text-secondary"></i>
                 </span>
                 <input 
                   type={showPassword ? "text" : "password"} 
-                  className="form-control border-start-0 border-end-0 border-dark py-2" 
-                  placeholder="Enter you password"
+                  name="password"
+                  className={`form-control border-start-0 border-end-0 border-dark py-2 ${errors.password ? 'is-invalid' : ''}`} 
+                  placeholder="Enter your password"
+                  value={formData.password}
+                  onChange={handleChange}
                 />
                 <button 
                   className="btn btn-outline-secondary bg-white border-start-0 border-dark rounded-end-3 text-muted px-3" 
@@ -83,19 +234,25 @@ const Register = () => {
                   <i className={`bi bi-eye${showPassword ? '' : '-slash'}`}></i>
                 </button>
               </div>
+              {errors.password && <small className="text-danger">{errors.password}</small>}
             </div>
 
             {/* Confirm Password */}
             <div className="mb-4 text-start">
-              <label className="form-label fw-bold small mb-1" style={{ color: colors.labelColor }}>Confirm Pasword</label>
+              <label className="form-label fw-bold small mb-1" style={{ color: colors.labelColor }}>
+                Confirm Password <span className="text-danger">*</span>
+              </label>
               <div className="input-group">
                 <span className="input-group-text bg-white border-end-0 border-dark rounded-start-3 px-3">
                   <i className="bi bi-lock text-secondary"></i>
                 </span>
                 <input 
                   type={showConfirmPassword ? "text" : "password"} 
-                  className="form-control border-start-0 border-end-0 border-dark py-2" 
-                  placeholder="Enter you password"
+                  name="password_confirmation"
+                  className={`form-control border-start-0 border-end-0 border-dark py-2 ${errors.password_confirmation ? 'is-invalid' : ''}`} 
+                  placeholder="Confirm your password"
+                  value={formData.password_confirmation}
+                  onChange={handleChange}
                 />
                 <button 
                   className="btn btn-outline-secondary bg-white border-start-0 border-dark rounded-end-3 text-muted px-3" 
@@ -105,6 +262,7 @@ const Register = () => {
                   <i className={`bi bi-eye${showConfirmPassword ? '' : '-slash'}`}></i>
                 </button>
               </div>
+              {errors.password_confirmation && <small className="text-danger">{errors.password_confirmation}</small>}
             </div>
 
             {/* Checkbox điều khoản */}
@@ -114,7 +272,7 @@ const Register = () => {
                 type="checkbox" 
                 id="terms" 
                 style={{ backgroundColor: colors.btnPrimary, borderColor: colors.btnPrimary, cursor: 'pointer' }}
-                defaultChecked 
+                required
               />
               <label className="form-check-label text-dark small" htmlFor="terms" style={{ fontSize: '0.85rem', lineHeight: '1.4', cursor: 'pointer' }}>
                 Tôi đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của EventHub.
@@ -126,8 +284,16 @@ const Register = () => {
               type="submit" 
               className="btn text-white w-100 py-2.5 fw-bold rounded-3"
               style={{ backgroundColor: colors.btnPrimary }}
+              disabled={isLoading}
             >
-              Sign up
+              {isLoading ? (
+                <span>
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Signing up...
+                </span>
+              ) : (
+                "Sign up"
+              )}
             </button>
           </form>
         </div>
