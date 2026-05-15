@@ -1,8 +1,5 @@
 import "../../styles/footer.css";
 import logoIcon from "../../assets/iconhomepage.png";
-// Bạn có thể dùng FontAwesome hoặc Bootstrap Icons cho các icon mạng xã hội
-// Ở đây mình dùng class của FontAwesome phổ biến
-import { FaFacebook, FaTwitter, FaInstagram, FaYoutube, FaEnvelope, FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa"; 
 
 function Footer() {
   return (
@@ -29,10 +26,10 @@ function Footer() {
             </p>
 
             <div className="d-flex gap-3 social-icons">
-              <FaFacebook size={24} color="#3b5998" style={{ cursor: 'pointer' }} />
-              <FaTwitter size={24} color="#1DA1F2" style={{ cursor: 'pointer' }} />
-              <FaInstagram size={24} color="#E1306C" style={{ cursor: 'pointer' }} />
-              <FaYoutube size={24} color="#FF0000" style={{ cursor: 'pointer' }} />
+              <i className="bi bi-facebook fs-4" style={{ color: "#3b5998" }}></i>
+              <i className="bi bi-twitter-x fs-4" style={{ color: "#111827" }}></i>
+              <i className="bi bi-instagram fs-4" style={{ color: "#E1306C" }}></i>
+              <i className="bi bi-youtube fs-4" style={{ color: "#FF0000" }}></i>
             </div>
           </div>
 
@@ -63,15 +60,15 @@ function Footer() {
             <h5 className="fw-bold mb-3">Bản tin & Liên hệ</h5>
             <ul className="list-unstyled text-muted small">
               <li className="mb-3 d-flex align-items-center">
-                <FaEnvelope className="me-2 text-primary" /> 
+                <i className="bi bi-envelope-fill me-2 text-primary"></i>
                 Email: support@eventhub.com
               </li>
               <li className="mb-3 d-flex align-items-center">
-                <FaPhoneAlt className="me-2 text-primary" /> 
+                <i className="bi bi-telephone-fill me-2 text-primary"></i>
                 Phone: +84 999 999 999
               </li>
               <li className="d-flex align-items-center">
-                <FaMapMarkerAlt className="me-2 text-primary" /> 
+                <i className="bi bi-geo-alt-fill me-2 text-primary"></i>
                 Da Nang, Viet Nam
               </li>
             </ul>
