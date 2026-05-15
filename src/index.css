@@ -55,6 +55,7 @@
 
 body {
   margin: 0;
+  min-width: 320px;
 }
 
 #root {
@@ -64,6 +65,7 @@ body {
   padding: 0;
   text-align: center;
   min-height: 100svh;
+  text-align: initial;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
