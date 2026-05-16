@@ -1,7 +1,7 @@
 import homepageImg from "../assets/homepage.png";
 import { useState } from "react";
 import { registerApi } from "../api/authApi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -262,6 +262,18 @@ const Register = () => {
               )}
             </button>
           </form>
+
+          {/* Link chuyển sang Login */}
+          <div className="text-center mt-3">
+            <span className="text-secondary small">Bạn đã có tài khoản? </span>
+            <Link 
+              to="/login" 
+              className="text-decoration-none fw-semibold small"
+              style={{ color: colors.btnPrimary }}
+            >
+              Đăng nhập ngay
+            </Link>
+          </div>
         </div>
 
         {/* CỘT BÊN PHẢI: BANNER & ĐIỂM NỔI BẬT */}
