@@ -13,8 +13,7 @@ const Register = () => {
     full_name: "",
     email: "",
     password: "",
-    password_confirmation: "",
-    role: ""
+    password_confirmation: ""
   });
   
   const [errors, setErrors] = useState({});
@@ -66,10 +65,6 @@ const Register = () => {
     } else if (formData.password !== formData.password_confirmation) {
       newErrors.password_confirmation = "Password confirmation does not match";
     }
-    
-    if (!formData.role) {
-      newErrors.role = "Please select a role";
-    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -87,20 +82,15 @@ const Register = () => {
     setApiError("");
 
     try {
-      const response = await registerApi({
+      await registerApi({
         full_name: formData.full_name,
         email: formData.email,
         password: formData.password,
         password_confirmation: formData.password_confirmation,
-        role: formData.role
+        role: "attendee"
       });
 
-      // Store token if returned
-      if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
-      }
-
-      // Redirect to login page on success
+      // Redirect to login page on success (register does not auto-login)
       alert("Registration successful! Please login to continue.");
       navigate("/login");
     } catch (error) {
@@ -183,30 +173,6 @@ const Register = () => {
                 />
               </div>
               {errors.email && <small className="text-danger">{errors.email}</small>}
-            </div>
-
-            {/* Role Selection */}
-            <div className="mb-3 text-start">
-              <label className="form-label fw-bold small mb-1" style={{ color: colors.labelColor }}>
-                Role <span className="text-danger">*</span>
-              </label>
-              <div className="input-group">
-                <span className="input-group-text bg-white border-end-0 border-dark rounded-start-3 px-3">
-                  <i className="bi bi-person-badge text-secondary"></i>
-                </span>
-                <select
-                  name="role"
-                  className={`form-control border-start-0 border-dark rounded-end-3 py-2 ${errors.role ? 'is-invalid' : ''}`}
-                  value={formData.role}
-                  onChange={handleChange}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <option value="">Select your role</option>
-                  <option value="attendee">Attendee</option>
-                  <option value="organizer">Organizer</option>
-                </select>
-              </div>
-              {errors.role && <small className="text-danger">{errors.role}</small>}
             </div>
 
             {/* Password */}
