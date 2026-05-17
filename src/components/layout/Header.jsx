@@ -1,6 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { logoutApi } from "../../services/api";
-import logoIcon from "../../assets/iconhomepage.png";
+import { logoutApi } from "../../services/api"
 
 function Header() {
   const location = useLocation();
@@ -30,17 +29,9 @@ function Header() {
   return (
     <header className="bg-white border-bottom shadow-sm sticky-top">
       <div className="container-fluid px-4 px-lg-5 d-flex justify-content-between align-items-center py-3">
-        {/* LOGO */}
-        <Link to="/" className="d-flex align-items-center text-decoration-none">
-          <img 
-            src={logoIcon} 
-            alt="EventHub Logo" 
-            className="me-2" 
-            style={{ width: '40px', height: '40px', objectFit: 'contain' }} 
-          />
-          <h2 className="m-0" style={{ color: colors.btnPrimary, fontWeight: '700' }}>
-            EventHub
-          </h2>
+        <Link to="/" className="d-flex align-items-center text-decoration-none" style={{ cursor: 'pointer' }}>
+          <i className="bi bi-lightning-charge-fill" style={{ color: '#14AE5C', fontSize: '38px' }}></i>
+          <span className="logo-text" style={{ fontSize: '24px', fontWeight: '700', marginLeft: '8px' }}>EventHub</span>
         </Link>
 
         {/* NAVBAR */}
@@ -52,9 +43,10 @@ function Header() {
                 className="text-decoration-none py-2 px-3 rounded-3 transition-all"
                 style={{ 
                   color: isActive('/') ? colors.btnPrimary : '#6c757d',
-                  fontWeight: isActive('/') ? '600' : '400',
+                  fontWeight: '700',
                   backgroundColor: isActive('/') ? 'rgba(77, 94, 227, 0.1)' : 'transparent',
-                  transition: 'all 0.2s ease'
+                  transition: 'all 0.2s ease',
+                  fontSize: '16px'
                 }}
                 onMouseEnter={(e) => {
                   if (!isActive('/')) {
@@ -79,9 +71,10 @@ function Header() {
                 className="text-decoration-none py-2 px-3 rounded-3 transition-all"
                 style={{ 
                   color: isActive('/events') ? colors.btnPrimary : '#6c757d',
-                  fontWeight: isActive('/events') ? '600' : '400',
+                  fontWeight: '700',
                   backgroundColor: isActive('/events') ? 'rgba(77, 94, 227, 0.1)' : 'transparent',
-                  transition: 'all 0.2s ease'
+                  transition: 'all 0.2s ease',
+                  fontSize: '16px'
                 }}
                 onMouseEnter={(e) => {
                   if (!isActive('/events')) {
@@ -106,9 +99,10 @@ function Header() {
                 className="text-decoration-none py-2 px-3 rounded-3 transition-all"
                 style={{ 
                   color: isActive('/contact') ? colors.btnPrimary : '#6c757d',
-                  fontWeight: isActive('/contact') ? '600' : '400',
+                  fontWeight: '700',
                   backgroundColor: isActive('/contact') ? 'rgba(77, 94, 227, 0.1)' : 'transparent',
-                  transition: 'all 0.2s ease'
+                  transition: 'all 0.2s ease',
+                  fontSize: '16px'
                 }}
                 onMouseEnter={(e) => {
                   if (!isActive('/contact')) {
@@ -133,9 +127,10 @@ function Header() {
                 className="text-decoration-none py-2 px-3 rounded-3 transition-all"
                 style={{ 
                   color: isActive('/about') ? colors.btnPrimary : '#6c757d',
-                  fontWeight: isActive('/about') ? '600' : '400',
+                  fontWeight: '700',
                   backgroundColor: isActive('/about') ? 'rgba(77, 94, 227, 0.1)' : 'transparent',
-                  transition: 'all 0.2s ease'
+                  transition: 'all 0.2s ease',
+                  fontSize: '16px'
                 }}
                 onMouseEnter={(e) => {
                   if (!isActive('/about')) {
@@ -160,7 +155,7 @@ function Header() {
         <div>
           {token ? (
             <div className="d-flex align-items-center gap-3">
-              <span className="fw-semibold text-dark">
+              <span className="fw-bold" style={{ fontSize: '16px' }}>
                 {user?.full_name || user?.name || 'User'}
               </span>
               <button
@@ -169,7 +164,8 @@ function Header() {
                 style={{ 
                   backgroundColor: '#dc3545',
                   border: 'none',
-                  fontWeight: '500'
+                  fontWeight: '700',
+                  fontSize: '16px'
                 }}
               >
                 Logout
@@ -184,7 +180,8 @@ function Header() {
                   color: isActive('/login') ? 'white' : colors.btnPrimary,
                   backgroundColor: isActive('/login') ? colors.btnPrimary : 'transparent',
                   border: `2px solid ${colors.btnPrimary}`,
-                  fontWeight: '500'
+                  fontWeight: '700',
+                  fontSize: '16px'
                 }}
               >
                 Login
@@ -197,7 +194,8 @@ function Header() {
                   color: isActive('/register') ? 'white' : colors.btnPrimary,
                   backgroundColor: isActive('/register') ? colors.btnPrimary : 'transparent',
                   border: `2px solid ${colors.btnPrimary}`,
-                  fontWeight: '500'
+                  fontWeight: '700',
+                  fontSize: '16px'
                 }}
               >
                 Register
