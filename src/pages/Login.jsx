@@ -1,6 +1,6 @@
 import homepageImg from "../assets/homepage.png";
 import { useState } from "react";
-import { loginApi } from "../services/authApi";
+import { loginApi } from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
