@@ -1,19 +1,25 @@
 import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
-import AppRoutes from "./routes/AppRoutes";
+import { Routes, Route } from "react-router-dom";
 
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
   return (
     <>
       <Header />
 
-      <AppRoutes />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
 
       <Footer />
-    </> 
+    </>
   );
 }
-
 
 export default App;
