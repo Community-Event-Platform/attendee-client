@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { logoutApi } from "../../api/authApi";
+import { logoutApi } from "../../services/authApi";
 import logoIcon from "../../assets/iconhomepage.png";
 
 function Header() {

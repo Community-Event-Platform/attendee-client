@@ -1,6 +1,6 @@
 import homepageImg from "../assets/homepage.png";
 import { useState } from "react";
-import { registerApi } from "../api/authApi";
+import { registerApi } from "../services/authApi";
 import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {

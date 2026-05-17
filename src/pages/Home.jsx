@@ -1,8 +1,8 @@
 // src/pages/Home.jsx
 
 import { useEffect, useState } from "react";
-import { getEvents } from "../api/eventApi";
-import { getProfileApi } from "../api/userApi";
+import { getEvents } from "../services/eventApi";
+import { getProfileApi } from "../services/userApi";
 
 function Home() {
 
