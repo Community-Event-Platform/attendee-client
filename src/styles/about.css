@@ -1,0 +1,149 @@
+.about-page {
+  background: #ffffff;
+  color: #14141f;
+  flex: 1;
+}
+
+.about-hero {
+  background: #eef5ff;
+  border-bottom: 1px solid #d7dee8;
+  padding: 36px 0;
+}
+
+.about-hero h1 {
+  color: #16ad62;
+  font-size: clamp(2.1rem, 4vw, 3.3rem);
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1.08;
+  margin: 0 0 18px;
+}
+
+.about-hero h1 span {
+  color: #6b4df5;
+}
+
+.about-hero p {
+  color: #4d4b57;
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1.55;
+  max-width: 680px;
+}
+
+.about-hero-image {
+  border-radius: 8px;
+  display: block;
+  max-height: 300px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.about-section {
+  background: #ffffff;
+  padding: 34px 0 12px;
+}
+
+.organizer-panel {
+  border: 1px solid #d2a8a8;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.organizer-panel h2 {
+  color: #111827;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  margin: 0 0 16px;
+}
+
+.feature-list {
+  display: grid;
+  gap: 14px;
+}
+
+.feature-item {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+}
+
+.feature-icon {
+  align-items: center;
+  background: #dff7ec;
+  border-radius: 8px;
+  color: #138a58;
+  display: inline-flex;
+  flex: 0 0 auto;
+  height: 44px;
+  justify-content: center;
+  width: 44px;
+}
+
+.feature-item h3 {
+  color: #111827;
+  font-size: 0.95rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.feature-item p,
+.panel-note {
+  color: #32323a;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.organizer-panel button {
+  align-items: center;
+  background: #ff831f;
+  border: 0;
+  border-radius: 8px;
+  color: #ffffff;
+  display: inline-flex;
+  font-weight: 800;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+  min-height: 44px;
+  padding: 10px 16px;
+  width: 100%;
+}
+
+.panel-note {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.dashboard-preview {
+  overflow: hidden;
+}
+
+.dashboard-preview img {
+  display: block;
+  width: 100%;
+}
+
+@media (max-width: 991.98px) {
+  .about-hero {
+    padding: 32px 0;
+  }
+
+  .about-hero-image {
+    max-height: 230px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .about-hero {
+    padding: 28px 0;
+  }
+
+  .about-section {
+    padding-top: 26px;
+  }
+}
