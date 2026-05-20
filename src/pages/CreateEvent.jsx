@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosClient from '../services/axiosClient';
 
@@ -17,7 +17,7 @@ function CreateEvent() {
   const [categories, setCategories] = useState([]);
 
   // Load categories once
-  React.useEffect(() => {
+  useEffect(() => {
     axiosClient.get('/categories')
       .then(res => setCategories(res.data))
       .catch(() => setCategories([]));

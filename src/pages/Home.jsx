@@ -19,7 +19,7 @@ function Home() {
 
         setEvents(data);
 
-      } catch (err) {
+      } catch {
 
         setError("Không tải được danh sách sự kiện.");
 
