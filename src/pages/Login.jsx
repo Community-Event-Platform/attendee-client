@@ -1,10 +1,11 @@
 import homepageImg from "../assets/homepage.png";
 import { useState } from "react";
-import { loginApi } from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -65,28 +66,16 @@ const Login = () => {
     setApiError("");
 
     try {
-      const response = await loginApi(formData);
+      const result = await login(formData.email, formData.password);
 
-      // Lưu token
-      localStorage.setItem("token", response.data.access_token);
-
-      // Lưu user
-      localStorage.setItem("user", JSON.stringify(response.data.data));
-
-      alert("Đăng nhập thành công!");
-
-      // Chuyển trang Home
-      navigate("/");
-
-    } catch (error) {
-      if (error.response && error.response.data) {
-        const errorData = error.response.data;
-        if (errorData.message) {
-          setApiError(errorData.message);
-        }
+      if (result.success) {
+        alert("Đăng nhập thành công!");
+        navigate("/");
       } else {
-        setApiError("Sai email hoặc mật khẩu!");
+        setApiError(result.error);
       }
+    } catch {
+      setApiError("Đã xảy ra lỗi không mong muốn!");
     } finally {
       setIsLoading(false);
     }

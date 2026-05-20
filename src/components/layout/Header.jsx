@@ -1,25 +1,16 @@
 import { Link, useLocation } from "react-router-dom";
-import { logoutApi } from "../../services/api"
+import { useAuth } from "../../hooks/useAuth";
 
 function Header() {
   const location = useLocation();
-  const token = localStorage.getItem("token");
-  const user = JSON.parse(localStorage.getItem("user"));
+  const { user, token, logout } = useAuth();
 
   const colors = {
     btnPrimary: '#4D5EE3'
   };
 
   const handleLogout = async () => {
-    try {
-      await logoutApi();
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      alert("Logout thành công!");
-      window.location.href = "/login";
-    } catch (error) {
-      console.log(error);
-    }
+    await logout();
   };
 
   const isActive = (path) => {
