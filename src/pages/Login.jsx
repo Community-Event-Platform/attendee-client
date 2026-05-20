@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
-const Login = () => {
+const Login = ({ addToast }) => {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
@@ -16,7 +16,6 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState("");
 
-  // Bảng màu chính xác từ thiết kế (giống Register)
   const colors = {
     bgLight: '#EAF5FF',
     btnPrimary: '#4D5EE3',
@@ -31,7 +30,6 @@ const Login = () => {
       ...formData,
       [name]: type === "checkbox" ? checked : value,
     });
-    // Clear error for this field
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: "" }));
     }
@@ -69,39 +67,34 @@ const Login = () => {
       const result = await login(formData.email, formData.password);
 
       if (result.success) {
-        alert("Đăng nhập thành công!");
+        if (addToast) addToast("Dang nhap thanh cong!", "success");
         navigate("/");
       } else {
-        setApiError(result.error);
+        if (addToast) addToast(result.error || "Dang nhap that bai!", "error");
       }
     } catch {
-      setApiError("Đã xảy ra lỗi không mong muốn!");
+      setApiError("Da xay ra loi khong mong muon!");
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleGoogleLogin = () => {
-    window.location.href =
-        "http://127.0.0.1:8000/api/auth/google/redirect";
-};
+    window.location.href = "http://127.0.0.1:8000/api/auth/google/redirect";
+  };
 
   return (
     <div className="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-white p-3">
-      {/* Khung lớn bo tròn chứa toàn bộ form */}
       <div 
         className="row rounded-4 p-4 p-md-5 w-100 justify-content-between align-items-stretch" 
         style={{ backgroundColor: colors.bgLight, maxWidth: '1024px' }}
       >
-        
-        {/* CỘT BÊN TRÁI: FORM ĐĂNG NHẬP */}
         <div className="col-12 col-md-6 d-flex flex-column justify-content-center pe-md-5 text-start">
-          <h2 className="fw-bold text-dark mb-2 fs-3 text-start">Chào mừng bạn quay lại!</h2>
+          <h2 className="fw-bold text-dark mb-2 fs-3 text-start">Chao mung ban quay lai!</h2>
           <p className="text-secondary small mb-4 text-start" style={{ lineHeight: '1.5' }}>
-            Đăng nhập để tiếp tục khám phá những sự kiện tuyệt vời.
+            Dang nhap de tiep tuc kham pha nhung su kien tuyet voi.
           </p>
 
-          {/* API Error Alert */}
           {apiError && (
             <div className="alert alert-danger py-2 mb-3 text-start" role="alert">
               {apiError}
@@ -109,7 +102,6 @@ const Login = () => {
           )}
 
           <form onSubmit={handleSubmit} className="w-100">
-            {/* Email */}
             <div className="mb-3 text-start">
               <label className="form-label fw-bold small mb-1" style={{ color: colors.labelColor }}>
                 Email <span className="text-danger">*</span>
@@ -130,7 +122,6 @@ const Login = () => {
               {errors.email && <small className="text-danger">{errors.email}</small>}
             </div>
 
-            {/* Password */}
             <div className="mb-3 text-start">
               <label className="form-label fw-bold small mb-1" style={{ color: colors.labelColor }}>
                 Password <span className="text-danger">*</span>
@@ -158,7 +149,6 @@ const Login = () => {
               {errors.password && <small className="text-danger">{errors.password}</small>}
             </div>
 
-            {/* Remember me */}
             <div className="form-check d-flex align-items-start mb-4 text-start">
               <input 
                 className="form-check-input me-2 mt-1 border-secondary" 
@@ -174,7 +164,6 @@ const Login = () => {
               </label>
             </div>
 
-            {/* Nút Login */}
             <button 
               type="submit" 
               className="btn text-white w-100 py-2.5 fw-bold rounded-3"
@@ -191,14 +180,12 @@ const Login = () => {
               )}
             </button>
 
-            {/* Divider */}
             <div className="d-flex align-items-center my-4">
               <hr className="flex-grow-1" style={{ borderColor: '#C4CCD4' }} />
               <span className="px-3 text-secondary small">or</span>
               <hr className="flex-grow-1" style={{ borderColor: '#C4CCD4' }} />
             </div>
 
-            {/* Sign in with Google */}
             <button 
               type="button" 
               className="btn btn-outline-dark w-100 py-2.5 fw-bold rounded-3 d-flex align-items-center justify-content-center gap-2"
@@ -216,23 +203,19 @@ const Login = () => {
             </button>
           </form>
 
-          {/* Link chuyển sang Register */}
           <div className="text-center mt-3">
-            <span className="text-secondary small">Bạn chưa có tài khoản? </span>
+            <span className="text-secondary small">Ban chua co tai khoan? </span>
             <Link 
               to="/register" 
               className="text-decoration-none fw-semibold small"
               style={{ color: colors.btnPrimary }}
             >
-              Đăng ký ngay
+              Dang ky ngay
             </Link>
           </div>
         </div>
 
-        {/* CỘT BÊN PHẢI: BANNER & ĐIỂM NỔI BẬT */}
         <div className="col-12 col-md-6 d-flex flex-column justify-content-between ps-md-4 mt-4 mt-md-0">
-          
-          {/* Banner minh họa phía trên */}
           <div className="mb-4">
             <img
               src={homepageImg}
@@ -246,45 +229,38 @@ const Login = () => {
             />
           </div>
 
-          {/* Danh sách tính năng nổi bật bên dưới (Căn trái nội dung bên trong) */}
           <div className="p-4 rounded-4 flex-grow-1 d-flex flex-column justify-content-center text-start" style={{ backgroundColor: colors.cardRightBg }}>
-            
-            {/* Khám phá sự kiện */}
             <div className="d-flex align-items-start mb-4 text-start">
               <div className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 me-3" style={{ backgroundColor: '#D7E4FF', width: '44px', height: '44px' }}>
                 <i className="bi bi-calendar-event text-primary fs-5"></i>
               </div>
               <div>
-                <h6 className="fw-bold mb-1 text-dark text-start" style={{ fontSize: '0.95rem' }}>Khám phá sự kiện</h6>
-                <p className="mb-0 text-secondary small text-start" style={{ fontSize: '0.8rem', color: '#718096' }}>Tìm các sự kiện địa phương phù hợp với sở thích của bạn.</p>
+                <h6 className="fw-bold mb-1 text-dark text-start" style={{ fontSize: '0.95rem' }}>Kham pha su kien</h6>
+                <p className="mb-0 text-secondary small text-start" style={{ fontSize: '0.8rem', color: '#718096' }}>Tim cac su kien dia phuong phu hop voi so thich cua ban.</p>
               </div>
             </div>
 
-            {/* Kết nối và chia sẻ */}
             <div className="d-flex align-items-start mb-4 text-start">
               <div className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 me-3" style={{ backgroundColor: '#D7E4FF', width: '44px', height: '44px' }}>
                 <i className="bi bi-people text-primary fs-5"></i>
               </div>
               <div>
-                <h6 className="fw-bold mb-1 text-dark text-start" style={{ fontSize: '0.95rem' }}>Kết nối và chia sẻ</h6>
-                <p className="mb-0 text-secondary small text-start" style={{ fontSize: '0.8rem', color: '#718096' }}>Kết nối với mọi người và chia sẻ những trải nghiệm tuyệt vời.</p>
+                <h6 className="fw-bold mb-1 text-dark text-start" style={{ fontSize: '0.95rem' }}>Ket noi va chia se</h6>
+                <p className="mb-0 text-secondary small text-start" style={{ fontSize: '0.8rem', color: '#718096' }}>Ket noi voi moi nguoi va chia se nhung trai nghiem tuyet voi.</p>
               </div>
             </div>
 
-            {/* Dễ dàng & an toàn */}
             <div className="d-flex align-items-start text-start">
               <div className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 me-3" style={{ backgroundColor: '#D7E4FF', width: '44px', height: '44px' }}>
                 <i className="bi bi-ticket-perforated text-primary fs-5"></i>
               </div>
               <div>
-                <h6 className="fw-bold mb-1 text-dark text-start" style={{ fontSize: '0.95rem' }}>Dễ dàng & an toàn</h6>
-                <p className="mb-0 text-secondary small text-start" style={{ fontSize: '0.8rem', color: '#718096' }}>Đặt vé dễ dàng và an toàn tại một nơi duy nhất.</p>
+                <h6 className="fw-bold mb-1 text-dark text-start" style={{ fontSize: '0.95rem' }}>De dang & an toan</h6>
+                <p className="mb-0 text-secondary small text-start" style={{ fontSize: '0.8rem', color: '#718096' }}>Dat ve de dang va an toan tai mot noi duy nhat.</p>
               </div>
             </div>
-
           </div>
         </div>
-
       </div>
     </div>
   );

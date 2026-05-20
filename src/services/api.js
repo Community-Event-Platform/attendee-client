@@ -61,7 +61,7 @@ export const getEvents = async () => {
 // ==================== User APIs ====================
 
 export const getProfileApi = () => {
-  return api.get('/profile');
+  return api.get('/user');
 };
 
 export default api;

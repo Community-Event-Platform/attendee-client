@@ -20,7 +20,8 @@ export const useAuth = () => {
   const login = async (email, password) => {
     try {
       const response = await loginApi({ email, password });
-      const { user: userData, token: authToken } = response.data;
+      const userData = response.data.data;
+      const authToken = response.data.access_token;
       storeLogin(userData, authToken);
       return { success: true };
     } catch (error) {
