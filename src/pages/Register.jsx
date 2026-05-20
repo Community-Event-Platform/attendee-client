@@ -1,10 +1,11 @@
 import homepageImg from "../assets/homepage.png";
 import { useState } from "react";
-import { registerApi } from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 const Register = () => {
   const navigate = useNavigate();
+  const { register } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
@@ -82,7 +83,7 @@ const Register = () => {
     setApiError("");
 
     try {
-      await registerApi({
+      const result = await register({
         full_name: formData.full_name,
         email: formData.email,
         password: formData.password,
@@ -90,21 +91,14 @@ const Register = () => {
         role: "attendee"
       });
 
-      // Redirect to login page on success (register does not auto-login)
-      alert("Registration successful! Please login to continue.");
-      navigate("/login");
-    } catch (error) {
-      if (error.response && error.response.data) {
-        // Handle Laravel validation errors
-        const errorData = error.response.data;
-        if (errorData.errors) {
-          setErrors(errorData.errors);
-        } else if (errorData.message) {
-          setApiError(errorData.message);
-        }
+      if (result.success) {
+        alert("Registration successful!");
+        navigate("/");
       } else {
-        setApiError("Registration failed. Please try again.");
+        setApiError(result.error);
       }
+    } catch {
+      setApiError("Đã xảy ra lỗi không mong muốn!");
     } finally {
       setIsLoading(false);
     }
