@@ -25,10 +25,10 @@ function App() {
 
   return (
     <>
-      <Header />
+      <Header addToast={addToast} />
 
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home addToast={addToast} />} />
         <Route path="/login" element={<Login addToast={addToast} />} />
         <Route path="/register" element={<Register addToast={addToast} />} />
         <Route path="/oauth-success" element={<OAuthSuccess addToast={addToast} />} />

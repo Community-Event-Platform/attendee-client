@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { getEvents, getProfileApi } from "../services/api";
 
-function Home() {
+function Home({ addToast }) {
 
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -44,6 +44,20 @@ function Home() {
 
       }
     };
+
+    // Check if user just logged in via Google OAuth
+    const googleLogin = sessionStorage.getItem("googleLogin");
+    if (googleLogin) {
+      sessionStorage.removeItem("googleLogin");
+      if (addToast) addToast("Đăng nhập Google thành công!", "success");
+    }
+
+    // Check if user just logged in via regular login
+    const justLoggedIn = sessionStorage.getItem("justLoggedIn");
+    if (justLoggedIn) {
+      sessionStorage.removeItem("justLoggedIn");
+      if (addToast) addToast("Đăng nhập thành công!", "success");
+    }
 
     loadEvents();
 

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
-const Register = () => {
+const Register = ({ addToast }) => {
   const navigate = useNavigate();
   const { register } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
@@ -89,13 +89,15 @@ const Register = () => {
         password: formData.password,
         password_confirmation: formData.password_confirmation,
         role: "attendee"
-      });
+      }, addToast);
 
       if (result.success) {
-        alert("Registration successful!");
-        navigate("/");
+        // Wait for toast to be displayed before navigating
+        setTimeout(() => {
+          navigate("/");
+        }, 100);
       } else {
-        setApiError(result.error);
+        // Error toast already shown in useAuth
       }
     } catch {
       setApiError("Đã xảy ra lỗi không mong muốn!");

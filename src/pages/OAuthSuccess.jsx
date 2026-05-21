@@ -1,12 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 
 function OAuthSuccess({ addToast }) {
     const navigate = useNavigate();
     const login = useAuthStore((state) => state.login);
-    const addToastRef = useRef(addToast);
-    addToastRef.current = addToast;
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -25,18 +23,17 @@ function OAuthSuccess({ addToast }) {
                     console.error("Failed to parse user data:", e);
                 }
             }
-
-            if (addToastRef.current) {
-                addToastRef.current("Dang nhap Google thanh cong!", "success");
+            // Show success toast and navigate
+            if (addToast) {
+                addToast("Đăng nhập Google thành công!", "success");
             }
-            navigate("/");
+            setTimeout(() => {
+                navigate("/");
+            }, 100);
         } else {
-            if (addToastRef.current) {
-                addToastRef.current("Dang nhap that bai!", "error");
-            }
             navigate("/login");
         }
-    }, [navigate, login]);
+    }, [navigate, login, addToast]);
 
     return (
         <div className="min-vh-100 d-flex align-items-center justify-content-center">

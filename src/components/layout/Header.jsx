@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
-function Header() {
+function Header({ addToast }) {
   const location = useLocation();
   const { user, token, logout } = useAuth();
 
@@ -11,6 +11,7 @@ function Header() {
 
   const handleLogout = async () => {
     await logout();
+    if (addToast) addToast("Đăng xuất thành công!", "success");
   };
 
   const isActive = (path) => {

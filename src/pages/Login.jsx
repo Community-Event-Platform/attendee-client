@@ -64,13 +64,15 @@ const Login = ({ addToast }) => {
     setApiError("");
 
     try {
-      const result = await login(formData.email, formData.password);
+      const result = await login(formData.email, formData.password, addToast);
 
       if (result.success) {
-        if (addToast) addToast("Dang nhap thanh cong!", "success");
-        navigate("/");
+        // Wait for toast to be displayed before navigating
+        setTimeout(() => {
+          navigate("/");
+        }, 100);
       } else {
-        if (addToast) addToast(result.error || "Dang nhap that bai!", "error");
+        // Error toast already shown in useAuth
       }
     } catch {
       setApiError("Da xay ra loi khong mong muon!");
