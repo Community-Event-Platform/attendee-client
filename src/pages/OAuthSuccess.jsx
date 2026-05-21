@@ -1,12 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 
 function OAuthSuccess({ addToast }) {
     const navigate = useNavigate();
     const login = useAuthStore((state) => state.login);
+    const hasRun = useRef(false);
 
     useEffect(() => {
+        if (hasRun.current) return;
+        hasRun.current = true;
+
         const params = new URLSearchParams(window.location.search);
         const token = params.get("token");
         const userParam = params.get("user");
@@ -33,7 +37,7 @@ function OAuthSuccess({ addToast }) {
         } else {
             navigate("/login");
         }
-    }, [navigate, login, addToast]);
+    }, [navigate, login]);
 
     return (
         <div className="min-vh-100 d-flex align-items-center justify-content-center">
