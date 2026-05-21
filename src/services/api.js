@@ -27,12 +27,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
-      // Token expired or invalid - clear storage and redirect
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.reload();
-    }
+    // Always reject errors - let callers handle their own 401s
     return Promise.reject(error);
   }
 );

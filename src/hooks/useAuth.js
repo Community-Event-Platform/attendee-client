@@ -17,32 +17,40 @@ export const useAuth = () => {
   } = useAuthStore();
 
   // Login function
-  const login = async (email, password) => {
+  const login = async (email, password, showToast) => {
     try {
       const response = await loginApi({ email, password });
       const userData = response.data.data;
       const authToken = response.data.access_token;
       storeLogin(userData, authToken);
-      return { success: true };
+      sessionStorage.setItem("justLoggedIn", "true");
+      return { success: true, showToast };
     } catch (error) {
+      const errorMsg = error.response?.data?.message || "Email hoặc mật khẩu không đúng!";
+      if (showToast) showToast(errorMsg, "error");
       return { 
         success: false, 
-        error: error.response?.data?.message || 'Login failed' 
+        error: errorMsg,
+        showToast 
       };
     }
   };
 
   // Register function
-  const register = async (userData) => {
+  const register = async (userData, showToast) => {
     try {
       const response = await registerApi(userData);
       const { user: newUser, token: authToken } = response.data;
       storeLogin(newUser, authToken);
-      return { success: true };
+      sessionStorage.setItem("justLoggedIn", "true");
+      return { success: true, showToast };
     } catch (error) {
+      const errorMsg = error.response?.data?.message || "Đăng ký thất bại!";
+      if (showToast) showToast(errorMsg, "error");
       return { 
         success: false, 
-        error: error.response?.data?.message || 'Registration failed' 
+        error: errorMsg,
+        showToast 
       };
     }
   };
