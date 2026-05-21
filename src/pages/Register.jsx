@@ -100,7 +100,7 @@ const Register = ({ addToast }) => {
         // Error toast already shown in useAuth
       }
     } catch {
-      setApiError("Đã xảy ra lỗi không mong muốn!");
+      setApiError("An unexpected error occurred!");
     } finally {
       setIsLoading(false);
     }
@@ -116,9 +116,9 @@ const Register = ({ addToast }) => {
         
         {/* CỘT BÊN TRÁI: FORM ĐĂNG KÝ (Căn trái toàn bộ) */}
         <div className="col-12 col-md-6 d-flex flex-column justify-content-center pe-md-5 text-start">
-          <h2 className="fw-bold text-dark mb-2 fs-3 text-start">Tạo tài khoản của bạn</h2>
+          <h2 className="fw-bold text-dark mb-2 fs-3 text-start">Create your account</h2>
           <p className="text-secondary small mb-4 text-start" style={{ lineHeight: '1.5' }}>
-            Hãy tham gia cộng đồng của chúng tôi và bắt đầu khám phá những sự kiện tuyệt vời.
+            Join our community and start exploring amazing events.
           </p>
 
           {/* API Error Alert */}
@@ -237,7 +237,7 @@ const Register = ({ addToast }) => {
                 required
               />
               <label className="form-check-label text-dark small" htmlFor="terms" style={{ fontSize: '0.85rem', lineHeight: '1.4', cursor: 'pointer' }}>
-                Tôi đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của EventHub.
+                I agree to EventHub's Terms of Service and Privacy Policy.
               </label>
             </div>
 
@@ -261,13 +261,13 @@ const Register = ({ addToast }) => {
 
           {/* Link chuyển sang Login */}
           <div className="text-center mt-3">
-            <span className="text-secondary small">Bạn đã có tài khoản? </span>
+            <span className="text-secondary small">Already have an account? </span>
             <Link 
               to="/login" 
               className="text-decoration-none fw-semibold small"
               style={{ color: colors.btnPrimary }}
             >
-              Đăng nhập ngay
+              Sign in now
             </Link>
           </div>
         </div>

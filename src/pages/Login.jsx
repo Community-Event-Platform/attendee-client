@@ -75,7 +75,7 @@ const Login = ({ addToast }) => {
         // Error toast already shown in useAuth
       }
     } catch {
-      setApiError("Da xay ra loi khong mong muon!");
+      setApiError("An unexpected error occurred!");
     } finally {
       setIsLoading(false);
     }
@@ -92,9 +92,9 @@ const Login = ({ addToast }) => {
         style={{ backgroundColor: colors.bgLight, maxWidth: '1024px' }}
       >
         <div className="col-12 col-md-6 d-flex flex-column justify-content-center pe-md-5 text-start">
-          <h2 className="fw-bold text-dark mb-2 fs-3 text-start">Chao mung ban quay lai!</h2>
+          <h2 className="fw-bold text-dark mb-2 fs-3 text-start">Welcome back!</h2>
           <p className="text-secondary small mb-4 text-start" style={{ lineHeight: '1.5' }}>
-            Dang nhap de tiep tuc kham pha nhung su kien tuyet voi.
+            Sign in to continue exploring amazing events.
           </p>
 
           {apiError && (
@@ -206,13 +206,13 @@ const Login = ({ addToast }) => {
           </form>
 
           <div className="text-center mt-3">
-            <span className="text-secondary small">Ban chua co tai khoan? </span>
+            <span className="text-secondary small">Don't have an account? </span>
             <Link 
               to="/register" 
               className="text-decoration-none fw-semibold small"
               style={{ color: colors.btnPrimary }}
             >
-              Dang ky ngay
+              Sign up now
             </Link>
           </div>
         </div>
@@ -237,8 +237,8 @@ const Login = ({ addToast }) => {
                 <i className="bi bi-calendar-event text-primary fs-5"></i>
               </div>
               <div>
-                <h6 className="fw-bold mb-1 text-dark text-start" style={{ fontSize: '0.95rem' }}>Kham pha su kien</h6>
-                <p className="mb-0 text-secondary small text-start" style={{ fontSize: '0.8rem', color: '#718096' }}>Tim cac su kien dia phuong phu hop voi so thich cua ban.</p>
+                <h6 className="fw-bold mb-1 text-dark text-start" style={{ fontSize: '0.95rem' }}>Discover Events</h6>
+                <p className="mb-0 text-secondary small text-start" style={{ fontSize: '0.8rem', color: '#718096' }}>Find local events that match your interests.</p>
               </div>
             </div>
 
@@ -247,8 +247,8 @@ const Login = ({ addToast }) => {
                 <i className="bi bi-people text-primary fs-5"></i>
               </div>
               <div>
-                <h6 className="fw-bold mb-1 text-dark text-start" style={{ fontSize: '0.95rem' }}>Ket noi va chia se</h6>
-                <p className="mb-0 text-secondary small text-start" style={{ fontSize: '0.8rem', color: '#718096' }}>Ket noi voi moi nguoi va chia se nhung trai nghiem tuyet voi.</p>
+                <h6 className="fw-bold mb-1 text-dark text-start" style={{ fontSize: '0.95rem' }}>Connect & Share</h6>
+                <p className="mb-0 text-secondary small text-start" style={{ fontSize: '0.8rem', color: '#718096' }}>Connect with people and share amazing experiences.</p>
               </div>
             </div>
 
@@ -257,8 +257,8 @@ const Login = ({ addToast }) => {
                 <i className="bi bi-ticket-perforated text-primary fs-5"></i>
               </div>
               <div>
-                <h6 className="fw-bold mb-1 text-dark text-start" style={{ fontSize: '0.95rem' }}>De dang & an toan</h6>
-                <p className="mb-0 text-secondary small text-start" style={{ fontSize: '0.8rem', color: '#718096' }}>Dat ve de dang va an toan tai mot noi duy nhat.</p>
+                <h6 className="fw-bold mb-1 text-dark text-start" style={{ fontSize: '0.95rem' }}>Easy & Safe</h6>
+                <p className="mb-0 text-secondary small text-start" style={{ fontSize: '0.8rem', color: '#718096' }}>Book tickets easily and safely in one place.</p>
               </div>
             </div>
           </div>

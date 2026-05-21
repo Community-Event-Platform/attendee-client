@@ -11,7 +11,7 @@ function Header({ addToast }) {
 
   const handleLogout = async () => {
     await logout();
-    if (addToast) addToast("Đăng xuất thành công!", "success");
+    if (addToast) addToast("Logged out successfully!", "success");
   };
 
   const isActive = (path) => {

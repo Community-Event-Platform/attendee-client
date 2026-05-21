@@ -29,7 +29,7 @@ function OAuthSuccess({ addToast }) {
             }
             // Show success toast and navigate
             if (addToast) {
-                addToast("Đăng nhập Google thành công!", "success");
+                addToast("Google login successful!", "success");
             }
             setTimeout(() => {
                 navigate("/");
@@ -43,7 +43,7 @@ function OAuthSuccess({ addToast }) {
         <div className="min-vh-100 d-flex align-items-center justify-content-center">
             <div className="text-center">
                 <div className="spinner-border text-primary mb-3" role="status"></div>
-                <p className="text-secondary">Dang nhap voi Google...</p>
+                <p className="text-secondary">Logging in with Google...</p>
             </div>
         </div>
     );

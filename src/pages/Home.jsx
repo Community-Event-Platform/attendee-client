@@ -21,7 +21,7 @@ function Home({ addToast }) {
 
       } catch (err) {
 
-        setError("Không tải được danh sách sự kiện.");
+        setError("Failed to load events list.");
 
       } finally {
 
@@ -49,14 +49,14 @@ function Home({ addToast }) {
     const googleLogin = sessionStorage.getItem("googleLogin");
     if (googleLogin) {
       sessionStorage.removeItem("googleLogin");
-      if (addToast) addToast("Đăng nhập Google thành công!", "success");
+      if (addToast) addToast("Google login successful!", "success");
     }
 
     // Check if user just logged in via regular login
     const justLoggedIn = sessionStorage.getItem("justLoggedIn");
     if (justLoggedIn) {
       sessionStorage.removeItem("justLoggedIn");
-      if (addToast) addToast("Đăng nhập thành công!", "success");
+      if (addToast) addToast("Login successful!", "success");
     }
 
     loadEvents();
@@ -72,16 +72,16 @@ function Home({ addToast }) {
       <section className="mb-5">
 
         <h1 className="fw-bold mb-3">
-          Sự kiện cộng đồng
+          Community Events
         </h1>
 
         <p className="text-secondary">
-          Danh sách sự kiện từ Laravel API.
+          Browse events from our API.
         </p>
 
       </section>
 
-      {loading && <p>Đang tải sự kiện...</p>}
+      {loading && <p>Loading events...</p>}
 
       {error && (
         <div className="alert alert-danger">
@@ -131,7 +131,7 @@ function Home({ addToast }) {
 
                     <span>
                       <i className="bi bi-people me-2"></i>
-                      Sức chứa: {event.capacity}
+                      Capacity: {event.capacity}
                     </span>
 
                   </div>
