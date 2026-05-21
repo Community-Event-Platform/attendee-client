@@ -82,7 +82,7 @@ const Login = ({ addToast }) => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://127.0.0.1:8000/api/auth/google/redirect";
+    window.location.href = "http://localhost:8000/api/auth/google/redirect";
   };
 
   return (
