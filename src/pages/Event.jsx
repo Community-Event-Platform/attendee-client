@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getEvents } from "../services/api";
 import eventImage from "../assets/event.png";
 import eventCard01 from "../assets/events/event-01.jpg";
@@ -47,6 +48,7 @@ const eventImages = {
 };
 
 function Event({ addToast }) {
+  const navigate = useNavigate();
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -288,7 +290,7 @@ function Event({ addToast }) {
                     <small>{formatDateTime(event.date_time)}</small>
                   </div>
 
-                  <button type="button">View Details</button>
+                  <button type="button" onClick={() => navigate(`/events/${event.id}`)}>View Details</button>
                 </div>
               </article>
             ))}
