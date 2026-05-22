@@ -1,5 +1,5 @@
 import contactImage from "../assets/contact.png";
-import "../components/layout/contact.css";
+import "./style.css/Contact.css";
 
 function Contact() {
   const contactItems = [
