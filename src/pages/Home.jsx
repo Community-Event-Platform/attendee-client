@@ -19,7 +19,7 @@ function Home({ addToast }) {
 
         setEvents(data);
 
-      } catch (err) {
+      } catch {
 
         setError("Failed to load events list.");
 
