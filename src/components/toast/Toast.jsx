@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import './Toast.css';
 
 /**
@@ -70,14 +70,14 @@ export const ToastContainer = ({ toasts, removeToast }) => {
 export const useToast = () => {
   const [toasts, setToasts] = useState([]);
 
-  const addToast = (message, type = 'info', duration = 3000) => {
+  const addToast = useCallback((message, type = 'info', duration = 3000) => {
     const id = Date.now() + Math.random();
     setToasts((prev) => [...prev, { id, message, type, duration }]);
-  };
+  }, []);
 
-  const removeToast = (id) => {
+  const removeToast = useCallback((id) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
-  };
+  }, []);
 
   return { toasts, addToast, removeToast };
 };

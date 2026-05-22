@@ -189,11 +189,6 @@ function Event({ addToast }) {
                       onChange={(event) => setSelectedDate(event.target.value)}
                     />
                   </label>
-
-                  <button className="event-search-button" type="submit">
-                    <i className="bi bi-search"></i>
-                    Tìm kiếm
-                  </button>
                 </form>
               </div>
             </div>
@@ -273,7 +268,6 @@ function Event({ addToast }) {
 
                 <div className="event-card-body">
                   <h3>{event.name}</h3>
-                  <p className="event-card-description">{event.description}</p>
 
                   <div className="event-card-meta">
                     <span>
@@ -291,10 +285,6 @@ function Event({ addToast }) {
                   </div>
 
                   <div className="event-card-footer">
-                    <span>
-                      <i className="bi bi-star-fill"></i>
-                      4.8
-                    </span>
                     <small>{formatDateTime(event.date_time)}</small>
                   </div>
 
