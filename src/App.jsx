@@ -3,7 +3,7 @@ import Footer from "./components/layout/Footer";
 import { Routes, Route } from "react-router-dom";
 import { useEffect, useCallback } from "react";
 import { useAuth } from "./hooks/useAuth";
-import { ToastContainer, useToast } from "./components/Toast";
+import { ToastContainer, useToast } from "./components/toast/Toast";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
