@@ -1,7 +1,50 @@
 import { useEffect, useMemo, useState } from "react";
 import { getEvents } from "../services/api";
 import eventImage from "../assets/event.png";
+import eventCard01 from "../assets/events/event-01.jpg";
+import eventCard02 from "../assets/events/event-02.jpg";
+import eventCard03 from "../assets/events/event-03.jpg";
+import eventCard04 from "../assets/events/event-04.jpg";
+import eventCard05 from "../assets/events/event-05.jpg";
+import eventCard06 from "../assets/events/event-06.jpg";
+import eventCard07 from "../assets/events/event-07.jpg";
+import eventCard08 from "../assets/events/event-08.jpg";
+import eventCard09 from "../assets/events/event-09.jpg";
+import eventCard10 from "../assets/events/event-10.jpg";
+import eventCard11 from "../assets/events/event-11.jpg";
+import eventCard12 from "../assets/events/event-12.jpg";
+import eventCard13 from "../assets/events/event-13.jpg";
+import eventCard14 from "../assets/events/event-14.jpg";
+import eventCard15 from "../assets/events/event-15.jpg";
+import eventCard16 from "../assets/events/event-16.jpg";
+import eventCard17 from "../assets/events/event-17.jpg";
+import eventCard18 from "../assets/events/event-18.jpg";
+import eventCard19 from "../assets/events/event-19.jpg";
+import eventCard20 from "../assets/events/event-20.jpg";
 import "./style.css/Event.css";
+
+const eventImages = {
+  1: eventCard01,
+  2: eventCard02,
+  3: eventCard03,
+  4: eventCard04,
+  5: eventCard05,
+  6: eventCard06,
+  7: eventCard07,
+  8: eventCard08,
+  9: eventCard09,
+  10: eventCard10,
+  11: eventCard11,
+  12: eventCard12,
+  13: eventCard13,
+  14: eventCard14,
+  15: eventCard15,
+  16: eventCard16,
+  17: eventCard17,
+  18: eventCard18,
+  19: eventCard19,
+  20: eventCard20,
+};
 
 function Event({ addToast }) {
   const [events, setEvents] = useState([]);
@@ -220,11 +263,17 @@ function Event({ addToast }) {
             {visibleEvents.map((event) => (
               <article className="event-card" key={event.id}>
                 <div className="event-card-image">
+                  <img
+                    src={eventImages[event.id] || eventImage}
+                    alt={event.name}
+                    loading="lazy"
+                  />
                   <span>{event.category}</span>
                 </div>
 
                 <div className="event-card-body">
                   <h3>{event.name}</h3>
+                  <p className="event-card-description">{event.description}</p>
 
                   <div className="event-card-meta">
                     <span>
