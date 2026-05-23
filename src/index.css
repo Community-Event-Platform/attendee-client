@@ -53,9 +53,20 @@
   }
 }
 
-body {
+* {
+  box-sizing: border-box;
+}
+
+html, body {
   margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
   min-width: 320px;
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 #root {
@@ -98,6 +109,60 @@ h2 {
 }
 p {
   margin: 0;
+}
+
+/* Main content should flex grow */
+main {
+  flex: 1;
+}
+
+/* Global Button Styles */
+.btn {
+  transition: all 0.3s ease;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background-color: #4D5EE3;
+  border-color: #4D5EE3;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #3d4dc4;
+  border-color: #3d4dc4;
+  color: white;
+}
+
+.btn-warning {
+  background-color: #FFD700;
+  border-color: #FFD700;
+  color: #1a1a1a;
+}
+
+.btn-warning:hover {
+  background-color: #FFC700;
+  border-color: #FFC700;
+  color: #1a1a1a;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 code,

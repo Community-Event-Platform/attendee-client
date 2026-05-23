@@ -1,9 +1,18 @@
-function CategoryCard({ title, icon }) {
-  return (
-    <div>
-      <img src={icon} width="50" />
+import './style/CategoryCard.css';
 
-      <h3>{title}</h3>
+function CategoryCard({ category, isSelected, onSelect }) {
+  return (
+    <div
+      className={`category-card ${isSelected ? 'selected' : ''}`}
+      style={{
+        backgroundColor: category.color,
+      }}
+      onClick={onSelect}
+    >
+      <div className="category-icon">
+        <i className={`bi ${category.icon}`}></i>
+      </div>
+      <h5 className="category-name">{category.name}</h5>
     </div>
   );
 }
