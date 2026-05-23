@@ -1,0 +1,210 @@
+/* Event Card Container */
+.event-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.event-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-8px);
+}
+
+/* Image Container */
+.event-image-container {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.event-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.event-card:hover .event-image {
+  transform: scale(1.1);
+}
+
+/* Badges */
+.category-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(77, 94, 227, 0.9);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.event-type-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Overlay */
+.event-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.view-details-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+
+.view-details-btn:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  transform: scale(1.05);
+}
+
+/* Event Details */
+.event-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.event-title {
+  font-weight: 700;
+  font-size: 16px;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.event-location {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+}
+
+.event-location i {
+  font-size: 14px;
+}
+
+.event-datetime {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+}
+
+.event-datetime i {
+  font-size: 14px;
+}
+
+.event-attendees {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+}
+
+.event-attendees i {
+  font-size: 14px;
+}
+
+/* Rating Stars */
+.event-rating {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+
+.event-rating i {
+  margin-right: 2px;
+}
+
+/* Capacity */
+.event-capacity {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+}
+
+/* Footer */
+.event-footer {
+  margin-top: auto;
+}
+
+.price-text {
+  font-size: 18px;
+  color: #667eea;
+}
+
+.event-footer .btn {
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  background-color: #4D5EE3;
+  border-color: #4D5EE3;
+  transition: all 0.3s ease;
+}
+
+.event-footer .btn:hover {
+  background-color: #3d4dc4;
+  border-color: #3d4dc4;
+}
+
+.event-footer .btn-primary {
+  background-color: #4D5EE3;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .event-image-container {
+    height: 200px;
+  }
+
+  .event-title {
+    font-size: 15px;
+  }
+
+  .price-text {
+    font-size: 16px;
+  }
+}
