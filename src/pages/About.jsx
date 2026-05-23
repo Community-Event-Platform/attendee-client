@@ -1,6 +1,6 @@
 import aboutImage from "../assets/about.png";
 import aboutDashboardImage from "../assets/aboutDes.png";
-import "./style.css/About.css";
+import "./style/About.css";
 
 function About() {
   const features = [
