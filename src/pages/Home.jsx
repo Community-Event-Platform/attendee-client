@@ -59,15 +59,19 @@ function Home() {
     if (search) {
       result = result.filter(
         (event) =>
-          event.name.toLowerCase().includes(search.toLowerCase()) ||
-          event.description.toLowerCase().includes(search.toLowerCase()) ||
-          event.location.toLowerCase().includes(search.toLowerCase())
+          event.name?.toLowerCase().includes(search.toLowerCase()) ||
+          event.description?.toLowerCase().includes(search.toLowerCase()) ||
+          event.location?.toLowerCase().includes(search.toLowerCase()) ||
+          (event.category?.name || event.category)?.toLowerCase().includes(search.toLowerCase())
       );
     }
 
     if (categoryId) {
       const category = categories.find((c) => c.id === categoryId);
-      result = result.filter((event) => event.category === category.name);
+      result = result.filter((event) => {
+        const categoryName = event.category?.name || event.category;
+        return categoryName === category.name;
+      });
     }
 
     setFilteredEvents(result);

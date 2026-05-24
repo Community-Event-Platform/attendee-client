@@ -48,6 +48,9 @@ const eventImages = {
 
 function EventCard({ event, navigate }) {
   const [isHovered, setIsHovered] = useState(false);
+  const eventCategory = event.category?.name || event.category || 'Event';
+  const attendeesCount = event.attendees ?? 0;
+  const capacity = event.capacity || 1;
 
   const getEventImage = (filename) => {
     return eventImages[filename] || event01;
@@ -91,7 +94,7 @@ function EventCard({ event, navigate }) {
 
         {/* Category Badge */}
         <div className="category-badge">
-          {event.category}
+          {eventCategory}
         </div>
 
         {/* Price Badge (Right Side) */}
@@ -134,7 +137,7 @@ function EventCard({ event, navigate }) {
           <div className="event-attendees">
             <i className="bi bi-people text-muted"></i>
             <span className="text-muted small ms-2">
-              {event.attendees} people attending
+              {attendeesCount} people attending
             </span>
           </div>
           <div className="event-price mt-1">
@@ -153,7 +156,7 @@ function EventCard({ event, navigate }) {
           <div className="d-flex justify-content-between mb-2">
             <small className="text-muted">Capacity</small>
             <small className="text-muted">
-              {event.attendees}/{event.capacity}
+              {attendeesCount}/{capacity}
             </small>
           </div>
           <div className="progress" style={{ height: '6px' }}>
@@ -161,7 +164,7 @@ function EventCard({ event, navigate }) {
               className="progress-bar"
               role="progressbar"
               style={{
-                width: `${(event.attendees / event.capacity) * 100}%`,
+                width: `${Math.min(100, Math.max(0, (attendeesCount / capacity) * 100))}%`,
                 backgroundColor: '#4D5EE3',
               }}
             ></div>

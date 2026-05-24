@@ -110,7 +110,8 @@ function EventDetail({ addToast }) {
     }
     const percent = {};
     for (let i = 1; i <= 5; i++) {
-      percent[i] = Math.round((event.rating_breakdown[i] / event.reviews_count) * 100);
+      const count = event.rating_breakdown?.[i] ?? 0;
+      percent[i] = Math.round((count / event.reviews_count) * 100);
     }
     return percent;
   }, [event]);
@@ -146,7 +147,7 @@ function EventDetail({ addToast }) {
       >
         <div className="container-fluid px-4 px-lg-5">
           <div className="event-detail-hero-content">
-            <span className="event-category-badge">{event.category || "General"}</span>
+            <span className="event-category-badge">{event.category?.name || event.category || "General"}</span>
             <h1 className="event-detail-title">{event.name}</h1>
             <div className="event-hero-meta">
               <span>

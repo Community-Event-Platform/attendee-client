@@ -36,7 +36,7 @@ function Event({ addToast }) {
   }, [addToast]);
 
   const categories = useMemo(() => {
-    const names = events.map((event) => event.category).filter(Boolean);
+    const names = events.map((event) => event.category?.name || event.category).filter(Boolean);
     return ["All categories", ...new Set(names)];
   }, [events]);
 
@@ -46,12 +46,13 @@ function Event({ addToast }) {
     return events
       .filter((event) => {
         if (selectedCategory === "All categories") return true;
-        return event.category === selectedCategory;
+        const categoryName = event.category?.name || event.category;
+        return categoryName === selectedCategory;
       })
       .filter((event) => {
         if (!normalizedSearch) return true;
 
-        return [event.name, event.location, event.description, event.category]
+        return [event.name, event.location, event.description, event.category?.name || event.category]
           .filter(Boolean)
           .some((value) => value.toLowerCase().includes(normalizedSearch));
       })
