@@ -52,8 +52,26 @@ function EventCard({ event, navigate }) {
   const attendeesCount = event.attendees ?? 0;
   const capacity = event.capacity || 1;
 
-  const getEventImage = (filename) => {
-    return eventImages[filename] || event01;
+  const getEventImage = (imageRef) => {
+    if (!imageRef) return event01;
+
+    // If imageRef matches a bundled asset filename, return that
+    const filename = imageRef.split('/').pop();
+    if (eventImages[filename]) return eventImages[filename];
+
+    // If imageRef already looks like a full URL, return it
+    if (imageRef.startsWith('http://') || imageRef.startsWith('https://')) return imageRef;
+
+    // If imageRef is a server path like '/storage/events/..', construct absolute URL from VITE_API_URL
+    const rawApiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, '');
+    if (!rawApiUrl) return event01;
+    const apiBase = rawApiUrl.replace(/\/api$/, '');
+
+    if (imageRef.startsWith('/')) {
+      return `${apiBase}${imageRef}`;
+    }
+
+    return `${apiBase}/${imageRef}`;
   };
 
   const formatDate = (dateString) => {
