@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getEventDetail, submitReview } from "../services/api";
-import "./style.css/EventDetail.css";
+import "./style/EventDetail.css";
 import eventImage from "../assets/event.png";
 
 function EventDetail({ addToast }) {

@@ -22,7 +22,7 @@ import eventCard17 from "../assets/events/event-17.jpg";
 import eventCard18 from "../assets/events/event-18.jpg";
 import eventCard19 from "../assets/events/event-19.jpg";
 import eventCard20 from "../assets/events/event-20.jpg";
-import "./style.css/Event.css";
+import "./style/Event.css";
 
 const eventImages = {
   1: eventCard01,
