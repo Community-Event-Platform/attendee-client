@@ -1,51 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getEvents } from "../services/api";
+import EventCard from "../components/home/EventCard";
 import eventImage from "../assets/event.png";
-import eventCard01 from "../assets/events/event-01.jpg";
-import eventCard02 from "../assets/events/event-02.jpg";
-import eventCard03 from "../assets/events/event-03.jpg";
-import eventCard04 from "../assets/events/event-04.jpg";
-import eventCard05 from "../assets/events/event-05.jpg";
-import eventCard06 from "../assets/events/event-06.jpg";
-import eventCard07 from "../assets/events/event-07.jpg";
-import eventCard08 from "../assets/events/event-08.jpg";
-import eventCard09 from "../assets/events/event-09.jpg";
-import eventCard10 from "../assets/events/event-10.jpg";
-import eventCard11 from "../assets/events/event-11.jpg";
-import eventCard12 from "../assets/events/event-12.jpg";
-import eventCard13 from "../assets/events/event-13.jpg";
-import eventCard14 from "../assets/events/event-14.jpg";
-import eventCard15 from "../assets/events/event-15.jpg";
-import eventCard16 from "../assets/events/event-16.jpg";
-import eventCard17 from "../assets/events/event-17.jpg";
-import eventCard18 from "../assets/events/event-18.jpg";
-import eventCard19 from "../assets/events/event-19.jpg";
-import eventCard20 from "../assets/events/event-20.jpg";
 import "./style/Event.css";
-
-const eventImages = {
-  1: eventCard01,
-  2: eventCard02,
-  3: eventCard03,
-  4: eventCard04,
-  5: eventCard05,
-  6: eventCard06,
-  7: eventCard07,
-  8: eventCard08,
-  9: eventCard09,
-  10: eventCard10,
-  11: eventCard11,
-  12: eventCard12,
-  13: eventCard13,
-  14: eventCard14,
-  15: eventCard15,
-  16: eventCard16,
-  17: eventCard17,
-  18: eventCard18,
-  19: eventCard19,
-  20: eventCard20,
-};
 
 function Event({ addToast }) {
   const navigate = useNavigate();
@@ -118,18 +76,6 @@ function Event({ addToast }) {
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, selectedCategory, selectedDate, sortOrder]);
-
-  const getShortDate = (value) => {
-    if (!value) return "Chưa cập nhật";
-
-    return new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      day: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(new Date(value));
-  };
 
   const handleSearch = (event) => {
     event.preventDefault();
@@ -246,101 +192,11 @@ function Event({ addToast }) {
         {!loading && !error && visibleEvents.length > 0 && (
           <div className="event-grid">
             {visibleEvents.map((event) => (
-              <article className="event-card" key={event.id}>
-                <div className="event-card-image">
-                  <img
-                    src={eventImages[event.id] || eventImage}
-                    alt={event.name}
-                    loading="lazy"
-                  />
-                  <span className="category-badge">{event.category}</span>
-                  <span 
-                    className="event-type-badge"
-                    style={{ backgroundColor: event.event_type === 'Free' ? '#14AE5C' : '#FF6B6B' }}
-                  >
-                    {event.event_type === 'Free' ? 'Miễn Phí' : 'Trả Phí'}
-                  </span>
-                  <div className="event-overlay">
-                    <button 
-                      className="view-details-btn"
-                      onClick={() => navigate(`/events/${event.id}`)}
-                    >
-                      Xem Chi Tiết
-                    </button>
-                  </div>
-                </div>
-
-                <div className="event-card-body">
-                  <h5 className="event-title text-truncate">{event.name}</h5>
-
-                  <div className="event-location mb-2">
-                    <i className="bi bi-geo-alt text-muted"></i>
-                    <span className="text-muted small ms-2">{event.location}</span>
-                  </div>
-
-                  <div className="event-datetime mb-2">
-                    <i className="bi bi-calendar-event text-muted"></i>
-                    <span className="text-muted small ms-2">{getShortDate(event.date_time)}</span>
-                  </div>
-
-                  <div className="event-attendees mb-3">
-                    <i className="bi bi-people text-muted"></i>
-                    <span className="text-muted small ms-2">{event.attendees || 0} người tham gia</span>
-                  </div>
-
-                  <div className="event-rating mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <i
-                        key={i}
-                        className={`bi bi-star-fill ${
-                          i < Math.floor(event.rating || 0) ? 'text-warning' : 'text-light'
-                        }`}
-                        style={{ fontSize: '12px' }}
-                      ></i>
-                    ))}
-                    <span className="text-muted small ms-2">({event.rating || 0})</span>
-                  </div>
-
-                  <div className="event-capacity mb-3">
-                    <div className="d-flex justify-content-between mb-2">
-                      <small className="text-muted">Công suất</small>
-                      <small className="text-muted">
-                        {event.attendees || 0}/{event.capacity}
-                      </small>
-                    </div>
-                    <div className="progress" style={{ height: '6px' }}>
-                      <div
-                        className="progress-bar"
-                        role="progressbar"
-                        style={{
-                          width: `${((event.attendees || 0) / event.capacity) * 100}%`,
-                          backgroundColor: '#4D5EE3',
-                        }}
-                      ></div>
-                    </div>
-                  </div>
-
-                  <div className="event-footer">
-                    {event.event_type === 'Paid' && event.price ? (
-                      <div className="d-flex justify-content-between align-items-center">
-                        <span className="price-text fw-bold" style={{ color: '#4D5EE3' }}>
-                          {new Intl.NumberFormat('vi-VN', {
-                            style: 'currency',
-                            currency: 'VND',
-                          }).format(event.price)}
-                        </span>
-                        <button className="btn btn-primary btn-sm" onClick={() => navigate(`/events/${event.id}`)}>
-                          Đăng Ký
-                        </button>
-                      </div>
-                    ) : (
-                      <button className="btn btn-primary w-100" onClick={() => navigate(`/events/${event.id}`)}>
-                        Đăng Ký Miễn Phí
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </article>
+              <EventCard 
+                key={event.id} 
+                event={event} 
+                navigate={navigate} 
+              />
             ))}
           </div>
         )}

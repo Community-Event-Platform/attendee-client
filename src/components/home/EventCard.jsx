@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './style/EventCard.css';
 
-function EventCard({ event }) {
+function EventCard({ event, navigate }) {
   const [isHovered, setIsHovered] = useState(false);
 
   const formatDate = (dateString) => {
@@ -22,6 +22,12 @@ function EventCard({ event }) {
 
   const getEventTypeLabel = (type) => {
     return type === 'Free' ? 'Miễn Phí' : 'Trả Phí';
+  };
+
+  const handleViewDetails = () => {
+    if (navigate) {
+      navigate(`/events/${event.id}`);
+    }
   };
 
   return (
@@ -54,7 +60,7 @@ function EventCard({ event }) {
         {/* Overlay on Hover */}
         {isHovered && (
           <div className="event-overlay">
-            <button className="view-details-btn">Xem Chi Tiết</button>
+            <button className="view-details-btn" onClick={handleViewDetails}>Xem Chi Tiết</button>
           </div>
         )}
       </div>
@@ -84,20 +90,6 @@ function EventCard({ event }) {
           <span className="text-muted small ms-2">{event.attendees} người tham gia</span>
         </div>
 
-        {/* Rating */}
-        <div className="event-rating mb-3">
-          {[...Array(5)].map((_, i) => (
-            <i
-              key={i}
-              className={`bi bi-star-fill ${
-                i < Math.floor(event.rating) ? 'text-warning' : 'text-light'
-              }`}
-              style={{ fontSize: '12px' }}
-            ></i>
-          ))}
-          <span className="text-muted small ms-2">({event.rating})</span>
-        </div>
-
         {/* Capacity Progress Bar */}
         <div className="event-capacity mb-3">
           <div className="d-flex justify-content-between mb-2">
@@ -125,10 +117,10 @@ function EventCard({ event }) {
               <span className="price-text fw-bold" style={{ color: '#4D5EE3' }}>
                 {formatPrice(event.price)}
               </span>
-              <button className="btn btn-primary btn-sm">Đăng Ký</button>
+              <button className="btn btn-primary btn-sm" onClick={handleViewDetails}>Đăng Ký</button>
             </div>
           ) : (
-            <button className="btn btn-primary w-100">Đăng Ký Miễn Phí</button>
+            <button className="btn btn-primary w-100" onClick={handleViewDetails}>Đăng Ký Miễn Phí</button>
           )}
         </div>
       </div>

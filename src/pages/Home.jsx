@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SearchBar from '../components/home/SearchBar';
 import EventCard from '../components/home/EventCard';
 import CategoryCard from '../components/home/CategoryCard';
@@ -14,6 +15,7 @@ const categories = [
 ];
 
 function Home() {
+  const navigate = useNavigate();
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -115,7 +117,7 @@ function Home() {
             <div className="row g-4">
               {filteredEvents.slice(0, 4).map((event) => (
                 <div key={event.id} className="col-12 col-md-6 col-lg-3">
-                  <EventCard event={event} />
+                  <EventCard event={event} navigate={navigate} />
                 </div>
               ))}
             </div>
@@ -169,13 +171,23 @@ function Home() {
               <p className="text-muted fs-5">Không tìm thấy sự kiện nào</p>
             </div>
           ) : (
-            <div className="row g-4">
-              {filteredEvents.map((event) => (
-                <div key={event.id} className="col-12 col-md-6 col-lg-4">
-                  <EventCard event={event} />
-                </div>
-              ))}
-            </div>
+            <>
+              <div className="row g-4">
+                {filteredEvents.slice(0, 6).map((event) => (
+                  <div key={event.id} className="col-12 col-md-6 col-lg-4">
+                    <EventCard event={event} navigate={navigate} />
+                  </div>
+                ))}
+              </div>
+              <div className="text-center mt-5">
+                <button 
+                  className="btn btn-primary btn-lg"
+                  onClick={() => navigate('/events')}
+                >
+                  Xem Tất Cả Sự Kiện
+                </button>
+              </div>
+            </>
           )}
         </div>
       </section>
