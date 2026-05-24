@@ -55,14 +55,14 @@ function EventCard({ event, navigate }) {
 
   const formatDate = (dateString) => {
     const options = { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' };
-    return new Date(dateString).toLocaleDateString('vi-VN', options);
+    return new Date(dateString).toLocaleDateString('en-US', options);
   };
 
   const getPriceDisplay = (price) => {
     if (price === 0 || price === null || price === undefined) {
-      return '0 đ';
+      return 'Free Registration';
     }
-    return new Intl.NumberFormat('vi-VN').format(price) + ' đ';
+    return new Intl.NumberFormat('en-US').format(price) + ' VND';
   };
 
   const getPriceColor = (price) => {
@@ -105,7 +105,7 @@ function EventCard({ event, navigate }) {
         {/* Overlay on Hover */}
         {isHovered && (
           <div className="event-overlay">
-            <button className="view-details-btn" onClick={handleViewDetails}>Xem Chi Tiết</button>
+            <button className="view-details-btn" onClick={handleViewDetails}>View Details</button>
           </div>
         )}
       </div>
@@ -130,29 +130,28 @@ function EventCard({ event, navigate }) {
         </div>
 
         {/* Event Attendees + Price */}
-<div className="event-attendees-price mb-2">
-  <div className="event-attendees">
-    <i className="bi bi-people text-muted"></i>
-    <span className="text-muted small ms-2">
-      {event.attendees} người tham gia
-    </span>
-  </div>
-
-  <div className="event-price mt-1">
-    <i className="bi bi-ticket-perforated text-muted"></i>
-    <span
-      className="small ms-2 fw-bold"
-      style={{ color: getPriceColor(event.price) }}
-    >
-      {getPriceDisplay(event.price)}
-    </span>
-  </div>
-</div>
+        <div className="event-attendees-price mb-2">
+          <div className="event-attendees">
+            <i className="bi bi-people text-muted"></i>
+            <span className="text-muted small ms-2">
+              {event.attendees} people attending
+            </span>
+          </div>
+          <div className="event-price mt-1">
+            <i className="bi bi-ticket-perforated text-muted"></i>
+            <span
+              className="small ms-2 fw-bold"
+              style={{ color: getPriceColor(event.price) }}
+            >
+              {getPriceDisplay(event.price)}
+            </span>
+          </div>
+        </div>
 
         {/* Capacity Progress Bar */}
         <div className="event-capacity mb-2">
           <div className="d-flex justify-content-between mb-2">
-            <small className="text-muted">Công suất</small>
+            <small className="text-muted">Capacity</small>
             <small className="text-muted">
               {event.attendees}/{event.capacity}
             </small>
@@ -172,7 +171,7 @@ function EventCard({ event, navigate }) {
         {/* Price or Register Button */}
         <div className="event-footer">
           <button className="btn btn-primary w-100" onClick={handleViewDetails}>
-            {event.price === 0 || event.price === null ? 'Đăng Ký Miễn Phí' : 'Đăng Ký'}
+            {event.price === 0 || event.price === null ? 'Free Registration' : 'Register'}
           </button>
         </div>
       </div>

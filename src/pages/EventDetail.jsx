@@ -12,7 +12,7 @@ function EventDetail({ addToast }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Đếm ngược thời gian
+  // Countdown timer
   const [countdown, setCountdown] = useState({
     days: "00",
     hours: "00",
@@ -22,7 +22,7 @@ function EventDetail({ addToast }) {
   });
   
 
-  // Tải chi tiết sự kiện từ API
+  // Load event details from API
   useEffect(() => {
     const loadEventDetail = async () => {
       try {
@@ -31,8 +31,8 @@ function EventDetail({ addToast }) {
         setEvent(data);
       } catch (err) {
         console.error("Failed to load event details:", err);
-        setError("Không thể tải thông tin chi tiết sự kiện.");
-        if (addToast) addToast("Không thể tải thông tin chi tiết sự kiện.", "error");
+        setError("Unable to load event details.");
+        if (addToast) addToast("Unable to load event details.", "error");
       } finally {
         setLoading(false);
       }
@@ -41,7 +41,7 @@ function EventDetail({ addToast }) {
     loadEventDetail();
   }, [id, addToast]);
 
-  // Bộ đếm ngược thời gian thực (Real-time countdown)
+  // Real-time countdown timer
   useEffect(() => {
     if (!event || !event.date_time) return;
 
@@ -78,10 +78,10 @@ function EventDetail({ addToast }) {
     return () => clearInterval(timer);
   }, [event]);
 
-  // Định dạng ngày giờ hiển thị
+  // Format date and time for display
   const formatDateTime = (value) => {
-    if (!value) return "Chưa cập nhật";
-    return new Intl.DateTimeFormat("vi-VN", {
+    if (!value) return "Not available";
+    return new Intl.DateTimeFormat("en-US", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
@@ -103,7 +103,7 @@ function EventDetail({ addToast }) {
 
   
 
-  // Tính phần trăm thanh biểu đồ đánh giá
+  // Calculate rating breakdown percentages
   const breakdownPercentages = useMemo(() => {
     if (!event || !event.rating_breakdown || event.reviews_count === 0) {
       return { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
@@ -121,7 +121,7 @@ function EventDetail({ addToast }) {
     return (
       <div className="container my-5 text-center" style={{ minHeight: "60vh", paddingTop: "15vh" }}>
         <div className="spinner-border text-primary mb-3" role="status" style={{ width: "3rem", height: "3rem" }}></div>
-        <p className="lead text-muted">Đang tải thông tin chi tiết sự kiện...</p>
+        <p className="lead text-muted">Loading event details...</p>
       </div>
     );
   }
@@ -130,11 +130,9 @@ function EventDetail({ addToast }) {
     return (
       <div className="container my-5 text-center" style={{ minHeight: "60vh", paddingTop: "15vh" }}>
         <i className="bi bi-exclamation-triangle-fill text-danger" style={{ fontSize: "3rem" }}></i>
-        <h2 className="mt-3 text-dark">Lỗi tải dữ liệu</h2>
-        <p className="lead text-muted">{error || "Sự kiện không tồn tại."}</p>
-        <button className="btn btn-primary mt-3 px-4 py-2 fw-bold" onClick={() => navigate("/events")}>
-          Quay lại danh sách sự kiện
-        </button>
+        <h2 className="mt-3 text-dark">Data load error</h2>
+        <p className="lead text-muted">{error || "Event does not exist."}</p>
+        <button className="btn btn-primary mt-3 px-4 py-2 fw-bold" onClick={() => navigate("/events")}>Back to events list</button>
       </div>
     );
   }
@@ -168,19 +166,19 @@ function EventDetail({ addToast }) {
       <div className="container-fluid px-4 px-lg-5">
         <div className="event-detail-grid">
           
-          {/* Cột trái: Chi tiết Sự kiện */}
+          {/* Left column: Event Information */}
           <div className="left-column">
             
-            {/* Thẻ 1: Thông tin sự kiện */}
+            {/* Card 1: Event Information */}
             <div className="event-detail-card">
               <div className="card-title-container">
                 <span className="card-title-icon">
                   <i className="bi bi-info-circle-fill"></i>
                 </span>
-                <h3 className="card-title-text">Thông tin sự kiện</h3>
+                <h3 className="card-title-text">Event Information</h3>
               </div>
               <p className="description-text mb-4">
-                {event.description || "Không có mô tả cho sự kiện này."}
+                {event.description || "No description available for this event."}
               </p>
               
               <div className="info-items-list">
@@ -189,7 +187,7 @@ function EventDetail({ addToast }) {
                     <i className="bi bi-calendar2-check-fill"></i>
                   </div>
                   <div className="info-item-content">
-                    <span className="info-item-label">Ngày tổ chức</span>
+                    <span className="info-item-label">Event Date</span>
                     <span className="info-item-value">{formatDateTime(event.date_time)}</span>
                   </div>
                 </div>
@@ -199,7 +197,7 @@ function EventDetail({ addToast }) {
                     <i className="bi bi-geo-alt-fill"></i>
                   </div>
                   <div className="info-item-content">
-                    <span className="info-item-label">Địa điểm</span>
+                    <span className="info-item-label">Location</span>
                     <span className="info-item-value">{event.location}</span>
                   </div>
                 </div>
@@ -209,9 +207,9 @@ function EventDetail({ addToast }) {
                     <i className="bi bi-people-fill"></i>
                   </div>
                   <div className="info-item-content">
-                    <span className="info-item-label">Sức chứa</span>
+                    <span className="info-item-label">Capacity</span>
                     <span className="info-item-value">
-                      {event.registrations_count} / {event.capacity} người tham gia
+                      {event.registrations_count} / {event.capacity} attendees
                     </span>
                   </div>
                 </div>
@@ -221,22 +219,22 @@ function EventDetail({ addToast }) {
                     <i className="bi bi-check-circle-fill"></i>
                   </div>
                   <div className="info-item-content">
-                    <span className="info-item-label">Trạng thái</span>
+                    <span className="info-item-label">Status</span>
                     <span className="info-item-value text-success">
-                      {event.remaining_seats > 0 ? `Còn lại ${event.remaining_seats} ghế` : "Hết ghế trống"}
+                      {event.remaining_seats > 0 ? `Remaining ${event.remaining_seats} seats` : "Sold out"}
                     </span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Thẻ 2: Đánh giá từ người tham gia */}
+            {/* Card 2: Attendee Reviews */}
             <div className="event-detail-card">
               <div className="card-title-container">
                 <span className="card-title-icon">
                   <i className="bi bi-chat-left-heart-fill"></i>
                 </span>
-                <h3 className="card-title-text">Đánh giá từ người tham gia</h3>
+                <h3 className="card-title-text">Attendee Reviews</h3>
               </div>
 
               <div className="reviews-summary-row">
@@ -253,7 +251,7 @@ function EventDetail({ addToast }) {
                       ></i>
                     ))}
                   </div>
-                  <span className="reviews-count-text">({event.reviews_count} đánh giá)</span>
+                  <span className="reviews-count-text">({event.reviews_count} reviews)</span>
                 </div>
 
                 <div className="reviews-bars-col">
@@ -277,50 +275,50 @@ function EventDetail({ addToast }) {
               </div>
 
               <div className="reviews-empty-box">
-                <span className="reviews-empty-text">Chưa có nhận xét nào.</span>
+                <span className="reviews-empty-text">No reviews yet.</span>
               </div>
             </div>
 
           </div>
 
-          {/* Cột phải: Khung Đăng ký Sticky Sidebar */}
+          {/* Right column: Registration Sticky Sidebar */}
           <div className="right-column">
             <div className="sidebar-sticky">
               
-              {/* Thẻ đăng ký */}
+              {/* Registration Card */}
               <div className="event-detail-card">
-                <h3 className="sidebar-title">Đăng kí tham gia</h3>
+                <h3 className="sidebar-title">Register to Attend</h3>
                 <div className="sidebar-divider"></div>
 
                 <div className="seat-remaining-box">
-                  <div className="seat-label">Số lượng còn lại</div>
+                  <div className="seat-label">Seats remaining</div>
                   <div className="seat-count">
-                    {event.remaining_seats} ghế
+                    {event.remaining_seats} seats
                   </div>
                   <div className="seat-total">
-                    Trong tổng số {event.capacity} ghế
+                    Out of {event.capacity} seats
                   </div>
                 </div>
 
                 <div className="sidebar-divider"></div>
 
-                <div className="countdown-section-title">Thời gian còn lại</div>
+                <div className="countdown-section-title">Time remaining</div>
                 <div className="countdown-timer-container">
                   <div className="countdown-unit">
                     <div className="countdown-number">{countdown.days}</div>
-                    <div className="countdown-label">Ngày</div>
+                    <div className="countdown-label">Days</div>
                   </div>
                   <div className="countdown-unit">
                     <div className="countdown-number">{countdown.hours}</div>
-                    <div className="countdown-label">Giờ</div>
+                    <div className="countdown-label">Hours</div>
                   </div>
                   <div className="countdown-unit">
                     <div className="countdown-number">{countdown.minutes}</div>
-                    <div className="countdown-label">Phút</div>
+                    <div className="countdown-label">Minutes</div>
                   </div>
                   <div className="countdown-unit">
                     <div className="countdown-number">{countdown.seconds}</div>
-                    <div className="countdown-label">Giây</div>
+                    <div className="countdown-label">Seconds</div>
                   </div>
                 </div>
 
@@ -328,7 +326,7 @@ function EventDetail({ addToast }) {
                   type="button" 
                   className="btn-register-event"
                 >
-                  Đăng ký ngay
+                  Register now
                 </button>
               </div>
             </div>

@@ -21,13 +21,13 @@ function SearchBar({ onSearch }) {
         <i className="bi bi-search search-icon"></i>
         <input
           type="text"
-          placeholder="Tìm kiếm theo tên, địa điểm, danh mục..."
+          placeholder="Search by name, location, category..."
           className="search-input"
           value={searchTerm}
           onChange={handleChange}
         />
         <button type="submit" className="search-btn">
-          <i className="bi bi-search"></i> Tìm kiếm
+          <i className="bi bi-search"></i> Search
         </button>
       </div>
     </form>

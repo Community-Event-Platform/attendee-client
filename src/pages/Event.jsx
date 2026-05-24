@@ -10,7 +10,7 @@ function Event({ addToast }) {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("Tất cả danh mục");
+  const [selectedCategory, setSelectedCategory] = useState("All categories");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [sortOrder, setSortOrder] = useState("newest");
@@ -25,8 +25,8 @@ function Event({ addToast }) {
         setEvents(data || []);
       } catch (err) {
         console.error("Failed to load events:", err);
-        setError("Không thể tải danh sách sự kiện.");
-        if (addToast) addToast("Không thể tải danh sách sự kiện.", "error");
+        setError("Unable to load the events list.");
+        if (addToast) addToast("Unable to load the events list.", "error");
       } finally {
         setLoading(false);
       }
@@ -37,7 +37,7 @@ function Event({ addToast }) {
 
   const categories = useMemo(() => {
     const names = events.map((event) => event.category).filter(Boolean);
-    return ["Tất cả danh mục", ...new Set(names)];
+    return ["All categories", ...new Set(names)];
   }, [events]);
 
   const filteredEvents = useMemo(() => {
@@ -45,7 +45,7 @@ function Event({ addToast }) {
 
     return events
       .filter((event) => {
-        if (selectedCategory === "Tất cả danh mục") return true;
+        if (selectedCategory === "All categories") return true;
         return event.category === selectedCategory;
       })
       .filter((event) => {
@@ -89,15 +89,15 @@ function Event({ addToast }) {
           <div className="row align-items-center g-4">
             <div className="col-lg-7">
               <div className="event-hero-copy">
-                <h1>Khám phá sự kiện</h1>
-                <p>Tìm kiếm và tham gia những sự kiện phù hợp với bạn</p>
+                <h1>Discover Events</h1>
+                <p>Search and join events that are right for you</p>
 
                 <form className="event-search-form" onSubmit={handleSearch}>
                   <label className="event-search-field event-search-text">
                     <i className="bi bi-search"></i>
                     <input
                       type="search"
-                      placeholder="Tìm kiếm tên, địa điểm ..."
+                      placeholder="Search by name, location..."
                       value={searchTerm}
                       onChange={(event) => setSearchTerm(event.target.value)}
                     />
@@ -156,14 +156,14 @@ function Event({ addToast }) {
 
         <div className="event-list-header">
           <div>
-            <h2>Tất cả sự kiện</h2>
-            <span>{loading ? "Đang tải..." : `${filteredEvents.length} sự kiện`}</span>
+            <h2>All Events</h2>
+            <span>{loading ? "Loading..." : `${filteredEvents.length} events`}</span>
           </div>
 
           <label className="event-sort">
             <select value={sortOrder} onChange={(event) => setSortOrder(event.target.value)}>
-              <option value="newest">Sắp xếp mới nhất</option>
-              <option value="oldest">Sắp xếp cũ nhất</option>
+              <option value="newest">Sort by Newest</option>
+              <option value="oldest">Sort by Oldest</option>
             </select>
             <i className="bi bi-chevron-down"></i>
           </label>
@@ -172,7 +172,7 @@ function Event({ addToast }) {
         {loading && (
           <div className="event-state-card">
             <div className="spinner-border text-primary mb-3" role="status"></div>
-            <p>Đang tải sự kiện...</p>
+            <p>Loading events...</p>
           </div>
         )}
 
@@ -185,7 +185,7 @@ function Event({ addToast }) {
         {!loading && !error && visibleEvents.length === 0 && (
           <div className="event-state-card">
             <i className="bi bi-calendar-x"></i>
-            <p>Không có sự kiện nào.</p>
+            <p>No events available.</p>
           </div>
         )}
 

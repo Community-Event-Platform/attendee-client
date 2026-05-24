@@ -78,15 +78,15 @@ function Home() {
       {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-content">
-          <h1 className="hero-title">Khám phá sự kiện</h1>
-          <p className="hero-subtitle">Tìm kiếm và tham gia những sự kiện hợp với bạn</p>
+          <h1 className="hero-title">Discover Events</h1>
+          <p className="hero-subtitle">Search and join events that are right for you</p>
           <SearchBar onSearch={handleSearch} />
           <div className="hero-filters">
             <button className="filter-btn">
-              <i className="bi bi-funnel"></i> Danh mục
+              <i className="bi bi-funnel"></i> Category
             </button>
             <button className="filter-btn">
-              <i className="bi bi-calendar3"></i> Ngày
+              <i className="bi bi-calendar3"></i> Date
             </button>
           </div>
         </div>
@@ -103,8 +103,8 @@ function Home() {
       <section className="featured-section py-5">
         <div className="container-fluid px-4 px-lg-5">
           <div className="section-header mb-5">
-            <h2 className="section-title">Sự kiện hàng đầu</h2>
-            <p className="section-subtitle">Các sự kiện nổi bật nhất tuần này</p>
+            <h2 className="section-title">Featured Events</h2>
+            <p className="section-subtitle">The most popular events this week</p>
           </div>
 
           {loading ? (
@@ -129,8 +129,8 @@ function Home() {
       <section className="category-section py-5">
         <div className="container-fluid px-4 px-lg-5">
           <div className="section-header mb-5 text-center">
-            <h2 className="section-title">Duyệt theo Danh mục</h2>
-            <p className="section-subtitle">Tìm các sự kiện phù hợp với sở thích của bạn</p>
+            <h2 className="section-title">Browse by Category</h2>
+            <p className="section-subtitle">Find events that match your interests</p>
           </div>
 
           <div className="row g-3 justify-content-center">
@@ -151,15 +151,15 @@ function Home() {
       <section className="all-events-section py-5 bg-light">
         <div className="container-fluid px-4 px-lg-5">
           <div className="section-header mb-5">
-            <h2 className="section-title">Tất cả sự kiện</h2>
+            <h2 className="section-title">All Events</h2>
             {selectedCategory && (
               <p className="section-subtitle">
-                Đang lọc: {categories.find((c) => c.id === selectedCategory)?.name}
+                Filtering: {categories.find((c) => c.id === selectedCategory)?.name}
                 <button
                   className="btn-clear-filter ms-3"
                   onClick={() => handleCategoryFilter(null)}
                 >
-                  Xóa bộ lọc
+                  Clear filter
                 </button>
               </p>
             )}
@@ -168,7 +168,7 @@ function Home() {
           {filteredEvents.length === 0 ? (
             <div className="text-center py-5">
               <i className="bi bi-search fs-1 text-muted mb-3 d-block"></i>
-              <p className="text-muted fs-5">Không tìm thấy sự kiện nào</p>
+              <p className="text-muted fs-5">No events found</p>
             </div>
           ) : (
             <>
@@ -184,7 +184,7 @@ function Home() {
                   className="btn btn-primary btn-lg"
                   onClick={() => navigate('/events')}
                 >
-                  Xem Tất Cả Sự Kiện
+                  View All Events
                 </button>
               </div>
             </>
@@ -196,8 +196,8 @@ function Home() {
       <section className="how-it-works py-5">
         <div className="container-fluid px-4 px-lg-5">
           <div className="section-header mb-5 text-center">
-            <h2 className="section-title">Cách Thức Hoạt Động</h2>
-            <p className="section-subtitle">Tham gia sự kiện trong 3 bước đơn giản</p>
+            <h2 className="section-title">How It Works</h2>
+            <p className="section-subtitle">Join events in 3 simple steps</p>
           </div>
 
           <div className="row g-4">
@@ -205,8 +205,8 @@ function Home() {
               <div className="step-card text-center">
                 <div className="step-number">1</div>
                 <i className="bi bi-search step-icon"></i>
-                <h4 className="step-title">Tìm Kiếm Sự Kiện</h4>
-                <p className="step-description">Tìm kiếm và tìm thấy các sự kiện mà bạn quan tâm nhất</p>
+                <h4 className="step-title">Search Events</h4>
+                <p className="step-description">Search and discover events that interest you</p>
               </div>
             </div>
 
@@ -214,8 +214,8 @@ function Home() {
               <div className="step-card text-center">
                 <div className="step-number">2</div>
                 <i className="bi bi-pencil-square step-icon"></i>
-                <h4 className="step-title">Đăng Ký Dễ Dàng</h4>
-                <p className="step-description">Đăng ký dễ dàng và lưu lại thông tin tài khoản của bạn</p>
+                <h4 className="step-title">Easy Registration</h4>
+                <p className="step-description">Register quickly and save your details</p>
               </div>
             </div>
 
@@ -223,8 +223,8 @@ function Home() {
               <div className="step-card text-center">
                 <div className="step-number">3</div>
                 <i className="bi bi-calendar-check step-icon"></i>
-                <h4 className="step-title">Tham Dự Sự Kiện</h4>
-                <p className="step-description">Hiển thị vé của bạn và tham gia một trải nghiệm tuyệt vời</p>
+                <h4 className="step-title">Attend the Event</h4>
+                <p className="step-description">Show your ticket and enjoy the experience</p>
               </div>
             </div>
           </div>
@@ -235,9 +235,9 @@ function Home() {
       <section className="cta-section py-5">
         <div className="container-fluid px-4 px-lg-5">
           <div className="cta-content text-center">
-            <h2 className="cta-title">Tham gia cộng đồng ngay hôm nay</h2>
+            <h2 className="cta-title">Join the community today</h2>
             <button className="btn btn-warning btn-lg cta-button">
-              Đăng Ký Ngay
+              Register Now
             </button>
           </div>
         </div>
