@@ -17,4 +17,5 @@ function CategoryCard({ category, isSelected, onSelect }) {
   );
 }
 
+
 export default CategoryCard;
