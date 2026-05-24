@@ -176,6 +176,7 @@
   color: #6b6375;
   font-size: 16px;
   line-height: 1.7;
+  white-space: pre-line;
 }
 
 .description-highlights {
@@ -612,8 +613,8 @@
 
 /* Submit Review Form Card (Tĩnh bên phải) */
 .submit-review-form-card {
-  border: 1px solid #cce5ff;
-  background-color: #ffffff;
+  /* Removed from UI: hide the submit review form card */
+  display: none !important;
 }
 
 .form-label-custom {

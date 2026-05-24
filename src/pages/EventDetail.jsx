@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getEventDetail, submitReview } from "../services/api";
+import { getEventDetail } from "../services/api";
 import "./style/EventDetail.css";
 import eventImage from "../assets/event.png";
 
@@ -20,10 +20,7 @@ function EventDetail({ addToast }) {
     seconds: "00",
     isExpired: false,
   });
-  const [selectedRating, setSelectedRating] = useState(0);
-  const [reviewComment, setReviewComment] = useState("");
-  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
-  const [reviewMessage, setReviewMessage] = useState("");
+  
 
   // Tải chi tiết sự kiện từ API
   useEffect(() => {
@@ -104,35 +101,7 @@ function EventDetail({ addToast }) {
     }).format(new Date(value));
   };
 
-  const handleSelectRating = (rating) => {
-    setSelectedRating(rating);
-  };
-
-  const handleReviewSubmit = async (eventSubmit) => {
-    eventSubmit.preventDefault();
-    if (!selectedRating || !reviewComment.trim()) {
-      const message = "Vui lòng chọn đánh giá sao và nhập nhận xét.";
-      setReviewMessage(message);
-      if (addToast) addToast(message, "warning");
-      return;
-    }
-
-    try {
-      setIsSubmittingReview(true);
-      await submitReview(id, selectedRating, reviewComment.trim());
-      setReviewMessage("Gửi đánh giá thành công!");
-      setSelectedRating(0);
-      setReviewComment("");
-      if (addToast) addToast("Gửi đánh giá thành công!", "success");
-    } catch (err) {
-      console.error("Review submit failed:", err);
-      const message = err?.response?.data?.message || "Không thể gửi đánh giá.";
-      setReviewMessage(message);
-      if (addToast) addToast(message, "error");
-    } finally {
-      setIsSubmittingReview(false);
-    }
-  };
+  
 
   // Tính phần trăm thanh biểu đồ đánh giá
   const breakdownPercentages = useMemo(() => {
@@ -361,55 +330,6 @@ function EventDetail({ addToast }) {
                 >
                   Đăng ký ngay
                 </button>
-              </div>
-
-              <div className="event-detail-card review-form-card">
-                <h3 className="card-title-text" style={{ marginBottom: "18px" }}>Submit Review Form</h3>
-                <form onSubmit={handleReviewSubmit}>
-                  <div className="form-group">
-                    <label className="form-label-custom" style={{ display: "block", marginBottom: "10px", fontWeight: 700, color: "#3b3742" }}>
-                      Chọn số sao
-                    </label>
-                    <div className="star-rating-input">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <i
-                          key={star}
-                          className={`bi ${star <= selectedRating ? "bi-star-fill" : "bi-star"}`}
-                          onClick={() => handleSelectRating(star)}
-                          style={{ cursor: "pointer" }}
-                        ></i>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="form-group" style={{ marginTop: "18px" }}>
-                    <label className="form-label-custom" style={{ display: "block", marginBottom: "10px", fontWeight: 700, color: "#3b3742" }}>
-                      Nhận xét của bạn
-                    </label>
-                    <textarea
-                      className="textarea-review"
-                      rows="4"
-                      placeholder="Viết nhận xét..."
-                      value={reviewComment}
-                      onChange={(e) => setReviewComment(e.target.value)}
-                    />
-                  </div>
-
-                  {reviewMessage && (
-                    <div className="review-form-message" style={{ marginBottom: "12px", color: "#5b5b65", fontSize: "14px" }}>
-                      {reviewMessage}
-                    </div>
-                  )}
-
-                  <button
-                    type="submit"
-                    className="btn-register-event"
-                    disabled={isSubmittingReview}
-                    style={{ width: "100%", marginTop: "8px" }}
-                  >
-                    {isSubmittingReview ? "Đang gửi..." : "Gửi đánh giá"}
-                  </button>
-                </form>
               </div>
             </div>
           </div>
