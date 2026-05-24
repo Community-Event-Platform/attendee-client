@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Base API configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL;
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -46,11 +46,19 @@ export const logoutApi = () => {
   return api.post('/logout');
 };
 
-// ==================== Event APIs ====================
-
 export const getEvents = async () => {
   const response = await api.get('/events');
-  return response.data.data;
+  return response.data?.data ?? response.data ?? [];
+};
+
+export const getEventDetail = async (id) => {
+  const response = await api.get(`/events/${id}`);
+  return response.data?.data ?? response.data;
+};
+ 
+export const submitReview = async (id, rating, comment) => {
+  const response = await api.post(`/events/${id}/reviews`, { rating, comment });
+  return response.data;
 };
 
 // ==================== User APIs ====================

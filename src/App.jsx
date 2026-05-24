@@ -11,6 +11,8 @@ import Register from "./pages/Register";
 import OAuthSuccess from "./pages/OAuthSuccess";
 import Contact from "./pages/Contact";
 import About from "./pages/About";
+import Event from "./pages/Event";
+import EventDetail from "./pages/EventDetail";
 
 function App() {
   const { initAuth } = useAuth();
@@ -34,6 +36,8 @@ function App() {
         <Route path="/login" element={<Login addToast={addToast} />} />
         <Route path="/register" element={<Register addToast={addToast} />} />
         <Route path="/oauth-success" element={<OAuthSuccess addToast={addToast} />} />
+        <Route path="/events" element={<Event addToast={addToast} />} />
+        <Route path="/events/:id" element={<EventDetail addToast={addToast} />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
       </Routes>
