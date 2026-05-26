@@ -1,4 +1,4 @@
-import Header from "./components/layout/Header";
+﻿import Header from "./components/layout/Header";
 import Footer from "./components/layout/Footer";
 import { Routes, Route } from "react-router-dom";
 import { useEffect, useCallback } from "react";
@@ -18,7 +18,6 @@ function App() {
   const { initAuth } = useAuth();
   const { toasts, addToast, removeToast } = useToast();
 
-  // Initialize auth state from localStorage khi app start
   const handleInitAuth = useCallback(() => {
     initAuth();
   }, [initAuth]);
@@ -44,7 +43,6 @@ function App() {
 
       <Footer />
 
-      {/* Toast notifications */}
       <ToastContainer toasts={toasts} removeToast={removeToast} />
     </>
   );

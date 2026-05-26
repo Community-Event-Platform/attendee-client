@@ -1,6 +1,8 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getEventDetail } from "../services/api";
+import FreeRegistrationForm from "../components/registration/FreeRegistrationForm";
+import PaidRegistrationForm from "../components/registration/PaidRegistrationForm";
 import "./style/EventDetail.css";
 import eventImage from "../assets/event.png";
 
@@ -11,6 +13,7 @@ function EventDetail({ addToast }) {
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showRegistrationModal, setShowRegistrationModal] = useState(false);
 
   // Countdown timer
   const [countdown, setCountdown] = useState({
@@ -326,6 +329,7 @@ function EventDetail({ addToast }) {
                 <button 
                   type="button" 
                   className="btn-register-event"
+                  onClick={() => setShowRegistrationModal(true)}
                 >
                   Register now
                 </button>
@@ -335,6 +339,23 @@ function EventDetail({ addToast }) {
 
         </div>
       </div>
+
+      {/* Registration Modals */}
+      {showRegistrationModal && (
+        event.price === null || event.price === 0 ? (
+          <FreeRegistrationForm 
+            event={event}
+            onClose={() => setShowRegistrationModal(false)}
+            addToast={addToast}
+          />
+        ) : (
+          <PaidRegistrationForm 
+            event={event}
+            onClose={() => setShowRegistrationModal(false)}
+            addToast={addToast}
+          />
+        )
+      )}
     </main>
   );
 }
