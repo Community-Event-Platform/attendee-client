@@ -1,7 +1,8 @@
 import { useState } from "react";
 import "./RegistrationForm.css";
+import { registerPaidEvent } from "../../services/api";
 
-function PaidRegistrationForm({ event, onClose, addToast }) {
+function PaidRegistrationForm({ event, onClose, addToast = null, onSuccess = null }) {
   const [formData, setFormData] = useState({
     quantity: 1,
     paymentMethod: "credit_card",
@@ -9,7 +10,7 @@ function PaidRegistrationForm({ event, onClose, addToast }) {
   const [loading, setLoading] = useState(false);
 
   const ticketPrice = event.price || 0;
-  const totalAmount = ticketPrice * formData.quantity;
+  const feesAndTaxes = event.fees_and_taxes || 0;
 
   const handleQuantityChange = (change) => {
     const newQuantity = formData.quantity + change;
@@ -32,29 +33,59 @@ function PaidRegistrationForm({ event, onClose, addToast }) {
     e.preventDefault();
 
     if (formData.quantity <= 0) {
-      if (addToast) addToast("Please select at least one ticket", "error");
+      const errorMsg = "Please select at least one ticket";
+      if (addToast) {
+        addToast(errorMsg, "error");
+      } else {
+        alert(errorMsg);
+      }
       return;
     }
 
     setLoading(true);
+    
     try {
-      // In production, you would redirect to a payment gateway
-      console.log("Proceeding to payment:", {
-        eventId: event.id,
-        quantity: formData.quantity,
-        amount: totalAmount,
-        paymentMethod: formData.paymentMethod,
-      });
+      console.log("Submitting paid registration with:", formData);
+      const response = await registerPaidEvent(event.id, formData.quantity, formData.paymentMethod);
+      console.log("Paid registration response:", response);
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      if (addToast) addToast("Proceeding to payment...", "success");
-      // In a real app, you would redirect to a payment gateway here
+      console.log("Paid registration successful, closing modal...");
       onClose();
+
+      if (onSuccess) {
+        setTimeout(() => {
+          onSuccess();
+        }, 100);
+      }
     } catch (error) {
       console.error("Payment error:", error);
-      if (addToast) addToast("Failed to proceed with payment", "error");
+      if (error.response?.status === 401) {
+        const errorMsg = "Vui lòng đăng nhập để đăng ký sự kiện";
+        if (addToast) {
+          addToast(errorMsg, "error");
+        } else {
+          alert(errorMsg);
+        }
+      } else if (error.response?.status === 409) {
+        const errorMsg = error.response.data?.message || "Bạn đã đăng ký sự kiện này";
+        console.log("Duplicate registration - showing error:", errorMsg);
+        if (addToast) {
+          addToast(errorMsg, "error");
+        } else {
+          alert(errorMsg);
+        }
+        setTimeout(() => {
+          onClose();
+        }, 2000);
+      } else {
+        const errorMsg = error.response?.data?.message || "Failed to proceed with payment";
+        console.log("Error message:", errorMsg);
+        if (addToast) {
+          addToast(errorMsg, "error");
+        } else {
+          alert(errorMsg);
+        }
+      }
     } finally {
       setLoading(false);
     }
@@ -72,11 +103,10 @@ function PaidRegistrationForm({ event, onClose, addToast }) {
 
         <div className="modal-body">
           <div className="paid-registration-container">
-            {/* Left Column: Ticket Selection */}
             <div className="paid-left-col">
               <div className="event-info-banner">
                 <h3>{event.name}</h3>
-                <p className="event-type-badge paid-badge">${ticketPrice.toFixed(2)}</p>
+                <p className="event-type-badge paid-badge">{new Intl.NumberFormat('en-US').format(ticketPrice)} VND</p>
               </div>
 
               <div className="ticket-selection-section">
@@ -84,7 +114,7 @@ function PaidRegistrationForm({ event, onClose, addToast }) {
                 <div className="ticket-option">
                   <div className="ticket-info">
                     <h5>Standard Pass</h5>
-                    <p className="ticket-price">${ticketPrice.toFixed(2)}</p>
+                    <p className="ticket-price">{new Intl.NumberFormat('en-US').format(ticketPrice)} VND</p>
                     <p className="ticket-description">Full access to the event</p>
                   </div>
                   <div className="quantity-selector">
@@ -114,7 +144,6 @@ function PaidRegistrationForm({ event, onClose, addToast }) {
                 </div>
               </div>
 
-              {/* Payment Method */}
               <div className="payment-method-section">
                 <h4 className="section-title">Payment Method</h4>
                 <div className="payment-options">
@@ -142,14 +171,13 @@ function PaidRegistrationForm({ event, onClose, addToast }) {
               </div>
             </div>
 
-            {/* Right Column: Order Summary */}
             <div className="paid-right-col">
               <div className="order-summary">
                 <h4 className="summary-title">Order Summary</h4>
 
                 <div className="summary-item">
                   <span className="summary-label">Standard Pass</span>
-                  <span className="summary-value">${ticketPrice.toFixed(2)}</span>
+                  <span className="summary-value">{new Intl.NumberFormat('en-US').format(ticketPrice)} VND</span>
                 </div>
 
                 <div className="summary-item">
@@ -161,22 +189,21 @@ function PaidRegistrationForm({ event, onClose, addToast }) {
 
                 <div className="summary-item subtotal">
                   <span className="summary-label">Subtotal</span>
-                  <span className="summary-value">${(ticketPrice * formData.quantity).toFixed(2)}</span>
+                  <span className="summary-value">{new Intl.NumberFormat('en-US').format(ticketPrice * formData.quantity)} VND</span>
                 </div>
 
                 <div className="summary-item fee">
                   <span className="summary-label">Fees & Taxes</span>
-                  <span className="summary-value">${(totalAmount * 0.1).toFixed(2)}</span>
+                  <span className="summary-value">{new Intl.NumberFormat('en-US').format(feesAndTaxes)} VND</span>
                 </div>
 
                 <div className="summary-divider"></div>
 
                 <div className="summary-item total">
                   <span className="summary-label">Total Amount</span>
-                  <span className="summary-value">${(totalAmount * 1.1).toFixed(2)}</span>
+                  <span className="summary-value">{new Intl.NumberFormat('en-US').format((ticketPrice * formData.quantity) + feesAndTaxes)} VND</span>
                 </div>
 
-                {/* Benefits */}
                 <div className="summary-benefits">
                   <div className="benefit-item">
                     <i className="bi bi-check-circle-fill"></i>
@@ -192,7 +219,6 @@ function PaidRegistrationForm({ event, onClose, addToast }) {
                   </div>
                 </div>
 
-                {/* Submit Button */}
                 <button
                   type="button"
                   className="btn-submit-payment"
