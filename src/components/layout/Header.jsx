@@ -1,13 +1,40 @@
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+
+const API_BASE = 'http://localhost:8000/api';
 
 function Header({ addToast }) {
   const location = useLocation();
   const { user, token, logout } = useAuth();
 
+  // Chỉ thêm duy nhất 1 state này để đếm số lượng thông báo chưa đọc
+  const [unreadCount, setUnreadCount] = useState(0);
+
   const colors = {
     btnPrimary: '#4D5EE3'
   };
+
+  // Hàm gọi API đếm số thông báo chưa đọc (Đáp ứng AC3)
+  useEffect(() => {
+    if (!token) return;
+    
+    fetch(`${API_BASE}/notifications`, {
+      headers: { 
+        Authorization: `Bearer ${token}`, 
+        Accept: 'application/json' 
+      },
+    })
+      .then(res => res.json())
+      .then(json => {
+        if (json.success && json.data) {
+          // Lọc xem có bao nhiêu thông báo chưa đọc (is_read === 0 hoặc false)
+          const unread = json.data.filter(n => !n.is_read).length;
+          setUnreadCount(unread);
+        }
+      })
+      .catch(() => { /* im lặng khi lỗi mạng */ });
+  }, [token]);
 
   const handleLogout = async () => {
     await logout();
@@ -147,6 +174,24 @@ function Header({ addToast }) {
         <div>
           {token ? (
             <div className="d-flex align-items-center gap-3">
+              
+              {/*  CHỈ THÊM ĐÚNG ICON QUẢ CHUÔNG NÀY (Bấm vào nhảy sang trang thông báo) */}
+              <Link 
+                to="/notifications" 
+                className="position-relative me-2 text-decoration-none"
+                style={{ color: '#6c757d' }}
+              >
+                <i className="bi bi-bell-fill" style={{ fontSize: '22px' }}></i>
+                {unreadCount > 0 && (
+                  <span 
+                    className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-flex align-items-center justify-content-center"
+                    style={{ fontSize: '10px', minWidth: '18px', height: '18px', marginTop: '4px' }}
+                  >
+                    {unreadCount}
+                  </span>
+                )}
+              </Link>
+
               <span className="fw-bold" style={{ fontSize: '16px' }}>
                 {user?.full_name || user?.name || 'User'}
               </span>
