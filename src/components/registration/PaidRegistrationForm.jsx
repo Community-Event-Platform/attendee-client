@@ -113,7 +113,7 @@ function PaidRegistrationForm({ event, onClose, addToast = null, onSuccess = nul
                 <h4 className="section-title">Select Tickets</h4>
                 <div className="ticket-option">
                   <div className="ticket-info">
-                    <h5>Standard Pass</h5>
+                    <h5>Standard Pass </h5>
                     <p className="ticket-price">{new Intl.NumberFormat('en-US').format(ticketPrice)} VND</p>
                     <p className="ticket-description">Full access to the event</p>
                   </div>
@@ -176,7 +176,7 @@ function PaidRegistrationForm({ event, onClose, addToast = null, onSuccess = nul
                 <h4 className="summary-title">Order Summary</h4>
 
                 <div className="summary-item">
-                  <span className="summary-label">Standard Pass</span>
+                  <span className="summary-label">Standard Pass </span>
                   <span className="summary-value">{new Intl.NumberFormat('en-US').format(ticketPrice)} VND</span>
                 </div>
 
@@ -188,19 +188,19 @@ function PaidRegistrationForm({ event, onClose, addToast = null, onSuccess = nul
                 <div className="summary-divider"></div>
 
                 <div className="summary-item subtotal">
-                  <span className="summary-label">Subtotal</span>
+                  <span className="summary-label">Subtotal </span>
                   <span className="summary-value">{new Intl.NumberFormat('en-US').format(ticketPrice * formData.quantity)} VND</span>
                 </div>
 
                 <div className="summary-item fee">
-                  <span className="summary-label">Fees & Taxes</span>
+                  <span className="summary-label">Fees & Taxes </span>
                   <span className="summary-value">{new Intl.NumberFormat('en-US').format(feesAndTaxes)} VND</span>
                 </div>
 
                 <div className="summary-divider"></div>
 
                 <div className="summary-item total">
-                  <span className="summary-label">Total Amount</span>
+                  <span className="summary-label">Total Amount </span>
                   <span className="summary-value">{new Intl.NumberFormat('en-US').format((ticketPrice * formData.quantity) + feesAndTaxes)} VND</span>
                 </div>
 
