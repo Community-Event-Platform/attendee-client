@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getEventDetail } from "../services/api";
+import { getEventDetail, checkRegistrationStatus } from "../services/api";
 import FreeRegistrationForm from "../components/registration/FreeRegistrationForm";
 import PaidRegistrationForm from "../components/registration/PaidRegistrationForm";
 import "./style/EventDetail.css";
@@ -14,6 +14,10 @@ function EventDetail({ addToast }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
+
+  // AC3: Track user's registration status for this event
+  const [hasRegistered, setHasRegistered] = useState(false);
+  const [registrationStatus, setRegistrationStatus] = useState(null);
 
   // Countdown timer
   const [countdown, setCountdown] = useState({
@@ -32,6 +36,16 @@ function EventDetail({ addToast }) {
         setLoading(true);
         const data = await getEventDetail(id);
         setEvent(data);
+
+        // AC3: Check if user has already registered for this event
+        try {
+          const statusData = await checkRegistrationStatus(id);
+          setHasRegistered(statusData.has_registered);
+          setRegistrationStatus(statusData.status);
+        } catch (regErr) {
+          // User not logged in or other error - ignore
+          console.log("Not logged in or no registration");
+        }
       } catch (err) {
         console.error("Failed to load event details:", err);
         setError("Unable to load event details.");
@@ -330,8 +344,11 @@ function EventDetail({ addToast }) {
                   type="button" 
                   className="btn-register-event"
                   onClick={() => setShowRegistrationModal(true)}
+                  disabled={hasRegistered}
                 >
-                  Register now
+                  {hasRegistered 
+                    ? (registrationStatus === 'Pending' ? 'Đang chờ duyệt' : 'Đã đăng ký') 
+                    : 'Register now'}
                 </button>
               </div>
             </div>
@@ -340,22 +357,19 @@ function EventDetail({ addToast }) {
         </div>
       </div>
 
-      {/* Registration Modals */}
-      {showRegistrationModal && (
-        event.price === null || event.price === 0 ? (
-          <FreeRegistrationForm 
-            event={event}
-            onClose={() => setShowRegistrationModal(false)}
-            addToast={addToast}
-          />
-        ) : (
-          <PaidRegistrationForm 
-            event={event}
-            onClose={() => setShowRegistrationModal(false)}
-            addToast={addToast}
-          />
-        )
-      )}
+      {/* AC3: Handle successful registration from modal */}
+      {(() => {
+        if (!showRegistrationModal) return null;
+        const handleSuccess = () => {
+          if (addToast) addToast("Gửi yêu cầu đăng ký thành công, vui lòng chờ duyệt!", "success");
+          setHasRegistered(true);
+          setRegistrationStatus('Pending');
+        };
+        if (event.price === null || event.price === 0) {
+          return <FreeRegistrationForm event={event} onClose={() => setShowRegistrationModal(false)} addToast={addToast} onSuccess={handleSuccess} />;
+        }
+        return <PaidRegistrationForm event={event} onClose={() => setShowRegistrationModal(false)} addToast={addToast} onSuccess={handleSuccess} />;
+      })()}
     </main>
   );
 }
