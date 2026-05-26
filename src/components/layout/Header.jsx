@@ -119,6 +119,11 @@ function Header({ addToast }) {
                     </div>
                   </div>
                   <div className="dropdown-divider"></div>
+                  <Link to="/profile" className="dropdown-item" onClick={() => setIsDropdownOpen(false)}>
+                    <i className="bi bi-person-circle"></i>
+                    My Profile
+                  </Link>
+                  <div className="dropdown-divider"></div>
                   <button className="dropdown-item" onClick={() => { handleLogout(); }}>
                     <i className="bi bi-box-arrow-right"></i>
                     Logout
