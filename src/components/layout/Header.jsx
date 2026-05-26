@@ -1,15 +1,43 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import { useState, useRef, useEffect } from "react";
+import "./style/Header.css";
 
+/**
+ * Header - Top navigation bar
+ * Shows: Logo, nav links, user profile (when logged in) or Login/Register buttons
+ * Features: Avatar dropdown with logout, active tab highlighting
+ */
 function Header({ addToast }) {
   const location = useLocation();
   const { user, token, logout } = useAuth();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
-  const colors = {
-    btnPrimary: '#4D5EE3'
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Get user initials for avatar
+  const getInitials = (name) => {
+    if (!name) return 'U';
+    const parts = name.trim().split(' ');
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+    return name[0].toUpperCase();
   };
 
   const handleLogout = async () => {
+    setIsDropdownOpen(false);
     await logout();
     if (addToast) addToast("Logged out successfully!", "success");
   };
@@ -19,123 +47,48 @@ function Header({ addToast }) {
   };
 
   return (
-    <header className="bg-white border-bottom shadow-sm sticky-top">
-      <div className="container-fluid px-4 px-lg-5 d-flex justify-content-between align-items-center py-3">
-        <Link to="/" className="d-flex align-items-center text-decoration-none" style={{ cursor: 'pointer' }}>
-          <i className="bi bi-lightning-charge-fill" style={{ color: '#14AE5C', fontSize: '38px' }}></i>
-          <span className="logo-text" style={{ fontSize: '24px', fontWeight: '700', marginLeft: '8px' }}>EventHub</span>
+    <header className="header">
+      <div className="header-container">
+        {/* Logo */}
+        <Link to="/" className="header-logo">
+          <i className="bi bi-lightning-charge-fill header-logo-icon"></i>
+          <span className="header-logo-text">EventHub</span>
         </Link>
 
-        {/* NAVBAR */}
+        {/* Navigation */}
         <nav>
-          <ul className="d-flex gap-4 list-unstyled m-0 align-items-center">
-            <li>
+          <ul className="header-nav">
+            <li className="header-nav-item">
               <Link 
                 to="/" 
-                className="text-decoration-none py-2 px-3 rounded-3 transition-all"
-                style={{ 
-                  color: isActive('/') ? colors.btnPrimary : '#6c757d',
-                  fontWeight: '700',
-                  backgroundColor: isActive('/') ? 'rgba(77, 94, 227, 0.1)' : 'transparent',
-                  transition: 'all 0.2s ease',
-                  fontSize: '16px'
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive('/')) {
-                    e.target.style.color = colors.btnPrimary;
-                    e.target.style.backgroundColor = 'rgba(77, 94, 227, 0.05)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive('/')) {
-                    e.target.style.color = '#6c757d';
-                    e.target.style.backgroundColor = 'transparent';
-                  }
-                }}
+                className={isActive('/') ? 'active' : ''}
               >
                 Home
               </Link>
             </li>
 
-            <li>
+            <li className="header-nav-item">
               <Link 
                 to="/events" 
-                className="text-decoration-none py-2 px-3 rounded-3 transition-all"
-                style={{ 
-                  color: isActive('/events') ? colors.btnPrimary : '#6c757d',
-                  fontWeight: '700',
-                  backgroundColor: isActive('/events') ? 'rgba(77, 94, 227, 0.1)' : 'transparent',
-                  transition: 'all 0.2s ease',
-                  fontSize: '16px'
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive('/events')) {
-                    e.target.style.color = colors.btnPrimary;
-                    e.target.style.backgroundColor = 'rgba(77, 94, 227, 0.05)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive('/events')) {
-                    e.target.style.color = '#6c757d';
-                    e.target.style.backgroundColor = 'transparent';
-                  }
-                }}
+                className={isActive('/events') ? 'active' : ''}
               >
                 Events
               </Link>
             </li>
 
-            <li>
+            <li className="header-nav-item">
               <Link 
                 to="/contact" 
-                className="text-decoration-none py-2 px-3 rounded-3 transition-all"
-                style={{ 
-                  color: isActive('/contact') ? colors.btnPrimary : '#6c757d',
-                  fontWeight: '700',
-                  backgroundColor: isActive('/contact') ? 'rgba(77, 94, 227, 0.1)' : 'transparent',
-                  transition: 'all 0.2s ease',
-                  fontSize: '16px'
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive('/contact')) {
-                    e.target.style.color = colors.btnPrimary;
-                    e.target.style.backgroundColor = 'rgba(77, 94, 227, 0.05)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive('/contact')) {
-                    e.target.style.color = '#6c757d';
-                    e.target.style.backgroundColor = 'transparent';
-                  }
-                }}
+                className={isActive('/contact') ? 'active' : ''}
               >
                 Contact
               </Link>
             </li>
 
-            <li>
+            <li className="header-nav-item">
               <Link 
                 to="/about" 
-                className="text-decoration-none py-2 px-3 rounded-3 transition-all"
-                style={{ 
-                  color: isActive('/about') ? colors.btnPrimary : '#6c757d',
-                  fontWeight: '700',
-                  backgroundColor: isActive('/about') ? 'rgba(77, 94, 227, 0.1)' : 'transparent',
-                  transition: 'all 0.2s ease',
-                  fontSize: '16px'
-                }}
-                onMouseEnter={(e) => {
-                  if (!isActive('/about')) {
-                    e.target.style.color = colors.btnPrimary;
-                    e.target.style.backgroundColor = 'rgba(77, 94, 227, 0.05)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isActive('/about')) {
-                    e.target.style.color = '#6c757d';
-                    e.target.style.backgroundColor = 'transparent';
-                  }
-                }}
+                className={isActive('/about') ? 'active' : ''}
               >
                 About
               </Link>
@@ -143,52 +96,48 @@ function Header({ addToast }) {
           </ul>
         </nav>
 
-        {/* AUTH */}
-        <div>
+        {/* Auth */}
+        <div className="header-auth">
           {token ? (
-            <div className="d-flex align-items-center gap-3">
-              <span className="fw-bold" style={{ fontSize: '16px' }}>
+            <div className="user-profile" ref={dropdownRef} onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+              <span className="user-name">
                 {user?.full_name || user?.name || 'User'}
               </span>
-              <button
-                onClick={handleLogout}
-                className="btn text-white rounded-3 px-4"
-                style={{ 
-                  backgroundColor: '#dc3545',
-                  border: 'none',
-                  fontWeight: '700',
-                  fontSize: '16px'
-                }}
-              >
-                Logout
-              </button>
+              <div className="user-avatar">
+                <i className="bi bi-person-fill user-avatar-icon"></i>
+              </div>
+              <i className={`bi bi-caret-down-fill dropdown-arrow ${isDropdownOpen ? 'open' : ''}`}></i>
+
+              {/* Dropdown menu */}
+              {isDropdownOpen && (
+                <div className="user-dropdown" onClick={(e) => e.stopPropagation()}>
+                  <div className="dropdown-header">
+                    <div className="dropdown-avatar">{getInitials(user?.full_name || user?.name || 'U')}</div>
+                    <div className="dropdown-info">
+                      <span className="dropdown-name">{user?.full_name || user?.name || 'User'}</span>
+                      <span className="dropdown-email">{user?.email || 'user@email.com'}</span>
+                    </div>
+                  </div>
+                  <div className="dropdown-divider"></div>
+                  <button className="dropdown-item" onClick={() => { handleLogout(); }}>
+                    <i className="bi bi-box-arrow-right"></i>
+                    Logout
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <>
               <Link
                 to="/login"
-                className="btn rounded-3 me-2 px-4"
-                style={{ 
-                  color: isActive('/login') ? 'white' : colors.btnPrimary,
-                  backgroundColor: isActive('/login') ? colors.btnPrimary : 'transparent',
-                  border: `2px solid ${colors.btnPrimary}`,
-                  fontWeight: '700',
-                  fontSize: '16px'
-                }}
+                className={`btn-link ${isActive('/login') ? 'active' : ''}`}
               >
                 Login
               </Link>
 
               <Link
                 to="/register"
-                className="btn rounded-3 px-4"
-                style={{ 
-                  color: isActive('/register') ? 'white' : colors.btnPrimary,
-                  backgroundColor: isActive('/register') ? colors.btnPrimary : 'transparent',
-                  border: `2px solid ${colors.btnPrimary}`,
-                  fontWeight: '700',
-                  fontSize: '16px'
-                }}
+                className={`btn-link ${isActive('/register') ? 'active' : ''}`}
               >
                 Register
               </Link>
