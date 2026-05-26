@@ -61,6 +61,36 @@ export const submitReview = async (id, rating, comment) => {
   return response.data;
 };
 
+// ==================== Registration APIs ====================
+
+export const registerFreeEvent = async (eventId, additionalInfo = {}) => {
+  const response = await api.post(`/events/${eventId}/register/free`, additionalInfo);
+  return response.data;
+};
+
+export const registerPaidEvent = async (eventId, quantity, paymentMethod = 'credit_card') => {
+  const response = await api.post(`/events/${eventId}/register/paid`, {
+    quantity,
+    payment_method: paymentMethod,
+  });
+  return response.data;
+};
+
+export const getMyRegistrations = async () => {
+  const response = await api.get('/registrations');
+  return response.data?.data ?? response.data ?? [];
+};
+
+export const cancelRegistration = async (registrationId) => {
+  const response = await api.post(`/registrations/${registrationId}/cancel`);
+  return response.data;
+};
+
+export const checkRegistrationStatus = async (eventId) => {
+  const response = await api.get(`/events/${eventId}/registration-status`);
+  return response.data;
+};
+
 // ==================== User APIs ====================
 
 export const getProfileApi = () => {
