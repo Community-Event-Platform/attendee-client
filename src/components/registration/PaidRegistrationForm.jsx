@@ -49,6 +49,12 @@ function PaidRegistrationForm({ event, onClose, addToast = null, onSuccess = nul
       const response = await registerPaidEvent(event.id, formData.quantity, formData.paymentMethod);
       console.log("Paid registration response:", response);
 
+      // If backend returns payment_url, redirect to payment gateway
+      if (response.data?.payment_url) {
+        window.location.href = response.data.payment_url;
+        return;
+      }
+
       console.log("Paid registration successful, closing modal...");
       onClose();
 
