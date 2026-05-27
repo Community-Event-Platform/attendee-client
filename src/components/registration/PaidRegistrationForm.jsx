@@ -7,7 +7,27 @@ function PaidRegistrationForm({ event, onClose, addToast = null, onSuccess = nul
     quantity: 1,
     paymentMethod: "credit_card",
   });
+  const [additionalInfo, setAdditionalInfo] = useState({});
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+
+  const parseCustomFormSpec = (spec) => {
+    if (!spec) return [];
+    const raw = typeof spec === 'string' ? JSON.parse(spec) : spec;
+    const fields = Array.isArray(raw) ? raw : raw.questions || [];
+    return fields.map((field) => {
+      if (typeof field === 'string') {
+        return { question: field, type: 'text', is_required: true };
+      }
+      return {
+        question: field.question || field.name || '',
+        type: field.type || 'text',
+        is_required: field.is_required !== undefined ? field.is_required : true,
+      };
+    }).filter((item) => item.question);
+  };
+
+  const questions = parseCustomFormSpec(event.custom_form_spec);
 
   const ticketPrice = event.price || 0;
   const feesAndTaxes = event.fees_and_taxes || 0;
@@ -29,8 +49,53 @@ function PaidRegistrationForm({ event, onClose, addToast = null, onSuccess = nul
     }));
   };
 
+  const handleAdditionalInfoChange = (index, value) => {
+    setAdditionalInfo((prev) => ({
+      ...prev,
+      [`additional_info_${index}`]: value,
+    }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (formData.quantity <= 0) {
+      newErrors.quantity = 'Please select at least one ticket';
+    }
+
+    if (event.require_additional_info && questions.length > 0) {
+      questions.forEach((q, index) => {
+        const value = additionalInfo[`additional_info_${index}`];
+        if (!q.is_required) return;
+
+        if (q.type === 'checkbox') {
+          if (value !== true && value !== 'yes' && value !== 'no') {
+            newErrors[`additional_info_${index}`] = `Vui lòng trả lời: ${q.question}`;
+          }
+        } else {
+          if (!value || !String(value).trim()) {
+            newErrors[`additional_info_${index}`] = `Vui lòng trả lời: ${q.question}`;
+          }
+        }
+      });
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      const errorMsg = "Please complete all required fields";
+      if (addToast) {
+        addToast(errorMsg, "error");
+      } else {
+        alert(errorMsg);
+      }
+      return;
+    }
 
     if (formData.quantity <= 0) {
       const errorMsg = "Please select at least one ticket";
@@ -45,8 +110,15 @@ function PaidRegistrationForm({ event, onClose, addToast = null, onSuccess = nul
     setLoading(true);
     
     try {
-      console.log("Submitting paid registration with:", formData);
-      const response = await registerPaidEvent(event.id, formData.quantity, formData.paymentMethod);
+      const additionalInfoData = {};
+      questions.forEach((q, index) => {
+        const fieldName = `additional_info_${index}`;
+        if (Object.prototype.hasOwnProperty.call(additionalInfo, fieldName)) {
+          additionalInfoData[fieldName] = additionalInfo[fieldName];
+        }
+      });
+      console.log("Submitting paid registration with:", { ...formData, additionalInfoData });
+      const response = await registerPaidEvent(event.id, formData.quantity, formData.paymentMethod, additionalInfoData);
       console.log("Paid registration response:", response);
 
       console.log("Paid registration successful, closing modal...");
@@ -169,6 +241,70 @@ function PaidRegistrationForm({ event, onClose, addToast = null, onSuccess = nul
                   </button>
                 </div>
               </div>
+
+              {event.require_additional_info && questions.length > 0 && (
+                <div className="custom-additional-fields">
+                  <h4 className="section-title">Additional Information</h4>
+                  {questions.map((question, index) => (
+                    <div className="form-group" key={index}>
+                      <label htmlFor={`additional_info_${index}`} className="form-label">
+                        {question.question} {question.is_required && <span className="required">*</span>}
+                      </label>
+                      {question.type === 'textarea' ? (
+                        <textarea
+                          id={`additional_info_${index}`}
+                          className={`form-control ${errors[`additional_info_${index}`] ? 'is-invalid' : ''}`}
+                          rows="3"
+                          value={additionalInfo[`additional_info_${index}`] || ''}
+                          onChange={(e) => handleAdditionalInfoChange(index, e.target.value)}
+                        ></textarea>
+                      ) : question.type === 'checkbox' ? (
+                        <div className="checkbox-yes-no-group">
+                          <div className="form-check form-check-inline">
+                            <input
+                              type="radio"
+                              id={`additional_info_${index}_yes`}
+                              name={`additional_info_${index}`}
+                              className={`form-check-input ${errors[`additional_info_${index}`] ? 'is-invalid' : ''}`}
+                              value="yes"
+                              checked={additionalInfo[`additional_info_${index}`] === 'yes'}
+                              onChange={(e) => handleAdditionalInfoChange(index, e.target.value)}
+                            />
+                            <label htmlFor={`additional_info_${index}_yes`} className="form-check-label">
+                              Yes
+                            </label>
+                          </div>
+                          <div className="form-check form-check-inline">
+                            <input
+                              type="radio"
+                              id={`additional_info_${index}_no`}
+                              name={`additional_info_${index}`}
+                              className={`form-check-input ${errors[`additional_info_${index}`] ? 'is-invalid' : ''}`}
+                              value="no"
+                              checked={additionalInfo[`additional_info_${index}`] === 'no'}
+                              onChange={(e) => handleAdditionalInfoChange(index, e.target.value)}
+                            />
+                            <label htmlFor={`additional_info_${index}_no`} className="form-check-label">
+                              No
+                            </label>
+                          </div>
+                        </div>
+                      ) : (
+                        <input
+                          type={question.type || 'text'}
+                          id={`additional_info_${index}`}
+                          className={`form-control ${errors[`additional_info_${index}`] ? 'is-invalid' : ''}`}
+                          value={additionalInfo[`additional_info_${index}`] || ''}
+                          onChange={(e) => handleAdditionalInfoChange(index, e.target.value)}
+                        />
+                      )}
+                      {errors[`additional_info_${index}`] && (
+                        <div className="invalid-feedback d-block">{errors[`additional_info_${index}`]}</div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="paid-right-col">
