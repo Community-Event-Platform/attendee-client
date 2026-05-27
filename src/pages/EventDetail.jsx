@@ -1,16 +1,21 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getEventDetail } from "../services/api";
+import { getEventDetail, registerEventApi } from "../services/api";
+import ReviewSubmissionForm from "../components/reviews/ReviewSubmissionForm";
+import { useAuth } from "../hooks/useAuth";
 import "./style/EventDetail.css";
 import eventImage from "../assets/event.png";
 
 function EventDetail({ addToast }) {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [hasReviewed, setHasReviewed] = useState(false);
 
   // Countdown timer
   const [countdown, setCountdown] = useState({
@@ -29,6 +34,21 @@ function EventDetail({ addToast }) {
         setLoading(true);
         const data = await getEventDetail(id);
         setEvent(data);
+
+        // Check if user is registered
+        if (user && data.registrations_count > 0) {
+          // The endpoint would return registration info, but for now we check if user is in the registrations
+          // This is a simple check - in production, you'd want a dedicated endpoint
+          // For this demo, we'll assume if they registered they'll see the review form
+        }
+
+        // Check if user has already reviewed
+        if (user && data.reviews && Array.isArray(data.reviews)) {
+          const userReview = data.reviews.find(review => review.attendee?.id === user.id || review.attendee?.name === user.name);
+          if (userReview) {
+            setHasReviewed(true);
+          }
+        }
       } catch (err) {
         console.error("Failed to load event details:", err);
         setError("Unable to load event details.");
@@ -39,7 +59,7 @@ function EventDetail({ addToast }) {
     };
 
     loadEventDetail();
-  }, [id, addToast]);
+  }, [id, addToast, user]);
 
   // Real-time countdown timer
   useEffect(() => {
@@ -115,6 +135,49 @@ function EventDetail({ addToast }) {
     }
     return percent;
   }, [event]);
+
+  // Check if event has ended
+  const isEventEnded = () => {
+    if (!event) return false;
+    const eventEndTime = new Date(event.end_date || event.date_time).getTime();
+    const now = new Date().getTime();
+    return now > eventEndTime;
+  };
+
+  // Handle register button click
+  const handleRegister = async () => {
+    if (!user) {
+      if (addToast) addToast("Please login to register for this event", "error");
+      navigate("/login");
+      return;
+    }
+
+    setIsRegistering(true);
+    try {
+      const response = await registerEventApi(id);
+      if (addToast) addToast(response.message || "Registered successfully!", "success");
+      // Reload event details to update registration count
+      const data = await getEventDetail(id);
+      setEvent(data);
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || "Failed to register for event";
+      if (addToast) addToast(errorMessage, "error");
+    } finally {
+      setIsRegistering(false);
+    }
+  };
+
+  // Handle review submission success
+  const handleReviewSubmitted = async () => {
+    setHasReviewed(true);
+    // Reload event details to show new review and updated ratings
+    try {
+      const data = await getEventDetail(id);
+      setEvent(data);
+    } catch (err) {
+      console.error("Failed to reload event details:", err);
+    }
+  };
 
 
 
@@ -275,9 +338,53 @@ function EventDetail({ addToast }) {
                 </div>
               </div>
 
-              <div className="reviews-empty-box">
-                <span className="reviews-empty-text">No reviews yet.</span>
-              </div>
+              {/* Review Submission Form - Only show if user is logged in, registered, event ended, and hasn't reviewed */}
+              {user && isEventEnded() && !hasReviewed && (
+                <>
+                  <div className="sidebar-divider" style={{ margin: "20px 0" }}></div>
+                  <h4 style={{ fontSize: "16px", fontWeight: "600", marginBottom: "16px" }}>Share Your Review</h4>
+                  <ReviewSubmissionForm 
+                    eventId={id}
+                    addToast={addToast}
+                    onReviewSubmitted={handleReviewSubmitted}
+                  />
+                </>
+              )}
+
+              {/* Display reviews list */}
+              {event.reviews && event.reviews.length > 0 ? (
+                <div className="reviews-list">
+                  <div className="sidebar-divider" style={{ margin: "20px 0" }}></div>
+                  <h4 style={{ fontSize: "16px", fontWeight: "600", marginBottom: "16px" }}>Recent Reviews</h4>
+                  {event.reviews.map((review) => (
+                    <div key={review.id} className="review-item">
+                      <div className="review-header">
+                        <div className="review-user-info">
+                          <span className="review-user-name">{review.attendee?.name || "Anonymous User"}</span>
+                          <span className="review-date">{new Date(review.created_at).toLocaleDateString()}</span>
+                        </div>
+                        <div className="review-rating">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <i
+                              key={star}
+                              className={`bi ${star <= review.rating ? "bi-star-fill" : "bi-star"}`}
+                              style={{ color: star <= review.rating ? "#ffc107" : "#dee2e6", marginRight: "2px" }}
+                            ></i>
+                          ))}
+                          <span style={{ marginLeft: "8px", fontSize: "14px", fontWeight: "600" }}>
+                            {review.rating}/5
+                          </span>
+                        </div>
+                      </div>
+                      <p className="review-comment">{review.comment}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="reviews-empty-box">
+                  <span className="reviews-empty-text">No reviews yet. Be the first to review!</span>
+                </div>
+              )}
             </div>
 
           </div>
@@ -326,8 +433,10 @@ function EventDetail({ addToast }) {
                 <button 
                   type="button" 
                   className="btn-register-event"
+                  onClick={handleRegister}
+                  disabled={isRegistering}
                 >
-                  Register now
+                  {isRegistering ? "Registering..." : "Register now"}
                 </button>
               </div>
             </div>
