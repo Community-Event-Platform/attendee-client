@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getEventDetail, checkRegistrationStatus } from "../services/api";
+import { getEventDetail, checkRegistrationStatus, cancelRegistration } from "../services/api";
 import FreeRegistrationForm from "../components/registration/FreeRegistrationForm";
 import PaidRegistrationForm from "../components/registration/PaidRegistrationForm";
 import ReviewSubmissionForm from "../components/reviews/ReviewSubmissionForm";
@@ -21,6 +21,7 @@ function EventDetail({ addToast }) {
   // AC3: Track user's registration status for this event
   const [hasRegistered, setHasRegistered] = useState(false);
   const [registrationStatus, setRegistrationStatus] = useState(null);
+  const [registrationId, setRegistrationId] = useState(null);
   const [hasReviewed, setHasReviewed] = useState(false);
 
   // Countdown timer
@@ -46,6 +47,7 @@ function EventDetail({ addToast }) {
           const statusData = await checkRegistrationStatus(id);
           setHasRegistered(statusData.has_registered);
           setRegistrationStatus(statusData.status);
+          setRegistrationId(statusData.registration_id);
         } catch {
           // User not logged in or no registration - ignore
           console.log("Not logged in or no registration");
@@ -156,6 +158,17 @@ function EventDetail({ addToast }) {
     return now > eventEndTime;
   };
 
+  const getCancelDeadline = () => {
+    if (!event?.date_time) return null;
+    return new Date(new Date(event.date_time).getTime() - 2 * 24 * 60 * 60 * 1000);
+  };
+
+  const canCancelRegistration = () => {
+    if (!event?.date_time || !registrationId) return false;
+    const deadline = getCancelDeadline();
+    return deadline ? Date.now() <= deadline.getTime() : false;
+  };
+
   // Open registration modal
   const handleOpenRegistration = () => {
     if (!user) {
@@ -165,6 +178,28 @@ function EventDetail({ addToast }) {
     }
 
     setShowRegistrationModal(true);
+  };
+
+  const handleCancelRegistration = async () => {
+    if (!registrationId) return;
+
+    if (!canCancelRegistration()) {
+      if (addToast) {
+        addToast("Hủy đăng ký chỉ được thực hiện trước 2 ngày diễn ra sự kiện", "error");
+      }
+      return;
+    }
+
+    try {
+      await cancelRegistration(registrationId);
+      if (addToast) addToast("Hủy đăng ký thành công", "success");
+      setHasRegistered(false);
+      setRegistrationStatus('Cancelled');
+      setRegistrationId(null);
+    } catch (err) {
+      const message = err?.response?.data?.message || "Hủy đăng ký thất bại";
+      if (addToast) addToast(message, "error");
+    }
   };
 
   // Handle review submission success
@@ -430,18 +465,40 @@ function EventDetail({ addToast }) {
                   </div>
                 </div>
 
-                  <button
-                  type="button"
-                  className="btn-register-event"
-                  onClick={handleOpenRegistration}
-                  disabled={hasRegistered}
-                >
-                  {hasRegistered
-                    ? registrationStatus === "Pending"
-                      ? "Đang chờ duyệt"
-                      : "Đã đăng ký"
-                    : "Register now"}
-                </button>
+                  {hasRegistered ? (
+                    registrationStatus === "Pending" ? (
+                      <button type="button" className="btn-register-event" disabled>
+                        Đang chờ duyệt
+                      </button>
+                    ) : registrationStatus === "Waitlisted" ? (
+                      <button type="button" className="btn-register-event" disabled>
+                        Danh sách chờ
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="btn-register-event"
+                        onClick={handleCancelRegistration}
+                        disabled={!canCancelRegistration()}
+                      >
+                        {canCancelRegistration() ? "Hủy đăng ký" : "Không thể hủy"}
+                      </button>
+                    )
+                  ) : (
+                    <button
+                      type="button"
+                      className="btn-register-event"
+                      onClick={handleOpenRegistration}
+                    >
+                      Register now
+                    </button>
+                  )}
+                  {hasRegistered && registrationStatus === "Waitlisted" && (
+                    <p className="cancel-disabled-note">Bạn đã được thêm vào danh sách chờ. Khi có ghế trống, bạn sẽ được thông báo.</p>
+                  )}
+                  {hasRegistered && registrationStatus === "Approved" && !canCancelRegistration() && (
+                    <p className="cancel-disabled-note">Hủy đăng ký chỉ được thực hiện trước 2 ngày diễn ra sự kiện.</p>
+                  )}
               </div>
             </div>
           </div>
