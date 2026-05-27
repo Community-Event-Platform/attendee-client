@@ -73,10 +73,11 @@ export const registerFreeEvent = async (eventId, additionalInfo = {}) => {
   return response.data;
 };
 
-export const registerPaidEvent = async (eventId, quantity, paymentMethod = 'credit_card') => {
+export const registerPaidEvent = async (eventId, quantity, paymentMethod = 'credit_card', additionalInfo = {}) => {
   const response = await api.post(`/events/${eventId}/register/paid`, {
     quantity,
     payment_method: paymentMethod,
+    ...additionalInfo,
   });
   return response.data;
 };
