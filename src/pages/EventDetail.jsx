@@ -3,12 +3,15 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getEventDetail, checkRegistrationStatus } from "../services/api";
 import FreeRegistrationForm from "../components/registration/FreeRegistrationForm";
 import PaidRegistrationForm from "../components/registration/PaidRegistrationForm";
+import ReviewSubmissionForm from "../components/reviews/ReviewSubmissionForm";
+import { useAuth } from "../hooks/useAuth";
 import "./style/EventDetail.css";
 import eventImage from "../assets/event.png";
 
 function EventDetail({ addToast }) {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -18,6 +21,7 @@ function EventDetail({ addToast }) {
   // AC3: Track user's registration status for this event
   const [hasRegistered, setHasRegistered] = useState(false);
   const [registrationStatus, setRegistrationStatus] = useState(null);
+  const [hasReviewed, setHasReviewed] = useState(false);
 
   // Countdown timer
   const [countdown, setCountdown] = useState({
@@ -42,9 +46,20 @@ function EventDetail({ addToast }) {
           const statusData = await checkRegistrationStatus(id);
           setHasRegistered(statusData.has_registered);
           setRegistrationStatus(statusData.status);
-        } catch (regErr) {
-          // User not logged in or other error - ignore
+        } catch {
+          // User not logged in or no registration - ignore
           console.log("Not logged in or no registration");
+        }
+
+        // Check if user has already reviewed
+        if (user && data.reviews && Array.isArray(data.reviews)) {
+          const userReview = data.reviews.find(
+            (review) =>
+              review.attendee?.id === user.id || review.attendee?.name === user.name
+          );
+          if (userReview) {
+            setHasReviewed(true);
+          }
         }
       } catch (err) {
         console.error("Failed to load event details:", err);
@@ -56,7 +71,7 @@ function EventDetail({ addToast }) {
     };
 
     loadEventDetail();
-  }, [id, addToast]);
+  }, [id, addToast, user]);
 
   // Real-time countdown timer
   useEffect(() => {
@@ -132,6 +147,37 @@ function EventDetail({ addToast }) {
     }
     return percent;
   }, [event]);
+
+  // Check if event has ended
+  const isEventEnded = () => {
+    if (!event) return false;
+    const eventEndTime = new Date(event.end_date || event.date_time).getTime();
+    const now = new Date().getTime();
+    return now > eventEndTime;
+  };
+
+  // Open registration modal
+  const handleOpenRegistration = () => {
+    if (!user) {
+      if (addToast) addToast("Please login to register for this event", "error");
+      navigate("/login");
+      return;
+    }
+
+    setShowRegistrationModal(true);
+  };
+
+  // Handle review submission success
+  const handleReviewSubmitted = async () => {
+    setHasReviewed(true);
+    // Reload event details to show new review and updated ratings
+    try {
+      const data = await getEventDetail(id);
+      setEvent(data);
+    } catch (err) {
+      console.error("Failed to reload event details:", err);
+    }
+  };
 
 
 
@@ -292,9 +338,53 @@ function EventDetail({ addToast }) {
                 </div>
               </div>
 
-              <div className="reviews-empty-box">
-                <span className="reviews-empty-text">No reviews yet.</span>
-              </div>
+              {/* Review Submission Form - Only show if user is logged in, registered, event ended, and hasn't reviewed */}
+              {user && hasRegistered && isEventEnded() && !hasReviewed && (
+                <>
+                  <div className="sidebar-divider" style={{ margin: "20px 0" }}></div>
+                  <h4 style={{ fontSize: "16px", fontWeight: "600", marginBottom: "16px" }}>Share Your Review</h4>
+                  <ReviewSubmissionForm 
+                    eventId={id}
+                    addToast={addToast}
+                    onReviewSubmitted={handleReviewSubmitted}
+                  />
+                </>
+              )}
+
+              {/* Display reviews list */}
+              {event.reviews && event.reviews.length > 0 ? (
+                <div className="reviews-list">
+                  <div className="sidebar-divider" style={{ margin: "20px 0" }}></div>
+                  <h4 style={{ fontSize: "16px", fontWeight: "600", marginBottom: "16px" }}>Recent Reviews</h4>
+                  {event.reviews.map((review) => (
+                    <div key={review.id} className="review-item">
+                      <div className="review-header">
+                        <div className="review-user-info">
+                          <span className="review-user-name">{review.attendee?.name || "Anonymous User"}</span>
+                          <span className="review-date">{new Date(review.created_at).toLocaleDateString()}</span>
+                        </div>
+                        <div className="review-rating">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <i
+                              key={star}
+                              className={`bi ${star <= review.rating ? "bi-star-fill" : "bi-star"}`}
+                              style={{ color: star <= review.rating ? "#ffc107" : "#dee2e6", marginRight: "2px" }}
+                            ></i>
+                          ))}
+                          <span style={{ marginLeft: "8px", fontSize: "14px", fontWeight: "600" }}>
+                            {review.rating}/5
+                          </span>
+                        </div>
+                      </div>
+                      <p className="review-comment">{review.comment}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="reviews-empty-box">
+                  <span className="reviews-empty-text">No reviews yet. Be the first to review!</span>
+                </div>
+              )}
             </div>
 
           </div>
@@ -340,15 +430,17 @@ function EventDetail({ addToast }) {
                   </div>
                 </div>
 
-                <button 
-                  type="button" 
+                  <button
+                  type="button"
                   className="btn-register-event"
-                  onClick={() => setShowRegistrationModal(true)}
+                  onClick={handleOpenRegistration}
                   disabled={hasRegistered}
                 >
-                  {hasRegistered 
-                    ? (registrationStatus === 'Pending' ? 'Đang chờ duyệt' : 'Đã đăng ký') 
-                    : 'Register now'}
+                  {hasRegistered
+                    ? registrationStatus === "Pending"
+                      ? "Đang chờ duyệt"
+                      : "Đã đăng ký"
+                    : "Register now"}
                 </button>
               </div>
             </div>

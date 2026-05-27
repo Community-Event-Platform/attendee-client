@@ -21,19 +21,27 @@ function Event({ addToast }) {
   useEffect(() => {
     const loadEvents = async () => {
       try {
-        const data = await getEvents();
+        setLoading(true);
+
+        const params = {
+          search: searchTerm,
+          category:
+            selectedCategory === "All categories"
+              ? ""
+              : selectedCategory,
+        };
+
+        const data = await getEvents(params);
         setEvents(data || []);
       } catch (err) {
-        console.error("Failed to load events:", err);
-        setError("Unable to load the events list.");
-        if (addToast) addToast("Unable to load the events list.", "error");
+        setError("Unable to load events");
       } finally {
         setLoading(false);
       }
     };
 
     loadEvents();
-  }, [addToast]);
+  }, [searchTerm, selectedCategory]);
 
   const categories = useMemo(() => {
     const names = events.map((event) => event.category?.name || event.category).filter(Boolean);
