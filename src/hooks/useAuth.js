@@ -45,7 +45,18 @@ export const useAuth = () => {
       sessionStorage.setItem("justLoggedIn", "true");
       return { success: true, showToast };
     } catch (error) {
-      const errorMsg = error.response?.data?.message || "Đăng ký thất bại!";
+      let errorMsg = "Đăng ký thất bại!";
+      const responseData = error.response?.data;
+      if (responseData) {
+        if (responseData.errors) {
+          const firstField = Object.keys(responseData.errors)[0];
+          if (firstField) {
+            errorMsg = responseData.errors[firstField][0];
+          }
+        } else if (responseData.message) {
+          errorMsg = responseData.message;
+        }
+      }
       if (showToast) showToast(errorMsg, "error");
       return { 
         success: false, 
