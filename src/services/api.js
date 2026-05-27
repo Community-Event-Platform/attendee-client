@@ -55,6 +55,11 @@ export const getEventDetail = async (id) => {
   const response = await api.get(`/events/${id}`);
   return response.data?.data ?? response.data;
 };
+
+export const registerEventApi = async (id) => {
+  const response = await api.post(`/events/${id}/register`);
+  return response.data;
+};
  
 export const submitReview = async (id, rating, comment) => {
   const response = await api.post(`/events/${id}/reviews`, { rating, comment });

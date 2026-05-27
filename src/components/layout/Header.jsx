@@ -1,6 +1,6 @@
+import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
-import { useState, useRef, useEffect } from "react";
 import "./style/Header.css";
 
 /**
@@ -8,6 +8,8 @@ import "./style/Header.css";
  * Shows: Logo, nav links, user profile (when logged in) or Login/Register buttons
  * Features: Avatar dropdown with logout, active tab highlighting
  */
+const API_BASE = 'http://localhost:8000/api';
+
 function Header({ addToast }) {
   const location = useLocation();
   const { user, token, logout } = useAuth();
@@ -35,6 +37,31 @@ function Header({ addToast }) {
     }
     return name[0].toUpperCase();
   };
+
+  const colors = {
+    btnPrimary: '#4D5EE3'
+  };
+
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    if (!token) return;
+    
+    fetch(`${API_BASE}/notifications`, {
+      headers: { 
+        Authorization: `Bearer ${token}`, 
+        Accept: 'application/json' 
+      },
+    })
+      .then(res => res.json())
+      .then(json => {
+        if (json.success && json.data) {
+          const unread = json.data.filter(n => !n.is_read).length;
+          setUnreadCount(unread);
+        }
+      })
+      .catch(() => { });
+  }, [token]);
 
   const handleLogout = async () => {
     setIsDropdownOpen(false);
@@ -100,13 +127,31 @@ function Header({ addToast }) {
         <div className="header-auth">
           {token ? (
             <div className="user-profile" ref={dropdownRef} onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-              <span className="user-name">
-                {user?.full_name || user?.name || 'User'}
-              </span>
-              <div className="user-avatar">
-                <i className="bi bi-person-fill user-avatar-icon"></i>
+              <div className="d-flex align-items-center gap-3">
+                <Link 
+                  to="/notifications" 
+                  className="position-relative me-2 text-decoration-none"
+                  style={{ color: '#6c757d' }}
+                >
+                  <i className="bi bi-bell-fill" style={{ fontSize: '22px' }}></i>
+                  {unreadCount > 0 && (
+                    <span 
+                      className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-flex align-items-center justify-content-center"
+                      style={{ fontSize: '10px', minWidth: '18px', height: '18px', marginTop: '4px' }}
+                    >
+                      {unreadCount}
+                    </span>
+                  )}
+                </Link>
+
+                <span className="fw-bold" style={{ fontSize: '16px' }}>
+                  {user?.full_name || user?.name || 'User'}
+                </span>
+                <div className="user-avatar">
+                  <i className="bi bi-person-fill user-avatar-icon"></i>
+                </div>
+                <i className={`bi bi-caret-down-fill dropdown-arrow ${isDropdownOpen ? 'open' : ''}`}></i>
               </div>
-              <i className={`bi bi-caret-down-fill dropdown-arrow ${isDropdownOpen ? 'open' : ''}`}></i>
 
               {/* Dropdown menu */}
               {isDropdownOpen && (
