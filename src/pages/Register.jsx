@@ -97,7 +97,7 @@ const Register = ({ addToast }) => {
           navigate("/");
         }, 100);
       } else {
-        // Error toast already shown in useAuth
+        setApiError(result.error);
       }
     } catch {
       setApiError("An unexpected error occurred!");
