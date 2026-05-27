@@ -3,29 +3,27 @@ import "./RegistrationForm.css";
 import { registerFreeEvent } from "../../services/api";
 
 function FreeRegistrationForm({ event, onClose, addToast = null, onSuccess = null }) {
-  const [formData, setFormData] = useState({
-    motivation: "",
-    idCard: null,
-  });
   const [additionalInfo, setAdditionalInfo] = useState({});
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
-  // Parse custom_form_spec if event has requirement form
-  const customFormSpec = event.custom_form_spec 
-    ? (typeof event.custom_form_spec === 'string' 
-        ? JSON.parse(event.custom_form_spec) 
-        : event.custom_form_spec)
-    : null;
-  const questions = customFormSpec?.questions || [];
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const parseCustomFormSpec = (spec) => {
+    if (!spec) return [];
+    const raw = typeof spec === 'string' ? JSON.parse(spec) : spec;
+    const fields = Array.isArray(raw) ? raw : raw.questions || [];
+    return fields.map((field) => {
+      if (typeof field === 'string') {
+        return { question: field, type: 'text', is_required: true };
+      }
+      return {
+        question: field.question || field.name || '',
+        type: field.type || 'text',
+        is_required: field.is_required !== undefined ? field.is_required : true,
+      };
+    }).filter((item) => item.question);
   };
+
+  const questions = parseCustomFormSpec(event.custom_form_spec);
 
   const handleAdditionalInfoChange = (index, value) => {
     setAdditionalInfo((prev) => ({
@@ -34,48 +32,23 @@ function FreeRegistrationForm({ event, onClose, addToast = null, onSuccess = nul
     }));
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Kiểm tra loại file
-      const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
-      if (!allowedTypes.includes(file.type)) {
-        if (addToast) addToast("Please upload a valid image file (JPG, PNG, or GIF)", "error");
-        return;
-      }
-
-      // Kiểm tra kích thước file (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        if (addToast) addToast("File size must be less than 5MB", "error");
-        return;
-      }
-
-      setFormData((prev) => ({
-        ...prev,
-        idCard: file,
-      }));
-    }
-  };
-
   // AC2: Validate required fields
   const validateForm = () => {
     const newErrors = {};
 
-    // Check motivation
-    if (!formData.motivation.trim()) {
-      newErrors.motivation = "Please tell us why you want to attend";
-    }
-
-    // Check ID card
-    if (!formData.idCard) {
-      newErrors.idCard = "Please upload your ID card";
-    }
-
-    // Check required fields from custom form
     if (event.require_additional_info && questions.length > 0) {
       questions.forEach((q, index) => {
-        if (q.is_required && !additionalInfo[`additional_info_${index}`]?.trim()) {
-          newErrors[`additional_info_${index}`] = `Vui lòng trả lời: ${q.question}`;
+        const value = additionalInfo[`additional_info_${index}`];
+        if (!q.is_required) return;
+
+        if (q.type === 'checkbox') {
+          if (value !== true && value !== 'yes' && value !== 'no') {
+            newErrors[`additional_info_${index}`] = `Vui lòng trả lời: ${q.question}`;
+          }
+        } else {
+          if (!value || !String(value).trim()) {
+            newErrors[`additional_info_${index}`] = `Vui lòng trả lời: ${q.question}`;
+          }
         }
       });
     }
@@ -105,7 +78,7 @@ function FreeRegistrationForm({ event, onClose, addToast = null, onSuccess = nul
       const additionalInfoData = {};
       questions.forEach((q, index) => {
         const fieldName = `additional_info_${index}`;
-        if (additionalInfo[fieldName]) {
+        if (Object.prototype.hasOwnProperty.call(additionalInfo, fieldName)) {
           additionalInfoData[fieldName] = additionalInfo[fieldName];
         }
       });
@@ -193,87 +166,73 @@ function FreeRegistrationForm({ event, onClose, addToast = null, onSuccess = nul
             </div>
 
             <form onSubmit={handleSubmit}>
-              {/* Motivation Field */}
-              <div className="form-group">
-                <label htmlFor="motivation" className="form-label">
-                  Why do you want to attend? <span className="required">*</span>
-                </label>
-                <textarea
-                  id="motivation"
-                  name="motivation"
-                  className={`form-control ${errors.motivation ? 'is-invalid' : ''}`}
-                  placeholder="Tell us about your interest in this event..."
-                  rows="4"
-                  value={formData.motivation}
-                  onChange={handleInputChange}
-                ></textarea>
-                {errors.motivation && <div className="invalid-feedback d-block">{errors.motivation}</div>}
-              </div>
-
-              {/* File Upload Field */}
-              <div className="form-group">
-                <label htmlFor="idCard" className="form-label">
-                  Upload ID Card <span className="required">*</span>
-                </label>
-                <div className="file-upload-container">
-                  <input
-                    type="file"
-                    id="idCard"
-                    name="idCard"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="file-input"
-                  />
-                  <label htmlFor="idCard" className={`file-upload-label ${errors.idCard ? 'is-invalid' : ''}`}>
-                    <div className="file-upload-icon">
-                      <i className="bi bi-cloud-arrow-up"></i>
-                    </div>
-                    <div className="file-upload-text">
-                      {formData.idCard ? (
-                        <>
-                          <p className="file-name">{formData.idCard.name}</p>
-                          <p className="file-size">({(formData.idCard.size / 1024).toFixed(2)} KB)</p>
-                        </>
+              {event.require_additional_info && questions.length > 0 ? (
+                <>
+                  {/* Dynamic Additional Fields from custom_form_spec */}
+                  {questions.map((question, index) => (
+                    <div className="form-group" key={index}>
+                      <label htmlFor={`additional_info_${index}`} className="form-label">
+                        {question.question} {question.is_required && <span className="required">*</span>}
+                      </label>
+                      {question.type === 'textarea' ? (
+                        <textarea
+                          id={`additional_info_${index}`}
+                          className={`form-control ${errors[`additional_info_${index}`] ? 'is-invalid' : ''}`}
+                          rows="3"
+                          value={additionalInfo[`additional_info_${index}`] || ''}
+                          onChange={(e) => handleAdditionalInfoChange(index, e.target.value)}
+                        ></textarea>
+                      ) : question.type === 'checkbox' ? (
+                        <div className="checkbox-yes-no-group">
+                          <div className="form-check form-check-inline">
+                            <input
+                              type="radio"
+                              id={`additional_info_${index}_yes`}
+                              name={`additional_info_${index}`}
+                              className={`form-check-input ${errors[`additional_info_${index}`] ? 'is-invalid' : ''}`}
+                              value="yes"
+                              checked={additionalInfo[`additional_info_${index}`] === 'yes'}
+                              onChange={(e) => handleAdditionalInfoChange(index, e.target.value)}
+                            />
+                            <label htmlFor={`additional_info_${index}_yes`} className="form-check-label">
+                              Yes
+                            </label>
+                          </div>
+                          <div className="form-check form-check-inline">
+                            <input
+                              type="radio"
+                              id={`additional_info_${index}_no`}
+                              name={`additional_info_${index}`}
+                              className={`form-check-input ${errors[`additional_info_${index}`] ? 'is-invalid' : ''}`}
+                              value="no"
+                              checked={additionalInfo[`additional_info_${index}`] === 'no'}
+                              onChange={(e) => handleAdditionalInfoChange(index, e.target.value)}
+                            />
+                            <label htmlFor={`additional_info_${index}_no`} className="form-check-label">
+                              No
+                            </label>
+                          </div>
+                        </div>
                       ) : (
-                        <>
-                          <p>Click or drag to upload</p>
-                          <p className="file-hint">JPG, PNG or GIF (max 5MB)</p>
-                        </>
+                        <input
+                          type={question.type || 'text'}
+                          id={`additional_info_${index}`}
+                          className={`form-control ${errors[`additional_info_${index}`] ? 'is-invalid' : ''}`}
+                          value={additionalInfo[`additional_info_${index}`] || ''}
+                          onChange={(e) => handleAdditionalInfoChange(index, e.target.value)}
+                        />
+                      )}
+                      {errors[`additional_info_${index}`] && (
+                        <div className="invalid-feedback d-block">{errors[`additional_info_${index}`]}</div>
                       )}
                     </div>
-                  </label>
+                  ))}
+                </>
+              ) : (
+                <div className="form-group">
+                  <p className="no-requirements-text">Không có yêu cầu thông tin bổ sung. Chỉ cần nhấn nút đăng ký để hoàn tất.</p>
                 </div>
-                {errors.idCard && <div className="invalid-feedback d-block">{errors.idCard}</div>}
-              </div>
-
-              {/* Dynamic Additional Fields from custom_form_spec */}
-              {event.require_additional_info && questions.length > 0 && questions.map((question, index) => (
-                <div className="form-group" key={index}>
-                  <label htmlFor={`additional_info_${index}`} className="form-label">
-                    {question.question} {question.is_required && <span className="required">*</span>}
-                  </label>
-                  {question.type === 'textarea' ? (
-                    <textarea
-                      id={`additional_info_${index}`}
-                      className={`form-control ${errors[`additional_info_${index}`] ? 'is-invalid' : ''}`}
-                      rows="3"
-                      value={additionalInfo[`additional_info_${index}`] || ''}
-                      onChange={(e) => handleAdditionalInfoChange(index, e.target.value)}
-                    ></textarea>
-                  ) : (
-                    <input
-                      type={question.type || 'text'}
-                      id={`additional_info_${index}`}
-                      className={`form-control ${errors[`additional_info_${index}`] ? 'is-invalid' : ''}`}
-                      value={additionalInfo[`additional_info_${index}`] || ''}
-                      onChange={(e) => handleAdditionalInfoChange(index, e.target.value)}
-                    />
-                  )}
-                  {errors[`additional_info_${index}`] && (
-                    <div className="invalid-feedback d-block">{errors[`additional_info_${index}`]}</div>
-                  )}
-                </div>
-              ))}
+              )}
 
               {/* Submit Button */}
               <button
