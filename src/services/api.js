@@ -69,16 +69,7 @@ export const submitReview = async (id, rating, comment) => {
 // ==================== Registration APIs ====================
 
 export const registerFreeEvent = async (eventId, additionalInfo = {}) => {
-  const response = await api.post(`/events/${eventId}/register/free`, additionalInfo);
-  return response.data;
-};
-
-export const registerPaidEvent = async (eventId, quantity, paymentMethod = 'credit_card', additionalInfo = {}) => {
-  const response = await api.post(`/events/${eventId}/register/paid`, {
-    quantity,
-    payment_method: paymentMethod,
-    ...additionalInfo,
-  });
+  const response = await api.post(`/events/${eventId}/register`, additionalInfo);
   return response.data;
 };
 
@@ -88,8 +79,13 @@ export const getMyRegistrations = async () => {
 };
 
 export const cancelRegistration = async (registrationId) => {
-  const response = await api.post(`/registrations/${registrationId}/cancel`);
-  return response.data;
+  // Prefer PATCH /registrations/{id}/cancel; fallback to POST for compatibility
+  try {
+    return (await api.patch(`/registrations/${registrationId}/cancel`)).data;
+  } catch (err) {
+    const fallback = await api.post(`/registrations/${registrationId}/cancel`);
+    return fallback.data;
+  }
 };
 
 export const checkRegistrationStatus = async (eventId) => {
