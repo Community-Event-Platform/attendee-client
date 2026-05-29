@@ -169,6 +169,11 @@ function EventDetail({ addToast }) {
     return deadline ? Date.now() <= deadline.getTime() : false;
   };
 
+  const isFreeEvent = (eventData) => {
+    if (!eventData) return false;
+    return eventData.price == null || Number(eventData.price) === 0;
+  };
+
   // Open registration modal
   const handleOpenRegistration = () => {
     if (!user) {
@@ -510,11 +515,17 @@ function EventDetail({ addToast }) {
       {(() => {
         if (!showRegistrationModal) return null;
         const handleSuccess = () => {
-          if (addToast) addToast("Gửi yêu cầu đăng ký thành công, vui lòng chờ duyệt!", "success");
           setHasRegistered(true);
-          setRegistrationStatus('Pending');
+          setRegistrationStatus(isFreeEvent(event) ? 'Pending' : 'Approved');
+          if (addToast) {
+            if (isFreeEvent(event)) {
+              addToast("Gửi yêu cầu đăng ký thành công, vui lòng chờ duyệt!", "success");
+            } else {
+              addToast("Đăng ký tham gia thành công!", "success");
+            }
+          }
         };
-        if (event.price === null || event.price === 0) {
+        if (isFreeEvent(event)) {
           return <FreeRegistrationForm event={event} onClose={() => setShowRegistrationModal(false)} addToast={addToast} onSuccess={handleSuccess} />;
         }
         return <PaidRegistrationForm event={event} onClose={() => setShowRegistrationModal(false)} addToast={addToast} onSuccess={handleSuccess} />;

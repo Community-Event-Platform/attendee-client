@@ -73,6 +73,16 @@ export const registerFreeEvent = async (eventId, additionalInfo = {}) => {
   return response.data;
 };
 
+export const registerPaidEvent = async (eventId, quantity = 1, paymentMethod = 'credit_card', additionalInfo = {}) => {
+  const payload = {
+    quantity,
+    payment_method: paymentMethod,
+    ...additionalInfo,
+  };
+  const response = await api.post(`/events/${eventId}/register`, payload);
+  return response.data;
+};
+
 export const getMyRegistrations = async () => {
   const response = await api.get('/registrations');
   return response.data?.data ?? response.data ?? [];

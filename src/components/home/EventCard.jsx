@@ -79,15 +79,19 @@ function EventCard({ event, navigate }) {
     return new Date(dateString).toLocaleDateString('en-US', options);
   };
 
+  const isFreePrice = (price) => {
+    return price == null || Number(price) === 0;
+  };
+
   const getPriceDisplay = (price) => {
-    if (price === 0 || price === null || price === undefined) {
+    if (isFreePrice(price)) {
       return 'Free Registration';
     }
     return new Intl.NumberFormat('en-US').format(price) + ' VND';
   };
 
   const getPriceColor = (price) => {
-    return price === 0 || price === null || price === undefined ? '#14AE5C' : '#FF6B6B';
+    return isFreePrice(price) ? '#14AE5C' : '#FF6B6B';
   };
 
   const handleViewDetails = () => {
@@ -192,7 +196,7 @@ function EventCard({ event, navigate }) {
         {/* Price or Register Button */}
         <div className="event-footer">
           <button className="btn btn-primary w-100" onClick={handleViewDetails}>
-            {event.price === 0 || event.price === null ? 'Free Registration' : 'Register'}
+            {isFreePrice(event.price) ? 'Free Registration' : 'Register'}
           </button>
         </div>
       </div>
