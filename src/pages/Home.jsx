@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getEvents } from '../services/api';
 import SearchBar from '../components/home/SearchBar';
 import EventCard from '../components/home/EventCard';
 import CategoryCard from '../components/home/CategoryCard';
@@ -26,10 +27,9 @@ function Home() {
     const fetchEvents = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:8000/api/events');
-        const data = await response.json();
-        setEvents(data.data || []);
-        setFilteredEvents(data.data || []);
+        const data = await getEvents();
+        setEvents(data);
+        setFilteredEvents(data);
       } catch (error) {
         console.error('Error fetching events:', error);
         setEvents([]);
