@@ -1,0 +1,343 @@
+/* Header Styles */
+.header {
+  background-color: white;
+  border-bottom: 1px solid #e9ecef;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Logo */
+.header-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  cursor: pointer;
+  gap: 8px;
+}
+
+.header-logo-icon {
+  color: #14AE5C;
+  font-size: 38px;
+}
+
+.header-logo-text {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+/* Navigation */
+.header-nav {
+  display: flex;
+  gap: 16px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+.header-nav-item a {
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 24px;
+  font-weight: 700;
+  font-size: 16px;
+  color: #6c757d;
+  background-color: transparent;
+  transition: all 0.2s ease;
+}
+
+.header-nav-item a:hover {
+  color: #4D5EE3;
+  background-color: rgba(77, 94, 227, 0.05);
+}
+
+.header-nav-item a.active {
+  color: #4D5EE3;
+  background-color: rgba(77, 94, 227, 0.1);
+}
+
+/* Auth Section */
+.header-auth {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn-link {
+  text-decoration: none !important;
+  padding: 8px 20px;
+  border-radius: 24px;
+  font-weight: 700;
+  font-size: 16px;
+  border: 2px solid #4D5EE3;
+  background-color: transparent;
+  color: #4D5EE3;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-link:hover {
+  background-color: #4D5EE3;
+  color: white;
+  text-decoration: none !important;
+}
+
+.btn-link.active {
+  background-color: #4D5EE3;
+  color: white;
+  text-decoration: none !important;
+}
+
+/* User Profile Dropdown */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  position: relative;
+}
+
+.user-name {
+  font-weight: 700;
+  font-size: 16px;
+  color: #dc3545;
+}
+
+.user-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #14AE5C;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.user-avatar-icon {
+  color: white;
+  font-size: 18px;
+}
+
+.dropdown-arrow {
+  font-size: 14px;
+  color: #6c757d;
+  transition: transform 0.2s ease;
+}
+
+.dropdown-arrow.open {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Menu */
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  min-width: 280px;
+  padding: 16px;
+}
+
+.dropdown-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.dropdown-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background-color: #14AE5C;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 20px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.dropdown-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.dropdown-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+}
+
+.dropdown-email {
+  font-size: 14px;
+  color: #6c757d;
+  word-break: break-all;
+}
+
+.dropdown-divider {
+  border-top: 1px solid #e9ecef;
+  margin: 8px 0;
+}
+
+.dropdown-item {
+  width: 100%;
+  padding: 10px 12px;
+  background-color: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #4D5EE3;
+  transition: background-color 0.2s ease;
+  text-decoration: none;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(77, 94, 227, 0.1);
+}
+
+.dropdown-item i {
+  font-size: 18px;
+}
+/* Container chính của Dropdown */
+.user-dropdown {
+  position: absolute;
+  top: 120%;
+  right: 0;
+  width: 280px; /* Tăng nhẹ độ rộng để text không bị kích */
+  background-color: #ffffff;
+  border-radius: 12px; /* Bo góc hiện đại */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+  padding: 16px 0;
+  z-index: 1000;
+  border: 1px solid #f0f0f0;
+  animation: fadeInDropdown 0.2s ease-out;
+}
+
+/* Phần Header chứa Avatar và Info */
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  padding: 0 20px 16px 20px;
+}
+
+/* Avatar vòng tròn chữ đại diện */
+.dropdown-avatar {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #2ecc71, #27ae60); /* Màu xanh gradient nhẹ */
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+  margin-right: 14px;
+  box-shadow: 0 4px 8px rgba(46, 204, 113, 0.2);
+  flex-shrink: 0;
+}
+
+/* Khối thông tin chữ */
+.dropdown-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Tránh tràn chữ */
+}
+
+.dropdown-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2c3e50;
+  line-height: 1.3;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.dropdown-email {
+  font-size: 13px;
+  color: #7f8c8d;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+/* Đường gạch ngang phân tách */
+.dropdown-divider {
+  height: 1px;
+  background-color: #f1f2f6;
+  margin: 8px 0;
+}
+
+/* Các lựa chọn Menu (Link & Button) */
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 14px;
+  color: #4b5563;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Icon nằm trước chữ */
+.dropdown-item i {
+  font-size: 18px;
+  margin-right: 12px; /* Tạo khoảng cách đẹp với text */
+  color: #9ca3af;
+  transition: color 0.2s ease;
+}
+
+/* Hiệu ứng khi di chuột vào mục chọn */
+.dropdown-item:hover {
+  background-color: #f8fafc;
+  color: #10b981; /* Đổi text sang màu xanh khi hover */
+}
+
+.dropdown-item:hover i {
+  color: #10b981; /* Đổi màu icon đồng bộ */
+}
+
+/* Hiệu ứng mở mượt mà */
+@keyframes fadeInDropdown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
