@@ -63,6 +63,15 @@ function Header({ addToast }) {
       .catch(() => { });
   }, [token]);
 
+  // Listen for mark-read events to update unread badge immediately
+  useEffect(() => {
+    const handler = (e) => {
+      setUnreadCount((c) => Math.max(0, c - 1));
+    };
+    window.addEventListener('notification:read', handler);
+    return () => window.removeEventListener('notification:read', handler);
+  }, []);
+
   const handleLogout = async () => {
     setIsDropdownOpen(false);
     await logout();

@@ -41,6 +41,8 @@ function NotificationPage() {
           setNotifications(prev =>
             prev.map(n => n.id === id ? { ...n, is_read: 1 } : n)
           );
+          // notify header to update unread badge
+          try { window.dispatchEvent(new CustomEvent('notification:read', { detail: { id } })); } catch(e){}
         }
       });
   };
