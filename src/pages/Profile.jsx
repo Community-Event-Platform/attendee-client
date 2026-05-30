@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { getProfileApi, cancelRegistration } from '../services/api';
 import './style/Profile.css';
 
 function Profile({ addToast }) {
@@ -27,15 +28,7 @@ function Profile({ addToast }) {
   const fetchProfile = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8000/api/user/profile', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        }
-      });
-
-      if (!response.ok) throw new Error('Failed to fetch profile');
-
-      const data = await response.json();
+      const data = await getProfileApi();
       setProfile(data.user);
       
       // Group registrations by status
@@ -46,7 +39,7 @@ function Profile({ addToast }) {
       };
 
       data.registrations?.forEach(reg => {
-        if (reg.status === 'Confirmed') {
+        if (reg.status === 'Confirmed' || reg.status === 'Approved') {
           grouped.confirmed.push(reg);
         } else if (reg.status === 'Pending') {
           grouped.pending.push(reg);
@@ -71,16 +64,7 @@ function Profile({ addToast }) {
 
     try {
       setCancelingId(registrationId);
-      const response = await fetch(`http://localhost:8000/api/registrations/${registrationId}/cancel`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        }
-      });
-
-      if (!response.ok) throw new Error('Failed to cancel registration');
-
+      await cancelRegistration(registrationId);
       addToast('Registration cancelled successfully', 'success');
       fetchProfile(); // Refresh profile data
     } catch (error) {
