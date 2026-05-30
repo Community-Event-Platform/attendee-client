@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import SearchBar from '../components/home/SearchBar';
 import EventCard from '../components/home/EventCard';
 import CategoryCard from '../components/home/CategoryCard';
+import { getEvents } from '../services/api';
 import '../components/home/style/Home.css';
 import HeroImage from '../assets/homepage.png';
 
@@ -26,10 +27,9 @@ function Home() {
     const fetchEvents = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:8000/api/events');
-        const data = await response.json();
-        setEvents(data.data || []);
-        setFilteredEvents(data.data || []);
+        const eventsData = await getEvents();
+        setEvents(eventsData || []);
+        setFilteredEvents(eventsData || []);
       } catch (error) {
         console.error('Error fetching events:', error);
         setEvents([]);

@@ -11,7 +11,7 @@ import eventImage from "../assets/event.png";
 function EventDetail({ addToast }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
 
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -32,6 +32,7 @@ function EventDetail({ addToast }) {
     seconds: "00",
     isExpired: false,
   });
+  const [now, setNow] = useState(() => Date.now());
   
 
   // Load event details from API
@@ -81,8 +82,9 @@ function EventDetail({ addToast }) {
 
     const timer = setInterval(() => {
       const targetDate = new Date(event.date_time).getTime();
-      const now = Date.now();
-      const difference = targetDate - now;
+      const currentTime = Date.now();
+      const difference = targetDate - currentTime;
+      setNow(currentTime);
 
       if (difference <= 0) {
         setCountdown({
@@ -163,20 +165,26 @@ function EventDetail({ addToast }) {
     return new Date(new Date(event.date_time).getTime() - 2 * 24 * 60 * 60 * 1000);
   };
 
-  const canCancelRegistration = () => {
-    if (!event?.date_time || !registrationId) return false;
-    const deadline = getCancelDeadline();
-    return deadline ? Date.now() <= deadline.getTime() : false;
-  };
-
   const isFreeEvent = (eventData) => {
     if (!eventData) return false;
     return eventData.price == null || Number(eventData.price) === 0;
   };
 
+  const isPaidEvent = (eventData) => {
+    if (!eventData) return false;
+    return eventData.price != null && Number(eventData.price) > 0;
+  };
+
+  const canCancelRegistration = () => {
+    if (!event?.date_time || !registrationId) return false;
+    if (isPaidEvent(event)) return false;
+    const deadline = getCancelDeadline();
+    return deadline ? now <= deadline.getTime() : false;
+  };
+
   // Open registration modal
   const handleOpenRegistration = () => {
-    if (!user) {
+    if (!user || !token) {
       if (addToast) addToast("Please login to register for this event", "error");
       navigate("/login");
       return;
@@ -190,19 +198,19 @@ function EventDetail({ addToast }) {
 
     if (!canCancelRegistration()) {
       if (addToast) {
-        addToast("Hủy đăng ký chỉ được thực hiện trước 2 ngày diễn ra sự kiện", "error");
+        addToast("Cancellation is only allowed at least 2 days before the event", "error");
       }
       return;
     }
 
     try {
       await cancelRegistration(registrationId);
-      if (addToast) addToast("Hủy đăng ký thành công", "success");
+      if (addToast) addToast("Registration cancelled successfully", "success");
       setHasRegistered(false);
       setRegistrationStatus('Cancelled');
       setRegistrationId(null);
     } catch (err) {
-      const message = err?.response?.data?.message || "Hủy đăng ký thất bại";
+      const message = err?.response?.data?.message || "Cancellation failed";
       if (addToast) addToast(message, "error");
     }
   };
@@ -471,24 +479,17 @@ function EventDetail({ addToast }) {
                 </div>
 
                   {hasRegistered ? (
-                    registrationStatus === "Pending" ? (
-                      <button type="button" className="btn-register-event" disabled>
-                        Đang chờ duyệt
-                      </button>
-                    ) : registrationStatus === "Waitlisted" ? (
-                      <button type="button" className="btn-register-event" disabled>
-                        Danh sách chờ
-                      </button>
-                    ) : (
+                    <>
+                      <div className="registration-status-label">Status: {registrationStatus || "Registered"}</div>
                       <button
                         type="button"
                         className="btn-register-event"
                         onClick={handleCancelRegistration}
                         disabled={!canCancelRegistration()}
                       >
-                        {canCancelRegistration() ? "Hủy đăng ký" : "Không thể hủy"}
+                        {canCancelRegistration() ? "Cancel registration" : isPaidEvent(event) ? "Cannot cancel (paid event)" : "Cannot cancel"}
                       </button>
-                    )
+                    </>
                   ) : (
                     <button
                       type="button"
@@ -499,10 +500,13 @@ function EventDetail({ addToast }) {
                     </button>
                   )}
                   {hasRegistered && registrationStatus === "Waitlisted" && (
-                    <p className="cancel-disabled-note">Bạn đã được thêm vào danh sách chờ. Khi có ghế trống, bạn sẽ được thông báo.</p>
+                    <p className="cancel-disabled-note">You are on the waitlist. You will be notified when a seat becomes available.</p>
                   )}
-                  {hasRegistered && registrationStatus === "Approved" && !canCancelRegistration() && (
-                    <p className="cancel-disabled-note">Hủy đăng ký chỉ được thực hiện trước 2 ngày diễn ra sự kiện.</p>
+                  {hasRegistered && isPaidEvent(event) && (
+                    <p className="cancel-disabled-note">Paid events cannot be canceled from this app.</p>
+                  )}
+                  {hasRegistered && !isPaidEvent(event) && !canCancelRegistration() && (
+                    <p className="cancel-disabled-note">Cancellation is only available until 2 days before the event.</p>
                   )}
               </div>
             </div>
@@ -519,9 +523,9 @@ function EventDetail({ addToast }) {
           setRegistrationStatus(isFreeEvent(event) ? 'Pending' : 'Approved');
           if (addToast) {
             if (isFreeEvent(event)) {
-              addToast("Gửi yêu cầu đăng ký thành công, vui lòng chờ duyệt!", "success");
+              addToast("Registration request sent successfully. Please wait for approval.", "success");
             } else {
-              addToast("Đăng ký tham gia thành công!", "success");
+              addToast("Registration completed successfully!", "success");
             }
           }
         };
