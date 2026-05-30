@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import "./RegistrationForm.css";
 import { registerPaidEvent } from "../../services/api";
 
@@ -10,6 +11,7 @@ function PaidRegistrationForm({ event, onClose, addToast = null, onSuccess = nul
   const [additionalInfo, setAdditionalInfo] = useState({});
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const parseCustomFormSpec = (spec) => {
     if (!spec) return [];
@@ -70,11 +72,11 @@ function PaidRegistrationForm({ event, onClose, addToast = null, onSuccess = nul
 
         if (q.type === 'checkbox') {
           if (value !== true && value !== 'yes' && value !== 'no') {
-            newErrors[`additional_info_${index}`] = `Vui lòng trả lời: ${q.question}`;
+            newErrors[`additional_info_${index}`] = `Please answer: ${q.question}`;
           }
         } else {
           if (!value || !String(value).trim()) {
-            newErrors[`additional_info_${index}`] = `Vui lòng trả lời: ${q.question}`;
+            newErrors[`additional_info_${index}`] = `Please answer: ${q.question}`;
           }
         }
       });
@@ -117,6 +119,14 @@ function PaidRegistrationForm({ event, onClose, addToast = null, onSuccess = nul
           additionalInfoData[fieldName] = additionalInfo[fieldName];
         }
       });
+      const token = localStorage.getItem('token');
+      if (!token) {
+        const msg = "You need to log in before registering";
+        if (addToast) addToast(msg, 'error');
+        navigate('/login');
+        return;
+      }
+
       console.log("Submitting paid registration with:", { ...formData, additionalInfoData });
       const response = await registerPaidEvent(event.id, formData.quantity, formData.paymentMethod, additionalInfoData);
       console.log("Paid registration response:", response);
@@ -138,14 +148,14 @@ function PaidRegistrationForm({ event, onClose, addToast = null, onSuccess = nul
     } catch (error) {
       console.error("Payment error:", error);
       if (error.response?.status === 401) {
-        const errorMsg = "Vui lòng đăng nhập để đăng ký sự kiện";
+        const errorMsg = "Please log in to register for the event";
         if (addToast) {
           addToast(errorMsg, "error");
         } else {
           alert(errorMsg);
         }
       } else if (error.response?.status === 409) {
-        const errorMsg = error.response.data?.message || "Bạn đã đăng ký sự kiện này";
+        const errorMsg = error.response.data?.message || "You have already registered for this event";
         console.log("Duplicate registration - showing error:", errorMsg);
         if (addToast) {
           addToast(errorMsg, "error");
