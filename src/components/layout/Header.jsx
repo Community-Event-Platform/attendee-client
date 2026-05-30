@@ -8,7 +8,7 @@ import "./style/Header.css";
  * Shows: Logo, nav links, user profile (when logged in) or Login/Register buttons
  * Features: Avatar dropdown with logout, active tab highlighting
  */
-const API_BASE = 'http://localhost:8000/api';
+const API_BASE = import.meta.env.VITE_API_URL;
 
 function Header({ addToast }) {
   const location = useLocation();
@@ -45,11 +45,12 @@ function Header({ addToast }) {
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    if (!token) return;
+    const authToken = token || localStorage.getItem('token');
+    if (!authToken) return;
     
     fetch(`${API_BASE}/notifications`, {
       headers: { 
-        Authorization: `Bearer ${token}`, 
+        Authorization: `Bearer ${authToken}`, 
         Accept: 'application/json' 
       },
     })
