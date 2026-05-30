@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
-import { api } from "../../services/api";
 import "./style/Header.css";
 
 /**
