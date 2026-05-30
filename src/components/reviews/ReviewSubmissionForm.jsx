@@ -2,7 +2,7 @@ import { useState } from "react";
 import { submitReview } from "../../services/api";
 import "../reviews/ReviewSubmissionForm.css";
 
-function ReviewSubmissionForm({ eventId, addToast, onReviewSubmitted }) {
+function ReviewSubmissionForm({ eventId, eventStatus, addToast, onReviewSubmitted }) {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [hoverRating, setHoverRating] = useState(0);
@@ -10,6 +10,7 @@ function ReviewSubmissionForm({ eventId, addToast, onReviewSubmitted }) {
   const [charCount, setCharCount] = useState(0);
 
   const maxCharacters = 300;
+  const isEventEnded = eventStatus === 'ended';
 
   const handleRatingClick = (value) => {
     setRating(value);
@@ -62,6 +63,17 @@ function ReviewSubmissionForm({ eventId, addToast, onReviewSubmitted }) {
       setIsSubmitting(false);
     }
   };
+
+  if (!isEventEnded) {
+    return (
+      <div className="review-submission-form review-locked">
+        <div className="locked-message">
+          <i className="bi bi-lock-fill"></i>
+          <p>Đánh giá sẽ mở khóa sau khi người tổ chức kết thúc sự kiện.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <form className="review-submission-form" onSubmit={handleSubmit}>

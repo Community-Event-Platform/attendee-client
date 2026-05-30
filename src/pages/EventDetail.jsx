@@ -32,6 +32,19 @@ function EventDetail({ addToast }) {
     isExpired: false,
   });
   
+  const formatEventDateTime = (value) => {
+    if (!value) return "Not available";
+
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    }).format(new Date(value));
+  };
+  
 
   // Load event details from API
   useEffect(() => {
@@ -77,8 +90,9 @@ function EventDetail({ addToast }) {
   useEffect(() => {
     if (!event || !event.date_time) return;
 
-    const timer = setInterval(() => {
-      const targetDate = new Date(event.date_time).getTime();
+    const targetDate = new Date(event.end_date || event.date_time).getTime();
+
+    const updateCountdown = () => {
       const now = Date.now();
       const difference = targetDate - now;
 
@@ -90,48 +104,33 @@ function EventDetail({ addToast }) {
           seconds: "00",
           isExpired: true,
         });
-        clearInterval(timer);
-      } else {
-        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-        setCountdown({
-          days: String(days).padStart(2, "0"),
-          hours: String(hours).padStart(2, "0"),
-          minutes: String(minutes).padStart(2, "0"),
-          seconds: String(seconds).padStart(2, "0"),
-          isExpired: false,
-        });
+        return;
       }
-    }, 1000);
+
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+      setCountdown({
+        days: String(days).padStart(2, "0"),
+        hours: String(hours).padStart(2, "0"),
+        minutes: String(minutes).padStart(2, "0"),
+        seconds: String(seconds).padStart(2, "0"),
+        isExpired: false,
+      });
+    };
+
+    updateCountdown();
+    const timer = setInterval(updateCountdown, 1000);
 
     return () => clearInterval(timer);
   }, [event]);
 
   // Format date and time for display
-  const formatDateTime = (value) => {
-    if (!value) return "Not available";
-    return new Intl.DateTimeFormat("en-US", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(new Date(value));
-  };
+  const formatDateTime = (value) => formatEventDateTime(value);
 
-  const getShortDate = (value) => {
-    if (!value) return "Chưa cập nhật";
-    return new Intl.DateTimeFormat("en-US", {
-      month: "short",
-      day: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(new Date(value));
-  };
+  const getShortDate = (value) => formatEventDateTime(value);
 
   
 
@@ -156,11 +155,18 @@ function EventDetail({ addToast }) {
     return now > eventEndTime;
   };
 
+  const isRegistrationClosed = countdown.isExpired || event?.status === "ended";
+
   // Open registration modal
   const handleOpenRegistration = () => {
     if (!user) {
       if (addToast) addToast("Please login to register for this event", "error");
       navigate("/login");
+      return;
+    }
+
+    if (isRegistrationClosed) {
+      if (addToast) addToast("Registration for this event has ended.", "error");
       return;
     }
 
@@ -357,6 +363,7 @@ function EventDetail({ addToast }) {
                   <h4 style={{ fontSize: "16px", fontWeight: "600", marginBottom: "16px" }}>Share Your Review</h4>
                   <ReviewSubmissionForm 
                     eventId={id}
+                    eventStatus={event.status}
                     addToast={addToast}
                     onReviewSubmitted={handleReviewSubmitted}
                   />
@@ -423,36 +430,44 @@ function EventDetail({ addToast }) {
                 <div className="sidebar-divider"></div>
 
                 <div className="countdown-section-title">Time remaining</div>
-                <div className="countdown-timer-container">
-                  <div className="countdown-unit">
-                    <div className="countdown-number">{countdown.days}</div>
-                    <div className="countdown-label">Days</div>
+                {countdown.isExpired ? (
+                  <div className="reviews-empty-box" style={{ marginTop: "12px" }}>
+                    <span className="reviews-empty-text">Registration has ended.</span>
                   </div>
-                  <div className="countdown-unit">
-                    <div className="countdown-number">{countdown.hours}</div>
-                    <div className="countdown-label">Hours</div>
+                ) : (
+                  <div className="countdown-timer-container">
+                    <div className="countdown-unit">
+                      <div className="countdown-number">{countdown.days}</div>
+                      <div className="countdown-label">Days</div>
+                    </div>
+                    <div className="countdown-unit">
+                      <div className="countdown-number">{countdown.hours}</div>
+                      <div className="countdown-label">Hours</div>
+                    </div>
+                    <div className="countdown-unit">
+                      <div className="countdown-number">{countdown.minutes}</div>
+                      <div className="countdown-label">Minutes</div>
+                    </div>
+                    <div className="countdown-unit">
+                      <div className="countdown-number">{countdown.seconds}</div>
+                      <div className="countdown-label">Seconds</div>
+                    </div>
                   </div>
-                  <div className="countdown-unit">
-                    <div className="countdown-number">{countdown.minutes}</div>
-                    <div className="countdown-label">Minutes</div>
-                  </div>
-                  <div className="countdown-unit">
-                    <div className="countdown-number">{countdown.seconds}</div>
-                    <div className="countdown-label">Seconds</div>
-                  </div>
-                </div>
+                )}
 
                   <button
                   type="button"
                   className="btn-register-event"
                   onClick={handleOpenRegistration}
-                  disabled={hasRegistered}
+                  disabled={hasRegistered || isRegistrationClosed}
                 >
                   {hasRegistered
                     ? registrationStatus === "Pending"
                       ? "Đang chờ duyệt"
                       : "Đã đăng ký"
-                    : "Register now"}
+                    : isRegistrationClosed
+                      ? "Registration closed"
+                      : "Register now"}
                 </button>
               </div>
             </div>

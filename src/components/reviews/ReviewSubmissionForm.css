@@ -126,3 +126,31 @@
   height: 14px;
   border-width: 2px;
 }
+
+/* Locked Review State */
+.review-submission-form.review-locked {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.locked-message {
+  text-align: center;
+  padding: 20px;
+}
+
+.locked-message i {
+  font-size: 48px;
+  color: #6c757d;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.locked-message p {
+  font-size: 14px;
+  color: #495057;
+  margin: 0;
+  line-height: 1.5;
+}
