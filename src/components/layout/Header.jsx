@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
+import { api } from "../../services/api";
 import "./style/Header.css";
 
 /**
@@ -8,7 +9,6 @@ import "./style/Header.css";
  * Shows: Logo, nav links, user profile (when logged in) or Login/Register buttons
  * Features: Avatar dropdown with logout, active tab highlighting
  */
-const API_BASE = 'http://localhost:8000/api';
 
 function Header({ addToast }) {
   const location = useLocation();
@@ -47,13 +47,8 @@ function Header({ addToast }) {
   useEffect(() => {
     if (!token) return;
     
-    fetch(`${API_BASE}/notifications`, {
-      headers: { 
-        Authorization: `Bearer ${token}`, 
-        Accept: 'application/json' 
-      },
-    })
-      .then(res => res.json())
+    api.get('/notifications')
+      .then(res => res.data)
       .then(json => {
         if (json.success && json.data) {
           const unread = json.data.filter(n => !n.is_read).length;

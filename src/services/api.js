@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Base API configuration
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 const api = axios.create({
@@ -11,96 +10,38 @@ const api = axios.create({
   },
 });
 
-// Request interceptor - attach JWT token to every request
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = 'Bearer ' + token;
     }
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Response interceptor - handle 401 unauthorized globally
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Always reject errors - let callers handle their own 401s
     return Promise.reject(error);
   }
 );
 
-// ==================== Auth APIs ====================
+export { api };
 
-export const loginApi = (data) => {
-  return api.post('/login', data);
-};
-
-export const registerApi = (data) => {
-  return api.post('/register', data);
-};
-
-export const logoutApi = () => {
-  return api.post('/logout');
-};
-
-export const getEvents = async () => {
-  const response = await api.get('/events');
-  return response.data?.data ?? response.data ?? [];
-};
-
-export const getEventDetail = async (id) => {
-  const response = await api.get(`/events/${id}`);
-  return response.data?.data ?? response.data;
-};
-
-export const registerEventApi = async (id) => {
-  const response = await api.post(`/events/${id}/register`);
-  return response.data;
-};
- 
-export const submitReview = async (id, rating, comment) => {
-  const response = await api.post(`/events/${id}/reviews`, { rating, comment });
-  return response.data;
-};
-
-// ==================== Registration APIs ====================
-
-export const registerFreeEvent = async (eventId, additionalInfo = {}) => {
-  const response = await api.post(`/events/${eventId}/register/free`, additionalInfo);
-  return response.data;
-};
-
-export const registerPaidEvent = async (eventId, quantity, paymentMethod = 'credit_card', additionalInfo = {}) => {
-  const response = await api.post(`/events/${eventId}/register/paid`, {
-    quantity,
-    payment_method: paymentMethod,
-    ...additionalInfo,
-  });
-  return response.data;
-};
-
-export const getMyRegistrations = async () => {
-  const response = await api.get('/registrations');
-  return response.data?.data ?? response.data ?? [];
-};
-
-export const cancelRegistration = async (registrationId) => {
-  const response = await api.post(`/registrations/${registrationId}/cancel`);
-  return response.data;
-};
-
-export const checkRegistrationStatus = async (eventId) => {
-  const response = await api.get(`/events/${eventId}/registration-status`);
-  return response.data;
-};
-
-// ==================== User APIs ====================
-
-export const getProfileApi = () => {
-  return api.get('/user');
-};
+export const loginApi = (data) => api.post('/login', data);
+export const registerApi = (data) => api.post('/register', data);
+export const logoutApi = () => api.post('/logout');
+export const getEvents = async () => { const r = await api.get('/events'); return r.data?.data ?? r.data ?? []; };
+export const getEventDetail = async (id) => { const r = await api.get('/events/' + id); return r.data?.data ?? r.data; };
+export const registerEventApi = async (id) => { const r = await api.post('/events/' + id + '/register'); return r.data; };
+export const submitReview = async (id, rating, comment) => { const r = await api.post('/events/' + id + '/reviews', { rating, comment }); return r.data; };
+export const registerFreeEvent = async (eventId, additionalInfo = {}) => { const r = await api.post('/events/' + eventId + '/register/free', additionalInfo); return r.data; };
+export const registerPaidEvent = async (eventId, quantity, paymentMethod = 'credit_card', additionalInfo = {}) => { const r = await api.post('/events/' + eventId + '/register/paid', { quantity, payment_method: paymentMethod, ...additionalInfo }); return r.data; };
+export const getMyRegistrations = async () => { const r = await api.get('/registrations'); return r.data?.data ?? r.data ?? []; };
+export const cancelRegistration = async (registrationId) => { const r = await api.post('/registrations/' + registrationId + '/cancel'); return r.data; };
+export const checkRegistrationStatus = async (eventId) => { const r = await api.get('/events/' + eventId + '/registration-status'); return r.data; };
+export const getProfileApi = () => api.get('/user');
 
 export default api;

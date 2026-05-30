@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { api } from '../services/api';
 import './style/Profile.css';
 
 function Profile({ addToast }) {
@@ -27,18 +28,10 @@ function Profile({ addToast }) {
   const fetchProfile = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8000/api/user/profile', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        }
-      });
-
-      if (!response.ok) throw new Error('Failed to fetch profile');
-
-      const data = await response.json();
+      const response = await api.get('/user/profile');
+      const data = response.data;
       setProfile(data.user);
       
-      // Group registrations by status
       const grouped = {
         confirmed: [],
         pending: [],
@@ -71,18 +64,9 @@ function Profile({ addToast }) {
 
     try {
       setCancelingId(registrationId);
-      const response = await fetch(`http://localhost:8000/api/registrations/${registrationId}/cancel`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        }
-      });
-
-      if (!response.ok) throw new Error('Failed to cancel registration');
-
+      await api.post(`/registrations/${registrationId}/cancel`);
       addToast('Registration cancelled successfully', 'success');
-      fetchProfile(); // Refresh profile data
+      fetchProfile();
     } catch (error) {
       console.error('Error cancelling registration:', error);
       addToast('Failed to cancel registration', 'error');
@@ -109,7 +93,6 @@ function Profile({ addToast }) {
 
   return (
     <div className="profile-container">
-      {/* Header Section */}
       <div className="profile-header">
         <div className="profile-header-bg"></div>
         <div className="profile-header-content">
@@ -124,9 +107,7 @@ function Profile({ addToast }) {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="profile-main">
-        {/* Info Section */}
         <div className="profile-section info-section">
           <h2 className="section-title">Personal Information</h2>
           <div className="info-grid">
@@ -145,7 +126,6 @@ function Profile({ addToast }) {
           </div>
         </div>
 
-        {/* Events Section */}
         <div className="profile-section events-section">
           <h2 className="section-title">My Events</h2>
           
@@ -173,7 +153,6 @@ function Profile({ addToast }) {
             </button>
           </div>
 
-          {/* Events List */}
           <div className="events-list">
             {activeTab === 'confirmed' && (
               <>
@@ -238,74 +217,6 @@ function Profile({ addToast }) {
           </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-// Event Card Component
-function EventCard({ registration, status, onCancel, isCanceling }) {
-  const event = registration.event;
-  
-  const getStatusBadge = () => {
-    switch (status) {
-      case 'confirmed':
-        return <span className="status-badge confirmed"><i className="bi bi-check-circle-fill"></i> Confirmed</span>;
-      case 'pending':
-        return <span className="status-badge pending"><i className="bi bi-hourglass-split"></i> Pending</span>;
-      case 'rejected':
-        return <span className="status-badge rejected"><i className="bi bi-x-circle-fill"></i> Rejected</span>;
-      default:
-        return null;
-    }
-  };
-
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('vi-VN', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  return (
-    <div className={`event-card ${status}`}>
-      <div className="event-card-header">
-        <h3 className="event-title">{event.name}</h3>
-        {getStatusBadge()}
-      </div>
-      <div className="event-card-body">
-        <div className="event-detail">
-          <i className="bi bi-calendar-event"></i>
-          <span>{formatDate(event.date_time)}</span>
-        </div>
-        <div className="event-detail">
-          <i className="bi bi-geo-alt"></i>
-          <span>{event.location}</span>
-        </div>
-        <div className="event-detail">
-          <i className="bi bi-tag"></i>
-          <span>{event.category?.name || 'General'}</span>
-        </div>
-        {event.price > 0 && (
-          <div className="event-detail">
-            <i className="bi bi-currency-dollar"></i>
-            <span>${event.price}</span>
-          </div>
-        )}
-      </div>
-      {(status === 'pending' || status === 'confirmed') && (
-        <div className="event-card-footer">
-          <button 
-            className="btn-cancel"
-            onClick={onCancel}
-            disabled={isCanceling}
-          >
-            {isCanceling ? 'Canceling...' : 'Cancel Registration'}
-          </button>
-        </div>
-      )}
     </div>
   );
 }

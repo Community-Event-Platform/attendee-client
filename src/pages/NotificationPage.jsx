@@ -1,43 +1,29 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../hooks/useAuth";
-
-// Gọi đúng biến môi trường VITE_API_URL 
-const API_BASE = import.meta.env.VITE_API_URL;
+import { api } from "../../../services/api";
 
 function NotificationPage() {
   const { token } = useAuth();
   const [notifications, setNotifications] = useState([]);
 
-  // 1. Tải danh sách thông báo về
+  // 1. Load notifications list
   useEffect(() => {
     if (!token) return;
-    fetch(`${API_BASE}/notifications`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json'
-      }
-    })
-      .then(res => res.json())
+    api.get('/notifications')
+      .then(res => res.data)
       .then(json => {
         if (json.success) setNotifications(json.data || []);
       })
       .catch(err => console.error(err));
   }, [token]);
 
-  // 2. AC4: Khi click vào một thông báo -> Cập nhật thành "Đã đọc"
+  // 2. When clicking a notification -> mark as "Read"
   const handleRead = (id, isRead) => {
-    if (isRead) return; // Đã đọc rồi thì không cần gọi API nữa
+    if (isRead) return; // Already read, no need to call API
 
-    fetch(`${API_BASE}/notifications/${id}/read`, {
-      method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json'
-      }
-    })
+    api.patch(`/notifications/${id}/read`)
       .then(res => {
         if (res.ok) {
-          // Cập nhật giao diện ngay lập tức
           setNotifications(prev =>
             prev.map(n => n.id === id ? { ...n, is_read: 1 } : n)
           );
@@ -65,7 +51,7 @@ function NotificationPage() {
               >
                 <div className="d-flex justify-content-between align-items-center mb-1">
                   <span className={!notif.is_read ? 'text-primary' : 'text-secondary'}>
-                    {!notif.is_read ? '● New Message' : 'Read'}
+                    {!notif.is_read ? 'New Message' : 'Read'}
                   </span>
                   <small className="text-muted">{new Date(notif.created_at).toLocaleDateString()}</small>
                 </div>
