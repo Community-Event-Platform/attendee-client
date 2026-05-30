@@ -14,6 +14,7 @@ import About from "./pages/About";
 import Event from "./pages/Event";
 import EventDetail from "./pages/EventDetail";
 import Profile from "./pages/Profile";
+import NotificationPage from "./pages/NotificationPage";
 
 function App() {
   const { initAuth } = useAuth();
@@ -39,6 +40,7 @@ function App() {
         <Route path="/events" element={<Event addToast={addToast} />} />
         <Route path="/events/:id" element={<EventDetail addToast={addToast} />} />
         <Route path="/profile" element={<Profile addToast={addToast} />} />
+        <Route path="/notifications" element={<NotificationPage />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
       </Routes>
