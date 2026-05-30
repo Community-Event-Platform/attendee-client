@@ -69,7 +69,12 @@ export const submitReview = async (id, rating, comment) => {
 // ==================== Registration APIs ====================
 
 export const registerFreeEvent = async (eventId, additionalInfo = {}) => {
-  const response = await api.post(`/events/${eventId}/register/free`, additionalInfo);
+  const config = {};
+  if (additionalInfo instanceof FormData) {
+    config.headers = { 'Content-Type': 'multipart/form-data' };
+  }
+
+  const response = await api.post(`/events/${eventId}/register`, additionalInfo, config);
   return response.data;
 };
 
@@ -87,7 +92,7 @@ export const getMyRegistrations = async () => {
 };
 
 export const cancelRegistration = async (registrationId) => {
-  const response = await api.post(`/registrations/${registrationId}/cancel`);
+  const response = await api.patch(`/registrations/${registrationId}/cancel`);
   return response.data;
 };
 

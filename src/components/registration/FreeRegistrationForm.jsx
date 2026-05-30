@@ -101,18 +101,22 @@ function FreeRegistrationForm({ event, onClose, addToast = null, onSuccess = nul
 
     setLoading(true);
     try {
-      // Prepare additional info data
-      const additionalInfoData = {};
+      // Prepare form payload so file and extra fields are sent correctly.
+      const payload = new FormData();
+      payload.append('motivation', formData.motivation);
+      if (formData.idCard) {
+        payload.append('id_card', formData.idCard);
+      }
+
       questions.forEach((q, index) => {
         const fieldName = `additional_info_${index}`;
         if (additionalInfo[fieldName]) {
-          additionalInfoData[fieldName] = additionalInfo[fieldName];
+          payload.append(fieldName, additionalInfo[fieldName]);
         }
       });
 
-      console.log("Submitting registration with data:", additionalInfoData);
-      // Call API
-      const response = await registerFreeEvent(event.id, additionalInfoData);
+      console.log("Submitting registration with payload", payload);
+      const response = await registerFreeEvent(event.id, payload);
       console.log("Registration response:", response);
 
       // AC1: Show success message

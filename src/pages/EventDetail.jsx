@@ -167,6 +167,18 @@ function EventDetail({ addToast }) {
     setShowRegistrationModal(true);
   };
 
+  const handleRegistrationSuccess = async (status = 'Pending') => {
+    setHasRegistered(true);
+    setRegistrationStatus(status);
+
+    try {
+      const data = await getEventDetail(id);
+      setEvent(data);
+    } catch (err) {
+      console.error('Failed to reload event details after registration:', err);
+    }
+  };
+
   // Handle review submission success
   const handleReviewSubmitted = async () => {
     setHasReviewed(true);
@@ -452,15 +464,24 @@ function EventDetail({ addToast }) {
       {/* AC3: Handle successful registration from modal */}
       {(() => {
         if (!showRegistrationModal) return null;
-        const handleSuccess = () => {
-          if (addToast) addToast("Gửi yêu cầu đăng ký thành công, vui lòng chờ duyệt!", "success");
-          setHasRegistered(true);
-          setRegistrationStatus('Pending');
-        };
         if (event.price === null || event.price === 0) {
-          return <FreeRegistrationForm event={event} onClose={() => setShowRegistrationModal(false)} addToast={addToast} onSuccess={handleSuccess} />;
+          return (
+            <FreeRegistrationForm
+              event={event}
+              onClose={() => setShowRegistrationModal(false)}
+              addToast={addToast}
+              onSuccess={() => handleRegistrationSuccess('Pending')}
+            />
+          );
         }
-        return <PaidRegistrationForm event={event} onClose={() => setShowRegistrationModal(false)} addToast={addToast} onSuccess={handleSuccess} />;
+        return (
+          <PaidRegistrationForm
+            event={event}
+            onClose={() => setShowRegistrationModal(false)}
+            addToast={addToast}
+            onSuccess={() => handleRegistrationSuccess('Approved')}
+          />
+        );
       })()}
     </main>
   );

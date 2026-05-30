@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import './style/Profile.css';
 
 function Profile({ addToast }) {
   const navigate = useNavigate();
-  const { user, token } = useAuth();
+  const { token } = useAuth();
   const [profile, setProfile] = useState(null);
   const [registrations, setRegistrations] = useState({
     confirmed: [],
@@ -16,15 +16,7 @@ function Profile({ addToast }) {
   const [activeTab, setActiveTab] = useState('confirmed');
   const [cancelingId, setCancelingId] = useState(null);
 
-  useEffect(() => {
-    if (!token) {
-      navigate('/login');
-      return;
-    }
-    fetchProfile();
-  }, [token, navigate]);
-
-  const fetchProfile = async () => {
+  const fetchProfile = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch('http://localhost:8000/api/user/profile', {
@@ -46,7 +38,7 @@ function Profile({ addToast }) {
       };
 
       data.registrations?.forEach(reg => {
-        if (reg.status === 'Confirmed') {
+        if (reg.status === 'Confirmed' || reg.status === 'Approved') {
           grouped.confirmed.push(reg);
         } else if (reg.status === 'Pending') {
           grouped.pending.push(reg);
@@ -62,7 +54,20 @@ function Profile({ addToast }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token, addToast]);
+
+  useEffect(() => {
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+
+    const loadProfile = async () => {
+      await fetchProfile();
+    };
+
+    loadProfile();
+  }, [token, navigate, fetchProfile]);
 
   const handleCancelRegistration = async (registrationId) => {
     if (!window.confirm('Are you sure you want to cancel this registration?')) {
@@ -72,7 +77,7 @@ function Profile({ addToast }) {
     try {
       setCancelingId(registrationId);
       const response = await fetch(`http://localhost:8000/api/registrations/${registrationId}/cancel`, {
-        method: 'POST',
+        method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -295,7 +300,7 @@ function EventCard({ registration, status, onCancel, isCanceling }) {
           </div>
         )}
       </div>
-      {(status === 'pending' || status === 'confirmed') && (
+      {(status === 'pending' || status === 'confirmed') && !event.price && (
         <div className="event-card-footer">
           <button 
             className="btn-cancel"
