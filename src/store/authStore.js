@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { setAuthToken } from '../services/api';
 
 // Auth store - quản lý state authentication toàn cục
 export const useAuthStore = create((set, get) => ({
@@ -12,6 +13,7 @@ export const useAuthStore = create((set, get) => ({
   login: (userData, token) => {
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(userData));
+    setAuthToken(token);
     set({ 
       user: userData, 
       token, 
@@ -22,6 +24,7 @@ export const useAuthStore = create((set, get) => ({
   logout: () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    setAuthToken(null);
     set({ 
       user: null, 
       token: null, 
@@ -37,10 +40,12 @@ export const useAuthStore = create((set, get) => ({
     if (token && userStr) {
       try {
         const user = JSON.parse(userStr);
+        setAuthToken(token);
         set({ user, token, isAuthenticated: true });
       } catch {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        setAuthToken(null);
       }
     }
   },

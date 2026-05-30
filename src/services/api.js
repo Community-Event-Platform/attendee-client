@@ -11,10 +11,32 @@ const api = axios.create({
   },
 });
 
+let authToken = null;
+const setAuthToken = (token) => {
+  authToken = token;
+  if (token) {
+    api.defaults.headers.common.Authorization = `Bearer ${token}`;
+  } else {
+    delete api.defaults.headers.common.Authorization;
+  }
+};
+
+const getAuthHeader = () => {
+  const token = authToken || localStorage.getItem('token');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+// Initialize Authorization header from storage when the module loads
+const storedToken = localStorage.getItem('token');
+if (storedToken) {
+  setAuthToken(storedToken);
+}
+
 // Request interceptor - attach JWT token to every request
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    config.headers = config.headers || {};
+    const token = authToken || localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -69,7 +91,9 @@ export const submitReview = async (id, rating, comment) => {
 // ==================== Registration APIs ====================
 
 export const registerFreeEvent = async (eventId, additionalInfo = {}) => {
-  const response = await api.post(`/events/${eventId}/register`, additionalInfo);
+  const response = await api.post(`/events/${eventId}/register`, additionalInfo, {
+    headers: getAuthHeader(),
+  });
   return response.data;
 };
 
@@ -79,7 +103,9 @@ export const registerPaidEvent = async (eventId, quantity = 1, paymentMethod = '
     payment_method: paymentMethod,
     ...additionalInfo,
   };
-  const response = await api.post(`/events/${eventId}/register`, payload);
+  const response = await api.post(`/events/${eventId}/register`, payload, {
+    headers: getAuthHeader(),
+  });
   return response.data;
 };
 
@@ -109,4 +135,5 @@ export const getProfileApi = () => {
   return api.get('/user');
 };
 
+export { setAuthToken };
 export default api;

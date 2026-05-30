@@ -1,85 +1,153 @@
-import { useState, useEffect } from "react";
-import { useAuth } from "../../../hooks/useAuth";
+﻿import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
+import "./style/NotificationPage.css";
 
-// Gọi đúng biến môi trường VITE_API_URL 
 const API_BASE = import.meta.env.VITE_API_URL;
 
 function NotificationPage() {
+  const navigate = useNavigate();
   const { token } = useAuth();
   const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  // 1. Tải danh sách thông báo về
   useEffect(() => {
-    if (!token) return;
+    const authToken = token || localStorage.getItem('token');
+    if (!authToken) {
+      return;
+    }
+
     fetch(`${API_BASE}/notifications`, {
       headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json'
-      }
+        Authorization: `Bearer ${authToken}`,
+        Accept: 'application/json',
+      },
     })
-      .then(res => res.json())
-      .then(json => {
-        if (json.success) setNotifications(json.data || []);
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success) {
+          setNotifications(json.data || []);
+        } else {
+          setNotifications([]);
+        }
       })
-      .catch(err => console.error(err));
+      .catch((err) => {
+        console.error("Notification fetch error:", err);
+        setNotifications([]);
+      })
+      .finally(() => setLoading(false));
   }, [token]);
 
-  // 2. AC4: Khi click vào một thông báo -> Cập nhật thành "Đã đọc"
   const handleRead = (id, isRead) => {
-    if (isRead) return; // Đã đọc rồi thì không cần gọi API nữa
+    if (isRead) return;
+    const authToken = token || localStorage.getItem('token');
+    if (!authToken) return;
 
     fetch(`${API_BASE}/notifications/${id}/read`, {
       method: 'PATCH',
       headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: 'application/json'
-      }
+        Authorization: `Bearer ${authToken}`,
+        Accept: 'application/json',
+      },
     })
-      .then(res => {
+      .then((res) => {
         if (res.ok) {
-          // Cập nhật giao diện ngay lập tức
-          setNotifications(prev =>
-            prev.map(n => n.id === id ? { ...n, is_read: 1 } : n)
+          setNotifications((prev) =>
+            prev.map((n) => (n.id === id ? { ...n, is_read: 1 } : n))
           );
-          // notify header to update unread badge
-          try { window.dispatchEvent(new CustomEvent('notification:read', { detail: { id } })); } catch(e){}
+          try {
+            window.dispatchEvent(
+              new CustomEvent('notification:read', { detail: { id } })
+            );
+          } catch (e) {
+            console.warn(e);
+          }
         }
+      })
+      .catch((err) => {
+        console.error("Mark notification read error:", err);
       });
   };
 
+  const formatDate = (value) => {
+    if (!value) return "";
+    const date = new Date(value);
+    return date.toLocaleDateString('vi-VN', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  };
+
+  const handleViewEvent = (eventId) => {
+    if (!eventId) return;
+    navigate(`/events/${eventId}`);
+  };
+
   return (
-    <div className="container my-5" style={{ maxWidth: '700px' }}>
-      <h3 className="fw-bold mb-4">MESSAGES BOX</h3>
-      <div className="card shadow-sm rounded-3">
-        <div className="list-group list-group-flush">
-          {notifications.length === 0 ? (
-            <div className="p-5 text-center text-muted">
-              <i className="bi bi-bell-slash mb-2" style={{ fontSize: '30px' }}></i>
-              <p>You don't have any notifications yet.</p>
-            </div>
-          ) : (
-            notifications.map(notif => (
-              <div
-                key={notif.id}
-                onClick={() => handleRead(notif.id, notif.is_read)}
-                className={`list-group-item list-group-item-action p-4 border-bottom transition-all ${!notif.is_read ? 'bg-light fw-bold' : ''}`}
-                style={{ cursor: 'pointer', borderLeft: !notif.is_read ? '4px solid #4D5EE3' : '4px solid transparent' }}
-              >
-                <div className="d-flex justify-content-between align-items-center mb-1">
-                  <span className={!notif.is_read ? 'text-primary' : 'text-secondary'}>
-                    {!notif.is_read ? '● New Message' : 'Read'}
-                  </span>
-                  <small className="text-muted">{new Date(notif.created_at).toLocaleDateString()}</small>
-                </div>
-                <p className="m-0 text-dark" style={{ fontSize: '15px', fontWeight: 'normal' }}>
-                  {notif.message}
-                </p>
-              </div>
-            ))
-          )}
+    <main className="notification-page">
+      <section className="notification-hero">
+        <div>
+          <p className="notification-hero__eyebrow">Notifications</p>
+          <h1 className="notification-hero__title">Latest Updates</h1>
+          <p className="notification-hero__description">
+            View your latest event updates and ticket confirmations.
+          </p>
         </div>
-      </div>
-    </div>
+      </section>
+
+      <section className="notification-list">
+        {loading ? (
+          <div className="notification-empty">
+            <span className="notification-empty__icon">⏳</span>
+            <p>Loading notifications...</p>
+          </div>
+        ) : notifications.length === 0 ? (
+          <div className="notification-empty">
+            <span className="notification-empty__icon">🔔</span>
+            <p>You have no new notifications.</p>
+            <small>Check again later or return to the events page.</small>
+          </div>
+        ) : (
+          notifications.map((notif) => (
+            <article
+              key={notif.id}
+              className={`notification-card ${!notif.is_read ? 'notification-card--unread' : ''}`}
+              onClick={() => handleRead(notif.id, notif.is_read)}
+            >
+              <div className="notification-card__header">
+                <div className="notification-card__status">
+                  {!notif.is_read ? 'New' : 'Read'}
+                </div>
+                <span className="notification-card__timestamp">
+                  {formatDate(notif.created_at)}
+                </span>
+              </div>
+
+              <div className="notification-card__body">
+                <div className="notification-card__emoji">🎉</div>
+                <div className="notification-card__text">
+                  <h2 className="notification-card__title">Congratulations! Your ticket is confirmed</h2>
+                  <p className="notification-card__message">{notif.message}</p>
+                </div>
+              </div>
+
+              <div className="notification-card__footer">
+                <span className="notification-card__detail">View event details and participation information.</span>
+                <button
+                  className="notification-card__button"
+                  type="button"
+                  onClick={() => handleViewEvent(notif.event_id)}
+                  disabled={!notif.event_id}
+                >
+                  View Event
+                </button>
+              </div>
+            </article>
+          ))
+        )}
+      </section>
+    </main>
   );
 }
 
