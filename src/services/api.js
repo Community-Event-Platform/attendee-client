@@ -131,8 +131,9 @@ export const checkRegistrationStatus = async (eventId) => {
 
 // ==================== User APIs ====================
 
-export const getProfileApi = () => {
-  return api.get('/user');
+export const getProfileApi = async () => {
+  const response = await api.get('/user/profile');
+  return response.data;
 };
 
 export { setAuthToken };
