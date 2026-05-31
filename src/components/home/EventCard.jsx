@@ -46,7 +46,7 @@ const eventImages = {
   'event-20.jpg': event20,
 };
 
-function EventCard({ event, navigate }) {
+function EventCard({ event, navigate, userRegistration }) {
   const [isHovered, setIsHovered] = useState(false);
   const eventCategory = event.category?.name || event.category || 'Event';
   const attendeesCount = event.attendees ?? 0;
@@ -196,7 +196,7 @@ function EventCard({ event, navigate }) {
         {/* Price or Register Button */}
         <div className="event-footer">
           {userRegistration ? (
-            <>
+            <div className="text-center w-100">
               <div style={{ marginBottom: '8px', fontSize: '14px', color: '#6b6375' }}>
                 Status: {userRegistration.status || "Registered"}
               </div>
@@ -207,7 +207,7 @@ function EventCard({ event, navigate }) {
               >
                 Cancel registration
               </button>
-            </>
+            </div>
           ) : (
             <button className="btn btn-primary w-100" onClick={handleViewDetails}>
               {isFreePrice(event.price) ? 'Free Registration' : 'Register'}

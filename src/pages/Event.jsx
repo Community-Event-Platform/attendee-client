@@ -50,7 +50,7 @@ function Event({ addToast }) {
       if (token) {
         try {
           const data = await getMyRegistrations();
-          setRegistrations(data || []);
+          setRegistrations(Array.isArray(data) ? data : []);
         } catch (err) {
           console.error("Failed to load registrations", err);
         }
