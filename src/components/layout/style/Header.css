@@ -6,6 +6,7 @@
   position: sticky;
   top: 0;
   z-index: 100;
+  overflow: visible; /* allow dropdowns / icons to extend outside header */
 }
 
 .header-container {
@@ -13,8 +14,10 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 20px;
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
+  overflow: visible;
+  flex-wrap: wrap;
 }
 
 /* Logo */
@@ -28,7 +31,12 @@
 
 .header-logo-icon {
   color: #14AE5C;
-  font-size: 38px;
+  font-size: clamp(1.4rem, 4vw, 2.4rem);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  z-index: 1100; /* ensure logo sits above nearby elements */
 }
 
 .header-logo-text {
@@ -47,6 +55,14 @@
   align-items: center;
 }
 
+@media (max-width: 768px) {
+  .header-container { justify-content: space-between; }
+  .header-logo { flex: 1 1 auto; }
+  .header-nav { width: 100%; justify-content: center; margin-top: 8px; gap: 10px; }
+  .header-auth { width: 100%; display: flex; justify-content: center; margin-top: 8px; }
+  .header-nav-item a { padding: 6px 10px; font-size: 14px; }
+}
+
 .header-nav-item a {
   text-decoration: none;
   padding: 8px 12px;
@@ -59,13 +75,13 @@
 }
 
 .header-nav-item a:hover {
-  color: #4D5EE3;
-  background-color: rgba(77, 94, 227, 0.05);
+  color: var(--accent);
+  background-color: rgba(20, 174, 92, 0.05);
 }
 
 .header-nav-item a.active {
-  color: #4D5EE3;
-  background-color: rgba(77, 94, 227, 0.1);
+  color: var(--accent);
+  background-color: rgba(20, 174, 92, 0.08);
 }
 
 /* Auth Section */
@@ -81,21 +97,21 @@
   border-radius: 24px;
   font-weight: 700;
   font-size: 16px;
-  border: 2px solid #4D5EE3;
+  border: 2px solid var(--accent);
   background-color: transparent;
-  color: #4D5EE3;
+  color: var(--accent);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .btn-link:hover {
-  background-color: #4D5EE3;
+  background-color: var(--accent);
   color: white;
   text-decoration: none !important;
 }
 
 .btn-link.active {
-  background-color: #4D5EE3;
+  background-color: var(--accent);
   color: white;
   text-decoration: none !important;
 }
@@ -212,13 +228,13 @@
   gap: 8px;
   font-size: 16px;
   font-weight: 600;
-  color: #4D5EE3;
+  color: var(--accent);
   transition: background-color 0.2s ease;
   text-decoration: none;
 }
 
 .dropdown-item:hover {
-  background-color: rgba(77, 94, 227, 0.1);
+  background-color: rgba(20, 174, 92, 0.06);
 }
 
 .dropdown-item i {

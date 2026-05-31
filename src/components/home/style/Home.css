@@ -223,7 +223,7 @@ section {
 }
 
 .step-icon {
-  font-size: 54px;
+  font-size: clamp(2rem, 6vw, 3.2rem);
   color: #6c63ff;
   margin-bottom: 22px;
   display: inline-block;

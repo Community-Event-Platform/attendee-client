@@ -1,18 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 :root {
+  /* Shared tokens aligned with organizer-dashboard */
+  --primary-green: #14AE5C;
+  --primary-green-dark: #0d9a4e;
+  --primary-green-light: #dcfce7;
+
   --text: #6b6375;
   --text-h: #08060d;
   --bg: #fff;
   --border: #e5e4e7;
   --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
+
+  /* Map previous accent to primary green for visual alignment */
+  --accent: var(--primary-green);
+  --accent-bg: rgba(20, 174, 92, 0.08);
+  --accent-border: rgba(20, 174, 92, 0.25);
+
   --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
   --sans: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
@@ -20,7 +29,7 @@
 
   font: 16px/145% var(--sans);
   letter-spacing: 0.18px;
-  color-scheme: light dark;
+  color-scheme: light;
   color: var(--text);
   background: var(--bg);
   font-synthesis: none;
@@ -66,7 +75,11 @@ html, body {
 
 body {
   min-width: 320px;
-  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: var(--sans);
+  line-height: 1.5;
+  color: var(--text-h);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #root {
@@ -74,38 +87,44 @@ body {
   max-width: 100%;
   margin: 0;
   padding: 0;
-  text-align: center;
   min-height: 100svh;
-  text-align: initial;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
 }
 
+/* Container consistent with organizer-dashboard */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
 h1,
 h2 {
   font-family: var(--heading);
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-h);
+  margin: 0 0 8px;
 }
 
 h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
+  font-size: 2.2rem; /* ~35px */
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 24px 0;
 }
+
 h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
+  font-size: 1.25rem; /* ~20px */
+  line-height: 1.25;
+}
+
+/* Responsive typography */
+@media (max-width: 768px) {
+  h1 { font-size: 1.6rem; margin: 16px 0; }
+  h2 { font-size: 1.05rem; }
+  .container { padding: 0 12px; }
 }
 p {
   margin: 0;

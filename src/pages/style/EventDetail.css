@@ -47,12 +47,16 @@
 }
 
 .event-detail-title {
-  font-size: 38px;
+  font-size: clamp(1.6rem, 5vw, 2.8rem);
   font-weight: 800;
   margin-bottom: 15px;
   color: white;
   text-shadow: 0 2px 4px rgba(0,0,0,0.5);
   line-height: 1.2;
+}
+
+@media (max-width: 768px) {
+  .event-detail-hero { height: 220px; }
 }
 
 .event-hero-meta {
@@ -292,7 +296,7 @@
 }
 
 .btn-register-event {
-  background-color: #E88F2A;
+  background-color: var(--accent);
   color: white;
   border: none;
   border-radius: 12px;
@@ -301,13 +305,13 @@
   font-weight: 700;
   width: 100%;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(232, 143, 42, 0.3);
+  box-shadow: 0 4px 12px rgba(20, 174, 92, 0.18);
 }
 
 .btn-register-event:hover:not(:disabled) {
-  background-color: #d67f1b;
+  background-color: var(--primary-green-dark);
   transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(232, 143, 42, 0.4);
+  box-shadow: 0 6px 15px rgba(20, 174, 92, 0.22);
 }
 
 .btn-register-event:disabled {
@@ -392,7 +396,7 @@
 }
 
 .average-score {
-  font-size: 44px;
+  font-size: clamp(2rem, 6vw, 3rem);
   font-weight: 800;
   color: #08060d;
   line-height: 1.1;
@@ -624,7 +628,7 @@
 }
 
 .no-reviews-state i {
-  font-size: 40px;
+  font-size: clamp(1.4rem, 5vw, 2.2rem);
   display: block;
   margin-bottom: 10px;
 }

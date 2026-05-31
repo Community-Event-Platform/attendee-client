@@ -6,7 +6,7 @@
 }
 
 .footer-logo {
-  font-size: 32px;
+  font-size: clamp(1.4rem, 3.5vw, 2rem);
   font-weight: bold;
   color: #3b82f6;
   margin-bottom: 20px;

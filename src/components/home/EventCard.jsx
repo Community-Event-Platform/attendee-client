@@ -187,7 +187,7 @@ function EventCard({ event, navigate }) {
               role="progressbar"
               style={{
                 width: `${Math.min(100, Math.max(0, (attendeesCount / capacity) * 100))}%`,
-                backgroundColor: '#4D5EE3',
+                backgroundColor: 'var(--accent)',
               }}
             ></div>
           </div>

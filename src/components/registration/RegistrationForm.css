@@ -259,7 +259,7 @@
 }
 
 .file-upload-icon {
-  font-size: 32px;
+  font-size: clamp(1.2rem, 4vw, 2rem);
   color: #14ae5c;
   flex-shrink: 0;
 }
