@@ -518,15 +518,35 @@ function EventDetail({ addToast }) {
       {/* AC3: Handle successful registration from modal */}
       {(() => {
         if (!showRegistrationModal) return null;
-        const handleSuccess = () => {
+        const handleSuccess = async (payload) => {
           setHasRegistered(true);
-          setRegistrationStatus(isFreeEvent(event) ? 'Pending' : 'Approved');
-          if (addToast) {
-            if (isFreeEvent(event)) {
-              addToast("Registration request sent successfully. Please wait for approval.", "success");
+          // If payload contains registration data, set registrationId and status accordingly
+          try {
+            const reg = payload?.data ?? payload ?? null;
+            if (reg && reg.id) {
+              setRegistrationId(reg.id);
+              setRegistrationStatus(reg.status ?? (isFreeEvent(event) ? 'Pending' : 'Approved'));
             } else {
-              addToast("Registration completed successfully!", "success");
+              setRegistrationStatus(isFreeEvent(event) ? 'Pending' : 'Approved');
             }
+
+            // Refresh event detail to update seat counts / remaining seats
+            try {
+              const updated = await getEventDetail(id);
+              setEvent(updated);
+            } catch (err) {
+              console.warn('Failed to refresh event after registration', err);
+            }
+
+            if (addToast) {
+              if (isFreeEvent(event)) {
+                addToast("Registration request sent successfully. Please wait for approval.", "success");
+              } else {
+                addToast("Registration completed successfully!", "success");
+              }
+            }
+          } catch (err) {
+            console.error('handleSuccess error', err);
           }
         };
         if (isFreeEvent(event)) {

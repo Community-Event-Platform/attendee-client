@@ -111,10 +111,14 @@ function FreeRegistrationForm({ event, onClose, addToast = null, onSuccess = nul
       // Close modal first
       onClose();
 
-      // Call success callback to show toast in parent
+      // Call success callback to show toast in parent and pass registration data
       if (onSuccess) {
+        // response expected shape: { message, data }
+        const registration = response?.data ?? response?.data ?? response?.data ?? response?.data;
+        // Prefer passing the `data` object if present, otherwise pass whole response
+        const payload = response?.data ?? response?.data ?? response ?? null;
         setTimeout(() => {
-          onSuccess();
+          onSuccess(payload);
         }, 100);
       }
     } catch (error) {

@@ -141,8 +141,10 @@ function PaidRegistrationForm({ event, onClose, addToast = null, onSuccess = nul
       onClose();
 
       if (onSuccess) {
+        // response expected: { message, data }
+        const payload = response?.data ?? response ?? null;
         setTimeout(() => {
-          onSuccess();
+          onSuccess(payload);
         }, 100);
       }
     } catch (error) {
