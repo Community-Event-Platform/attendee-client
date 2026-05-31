@@ -129,6 +129,20 @@ export const checkRegistrationStatus = async (eventId) => {
   return response.data;
 };
 
+export const approveRegistration = async (registrationId) => {
+  const response = await api.post(`/registrations/${registrationId}/approve`, {}, {
+    headers: getAuthHeader(),
+  });
+  return response.data;
+};
+
+export const rejectRegistration = async (registrationId) => {
+  const response = await api.post(`/registrations/${registrationId}/reject`, {}, {
+    headers: getAuthHeader(),
+  });
+  return response.data;
+};
+
 // ==================== User APIs ====================
 
 export const getProfileApi = async () => {
