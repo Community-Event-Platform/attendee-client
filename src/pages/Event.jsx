@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getEvents } from "../services/api";
+import { getEvents, getMyRegistrations } from "../services/api";
 import EventCard from "../components/home/EventCard";
 import eventImage from "../assets/event.png";
 import "./style/Event.css";
@@ -8,6 +8,7 @@ import "./style/Event.css";
 function Event({ addToast }) {
   const navigate = useNavigate();
   const [events, setEvents] = useState([]);
+  const [registrations, setRegistrations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All categories");
@@ -42,6 +43,21 @@ function Event({ addToast }) {
 
     loadEvents();
   }, [searchTerm, selectedCategory]);
+
+  useEffect(() => {
+    const loadRegistrations = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const data = await getMyRegistrations();
+          setRegistrations(data || []);
+        } catch (err) {
+          console.error("Failed to load registrations", err);
+        }
+      }
+    };
+    loadRegistrations();
+  }, []);
 
   const categories = useMemo(() => {
     const names = events.map((event) => event.category?.name || event.category).filter(Boolean);
@@ -205,6 +221,7 @@ function Event({ addToast }) {
                 key={event.id} 
                 event={event} 
                 navigate={navigate} 
+                userRegistration={registrations.find(r => r.event_id === event.id)}
               />
             ))}
           </div>

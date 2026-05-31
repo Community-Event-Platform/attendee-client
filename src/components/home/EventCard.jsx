@@ -195,9 +195,24 @@ function EventCard({ event, navigate }) {
 
         {/* Price or Register Button */}
         <div className="event-footer">
-          <button className="btn btn-primary w-100" onClick={handleViewDetails}>
-            {isFreePrice(event.price) ? 'Free Registration' : 'Register'}
-          </button>
+          {userRegistration ? (
+            <>
+              <div style={{ marginBottom: '8px', fontSize: '14px', color: '#6b6375' }}>
+                Status: {userRegistration.status || "Registered"}
+              </div>
+              <button 
+                className="btn w-100 fw-bold" 
+                style={{ backgroundColor: '#14AE5C', color: 'white', border: 'none' }} 
+                onClick={handleViewDetails}
+              >
+                Cancel registration
+              </button>
+            </>
+          ) : (
+            <button className="btn btn-primary w-100" onClick={handleViewDetails}>
+              {isFreePrice(event.price) ? 'Free Registration' : 'Register'}
+            </button>
+          )}
         </div>
       </div>
     </div>
