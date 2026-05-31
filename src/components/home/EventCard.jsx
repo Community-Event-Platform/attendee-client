@@ -119,14 +119,6 @@ function EventCard({ event, navigate, userRegistration }) {
           {eventCategory}
         </div>
 
-        {/* Price Badge (Right Side) */}
-        <div 
-          className="event-type-badge"
-          style={{ backgroundColor: getPriceColor(event.price) }}
-        >
-          {getPriceDisplay(event.price)}
-        </div>
-
         {/* Overlay on Hover */}
         {isHovered && (
           <div className="event-overlay">
