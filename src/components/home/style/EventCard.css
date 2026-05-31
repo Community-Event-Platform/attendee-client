@@ -41,7 +41,7 @@
   position: absolute;
   top: 12px;
   left: 12px;
-  background: rgba(77, 94, 227, 0.9);
+  background: rgba(20, 174, 92, 0.9);
   color: white;
   padding: 6px 12px;
   border-radius: 20px;
@@ -86,7 +86,7 @@
 }
 
 .view-details-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #14AE5C 0%, #0d9a4e 100%);
   color: white;
   border: none;
   padding: 12px 24px;
@@ -98,7 +98,7 @@
 }
 
 .view-details-btn:hover {
-  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  background: linear-gradient(135deg, #0d9a4e 0%, #14AE5C 100%);
   transform: scale(1.05);
 }
 
@@ -172,7 +172,7 @@
 
 .price-text {
   font-size: 18px;
-  color: #667eea;
+  color: #14AE5C;
 }
 
 .event-footer .btn {
@@ -180,18 +180,18 @@
   font-size: 13px;
   font-weight: 600;
   border-radius: 6px;
-  background-color: #4D5EE3;
-  border-color: #4D5EE3;
+  background-color: #14AE5C;
+  border-color: #14AE5C;
   transition: all 0.3s ease;
 }
 
 .event-footer .btn:hover {
-  background-color: #3d4dc4;
-  border-color: #3d4dc4;
+  background-color: #0d9a4e;
+  border-color: #0d9a4e;
 }
 
 .event-footer .btn-primary {
-  background-color: #4D5EE3;
+  background-color: #14AE5C;
 }
 
 /* Responsive */

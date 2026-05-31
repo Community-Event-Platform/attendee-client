@@ -34,7 +34,7 @@
 }
 
 .event-category-badge {
-  background-color: #4D5EE3;
+  background-color: #14AE5C;
   color: white;
   padding: 6px 16px;
   border-radius: 6px;
@@ -118,7 +118,7 @@
 }
 
 .card-title-icon {
-  color: #4D5EE3;
+  color: #14AE5C;
   font-size: 22px;
   display: flex;
   align-items: center;
@@ -145,8 +145,8 @@
 }
 
 .info-item-icon {
-  background-color: rgba(77, 94, 227, 0.08);
-  color: #4D5EE3;
+  background-color: rgba(20, 174, 92, 0.08);
+  color: #14AE5C;
   width: 42px;
   height: 42px;
   border-radius: 10px;
@@ -226,11 +226,11 @@
 }
 
 .seat-remaining-box {
-  background-color: rgba(77, 94, 227, 0.05);
+  background-color: rgba(20, 174, 92, 0.05);
   border-radius: 12px;
   padding: 18px;
   margin-bottom: 25px;
-  border-left: 4px solid #4D5EE3;
+  border-left: 4px solid #14AE5C;
 }
 
 .seat-label {
@@ -243,7 +243,7 @@
 .seat-count {
   font-size: 28px;
   font-weight: 800;
-  color: #4D5EE3;
+  color: #14AE5C;
   margin-bottom: 5px;
 }
 
@@ -525,7 +525,7 @@
 /* Review Form */
 .review-form-card {
   background-color: #fafafc;
-  border: 1px dashed #4D5EE3;
+  border: 1px dashed #14AE5C;
 }
 
 .star-rating-input {
@@ -578,12 +578,12 @@
 
 .textarea-review:focus {
   outline: none;
-  border-color: #4D5EE3;
-  box-shadow: 0 0 0 3px rgba(77, 94, 227, 0.15);
+  border-color: #14AE5C;
+  box-shadow: 0 0 0 3px rgba(20, 174, 92, 0.15);
 }
 
 .btn-submit-review {
-  background-color: #4D5EE3;
+  background-color: #14AE5C;
   color: white;
   border: none;
   border-radius: 8px;
@@ -594,7 +594,7 @@
 }
 
 .btn-submit-review:hover:not(:disabled) {
-  background-color: #3b49c7;
+  background-color: #0d9a4e;
 }
 
 .btn-submit-review:disabled {
@@ -661,7 +661,7 @@
 }
 
 .custom-star-select:hover {
-  border-color: #4D5EE3;
+  border-color: #14AE5C;
 }
 
 .stars-display {
@@ -699,7 +699,7 @@
 
 .custom-review-textarea:focus {
   outline: none;
-  border-color: #4D5EE3;
+  border-color: #14AE5C;
 }
 
 .btn-submitted-review {

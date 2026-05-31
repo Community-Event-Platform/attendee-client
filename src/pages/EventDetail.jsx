@@ -316,6 +316,16 @@ function EventDetail({ addToast }) {
 
                 <div className="info-item">
                   <div className="info-item-icon">
+                    <i className="bi bi-person-badge-fill"></i>
+                  </div>
+                  <div className="info-item-content">
+                    <span className="info-item-label">Organizer</span>
+                    <span className="info-item-value">{event.organizer?.name || "EventHub Organizer"}</span>
+                  </div>
+                </div>
+
+                <div className="info-item">
+                  <div className="info-item-icon">
                     <i className="bi bi-people-fill"></i>
                   </div>
                   <div className="info-item-content">

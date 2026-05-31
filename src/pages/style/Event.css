@@ -12,7 +12,7 @@
 
 .event-hero-copy h1 {
   margin: 0 0 18px;
-  color: #6b4df5;
+  color: #14AE5C;
   font-size: clamp(2.1rem, 4vw, 3.3rem);
   font-weight: 800;
   line-height: 1.1;
@@ -41,24 +41,24 @@
   gap: 12px;
   height: 52px;
   min-width: 0;
-  border: 3px solid #bca8ea;
+  border: 3px solid #bcead1;
   border-radius: 10px;
   background: #fff;
-  color: #d4a1a8;
+  color: #92d4b2;
   padding: 0 16px;
-  box-shadow: 0 6px 14px rgba(111, 80, 232, 0.08);
+  box-shadow: 0 6px 14px rgba(20, 174, 92, 0.08);
   transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .event-search-field:focus-within {
-  border-color: #8f72ee;
-  box-shadow: 0 10px 22px rgba(111, 80, 232, 0.16);
+  border-color: #14AE5C;
+  box-shadow: 0 10px 22px rgba(20, 174, 92, 0.16);
   transform: translateY(-1px);
 }
 
 .event-search-field i {
   flex: 0 0 auto;
-  color: #d8a4aa;
+  color: #5ec68d;
   font-size: 22px;
 }
 
@@ -75,7 +75,7 @@
 }
 
 .event-search-field input::placeholder {
-  color: #d6a5ac;
+  color: #92d4b2;
 }
 
 .event-search-field select {
@@ -85,7 +85,7 @@
 }
 
 .event-search-field input[type="date"] {
-  color: #d6a5ac;
+  color: #92d4b2;
 }
 
 .event-search-button {
@@ -96,17 +96,17 @@
   height: 52px;
   border: 0;
   border-radius: 12px;
-  background: linear-gradient(135deg, #7b57f2 0%, #5b39dc 100%);
+  background: linear-gradient(135deg, #14AE5C 0%, #0d9a4e 100%);
   color: #fff;
   padding: 0 24px;
   font-size: 15px;
   font-weight: 800;
-  box-shadow: 0 0 0 4px rgba(111, 80, 232, 0.18), 0 12px 22px rgba(91, 57, 220, 0.24);
+  box-shadow: 0 0 0 4px rgba(20, 174, 92, 0.18), 0 12px 22px rgba(13, 154, 78, 0.24);
   transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
 .event-search-button:hover {
-  box-shadow: 0 0 0 4px rgba(111, 80, 232, 0.22), 0 16px 28px rgba(91, 57, 220, 0.3);
+  box-shadow: 0 0 0 4px rgba(20, 174, 92, 0.22), 0 16px 28px rgba(13, 154, 78, 0.3);
   filter: brightness(1.04);
   transform: translateY(-1px);
 }
@@ -156,9 +156,9 @@
 }
 
 .event-category-bar button.active {
-  background: linear-gradient(135deg, #7a57f1 0%, #6947df 100%);
+  background: linear-gradient(135deg, #14AE5C 0%, #0d9a4e 100%);
   color: #fff;
-  box-shadow: 0 10px 20px rgba(111, 80, 232, 0.24);
+  box-shadow: 0 10px 20px rgba(20, 174, 92, 0.24);
 }
 
 .event-category-bar button:hover {
@@ -264,7 +264,7 @@
   position: absolute;
   top: 12px;
   left: 12px;
-  background: rgba(77, 94, 227, 0.9);
+  background: rgba(20, 174, 92, 0.9);
   color: white;
   padding: 6px 12px;
   border-radius: 20px;
@@ -316,7 +316,7 @@
 }
 
 .view-details-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #14AE5C 0%, #0d9a4e 100%);
   color: white;
   border: none;
   padding: 12px 24px;
@@ -328,7 +328,7 @@
 }
 
 .view-details-btn:hover {
-  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  background: linear-gradient(135deg, #0d9a4e 0%, #14AE5C 100%);
   transform: scale(1.05);
 }
 
@@ -414,7 +414,7 @@
 }
 
 .event-capacity .progress-bar {
-  background-color: #4D5EE3;
+  background-color: #14AE5C;
 }
 
 /* Footer */
@@ -424,7 +424,7 @@
 
 .price-text {
   font-size: 18px;
-  color: #4D5EE3;
+  color: #14AE5C;
   font-weight: bold;
 }
 
@@ -433,18 +433,18 @@
   font-size: 13px;
   font-weight: 600;
   border-radius: 6px;
-  background-color: #4D5EE3;
-  border-color: #4D5EE3;
+  background-color: #14AE5C;
+  border-color: #14AE5C;
   transition: all 0.3s ease;
 }
 
 .event-footer .btn:hover {
-  background-color: #3d4dc4;
-  border-color: #3d4dc4;
+  background-color: #0d9a4e;
+  border-color: #0d9a4e;
 }
 
 .event-footer .btn-primary {
-  background-color: #4D5EE3;
+  background-color: #14AE5C;
   color: white;
   border: none;
 }
@@ -483,7 +483,7 @@
 }
 
 .event-pagination button.active {
-  background: #6f50e8;
+  background: #14AE5C;
   color: #fff;
 }
 
