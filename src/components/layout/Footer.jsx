@@ -1,5 +1,4 @@
 import "./style/Footer.css";
-import logoIcon from "../../assets/iconhomepage.png";
 
 function Footer() {
   return (
@@ -10,12 +9,8 @@ function Footer() {
           {/* Cột 1: Logo + Description + Social Icons */}
           <div className="col-md-3 mb-4">
             <div className="d-flex align-items-center mb-3">
-              <img 
-                src={logoIcon} 
-                alt="EventHub Logo" 
-                style={{ width: '30px', height: '30px', objectFit: 'contain', marginRight: '10px' }} 
-              />
-              <h4 className="fw-bold mb-0" style={{ color: "#000" }}>
+              <i className="bi bi-lightning-charge-fill" style={{ color: '#14AE5C', fontSize: '28px', marginRight: '10px' }}></i>
+              <h4 className="fw-bold mb-0" style={{ color: "#1a1a1a", fontSize: '24px' }}>
                 EventHub
               </h4>
             </div>

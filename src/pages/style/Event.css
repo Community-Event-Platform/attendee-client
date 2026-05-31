@@ -464,33 +464,33 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 64px;
-  height: 64px;
-  border: 4px solid #111;
-  border-radius: 20px;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #d5d7dc;
+  border-radius: 8px;
   background: #fff;
   color: #111;
-  font-size: clamp(1.4rem, 4vw, 2.2rem);
-  font-weight: 900;
+  font-size: 16px;
+  font-weight: 600;
   line-height: 1;
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.2s ease;
 }
 
-.event-pagination button:hover:not(:disabled),
-.event-pagination button.active {
-  box-shadow: 0 10px 20px rgba(17, 24, 39, 0.14);
-  transform: translateY(-1px);
+.event-pagination button:hover:not(:disabled) {
+  border-color: #14AE5C;
+  color: #14AE5C;
 }
 
 .event-pagination button.active {
   background: #14AE5C;
   color: #fff;
+  border-color: #14AE5C;
 }
 
 .event-pagination button:disabled {
-  border-color: #9c9c9c;
-  color: #9c9c9c;
-  opacity: 1;
+  border-color: #e5e7eb;
+  color: #9ca3af;
+  background: #f9fafb;
   cursor: not-allowed;
 }
 

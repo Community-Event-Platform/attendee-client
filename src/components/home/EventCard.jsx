@@ -202,7 +202,7 @@ function EventCard({ event, navigate, userRegistration }) {
               </div>
               <button 
                 className="btn w-100 fw-bold" 
-                style={{ backgroundColor: '#14AE5C', color: 'white', border: 'none' }} 
+                style={{ backgroundColor: '#f1f5f9', color: '#64748b', border: '1px solid #cbd5e1' }} 
                 onClick={handleViewDetails}
               >
                 Cancel registration
