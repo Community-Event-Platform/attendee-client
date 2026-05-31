@@ -137,7 +137,11 @@ function EventDetail({ addToast }) {
     }).format(new Date(value));
   };
 
-  
+  const attendeesCount = event?.registrations_count ?? event?.attendees ?? 0;
+  const capacity = event?.capacity || 0;
+  const remainingSeats = event?.remaining_seats ?? Math.max(0, capacity - attendeesCount);
+  const capacityProgress = capacity > 0 ? Math.min(100, Math.round((attendeesCount / capacity) * 100)) : 0;
+  const capacityStatusText = remainingSeats > 0 ? `Remaining ${remainingSeats} seats` : "Sold out";
 
   // Calculate rating breakdown percentages
   const breakdownPercentages = useMemo(() => {
@@ -328,11 +332,24 @@ function EventDetail({ addToast }) {
                   <div className="info-item-icon">
                     <i className="bi bi-people-fill"></i>
                   </div>
-                  <div className="info-item-content">
+                  <div className="info-item-content" style={{ width: "100%" }}>
                     <span className="info-item-label">Capacity</span>
                     <span className="info-item-value">
-                      {event.registrations_count} / {event.capacity} attendees
+                      {attendeesCount} / {capacity} attendees
                     </span>
+                    <div className="progress mt-2" style={{ height: "8px" }}>
+                      <div
+                        className="progress-bar"
+                        role="progressbar"
+                        aria-valuenow={capacityProgress}
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        style={{
+                          width: `${capacityProgress}%`,
+                          backgroundColor: "#4D5EE3",
+                        }}
+                      ></div>
+                    </div>
                   </div>
                 </div>
 
@@ -342,8 +359,8 @@ function EventDetail({ addToast }) {
                   </div>
                   <div className="info-item-content">
                     <span className="info-item-label">Status</span>
-                    <span className="info-item-value text-success">
-                      {event.remaining_seats > 0 ? `Remaining ${event.remaining_seats} seats` : "Sold out"}
+                    <span className={`info-item-value ${remainingSeats > 0 ? "text-success" : "text-danger"}`}>
+                      {capacityStatusText}
                     </span>
                   </div>
                 </div>
@@ -457,12 +474,25 @@ function EventDetail({ addToast }) {
                 <div className="sidebar-divider"></div>
 
                 <div className="seat-remaining-box">
-                  <div className="seat-label">Seats remaining</div>
+                  <div className="seat-label">Capacity</div>
                   <div className="seat-count">
-                    {event.remaining_seats} seats
+                    {attendeesCount} / {capacity} attendees
                   </div>
-                  <div className="seat-total">
-                    Out of {event.capacity} seats
+                  <div className="progress mt-2" style={{ height: "8px" }}>
+                    <div
+                      className="progress-bar"
+                      role="progressbar"
+                      aria-valuenow={capacityProgress}
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                      style={{
+                        width: `${capacityProgress}%`,
+                        backgroundColor: "#4D5EE3",
+                      }}
+                    ></div>
+                  </div>
+                  <div className="seat-total" style={{ marginTop: "10px" }}>
+                    {capacityStatusText}
                   </div>
                 </div>
 

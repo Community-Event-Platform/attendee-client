@@ -49,8 +49,11 @@ const eventImages = {
 function EventCard({ event, navigate, userRegistration }) {
   const [isHovered, setIsHovered] = useState(false);
   const eventCategory = event.category?.name || event.category || 'Event';
-  const attendeesCount = event.attendees ?? 0;
-  const capacity = event.capacity || 1;
+  const attendeesCount = event.registrations_count ?? event.attendees ?? 0;
+  const capacity = event.capacity || 0;
+  const remainingSeats = event.remaining_seats ?? Math.max(0, capacity - attendeesCount);
+  const capacityProgress = capacity > 0 ? Math.min(100, Math.round((attendeesCount / capacity) * 100)) : 0;
+  const capacityStatusText = remainingSeats > 0 ? `Remaining ${remainingSeats} seats` : 'Sold out';
 
   const getEventImage = (imageRef) => {
     if (!imageRef) return event01;
@@ -165,7 +168,7 @@ function EventCard({ event, navigate, userRegistration }) {
           </div>
         </div>
 
-        {/* Capacity Progress Bar */}
+        {/* Capacity & Status */}
         <div className="event-capacity mb-2">
           <div className="d-flex justify-content-between mb-2">
             <small className="text-muted">Capacity</small>
@@ -177,11 +180,17 @@ function EventCard({ event, navigate, userRegistration }) {
             <div
               className="progress-bar"
               role="progressbar"
+              aria-valuenow={capacityProgress}
+              aria-valuemin="0"
+              aria-valuemax="100"
               style={{
-                width: `${Math.min(100, Math.max(0, (attendeesCount / capacity) * 100))}%`,
-                backgroundColor: 'var(--accent)',
+                width: `${capacityProgress}%`,
+                backgroundColor: '#4D5EE3',
               }}
             ></div>
+          </div>
+          <div className={`event-status-text mt-2 ${remainingSeats > 0 ? 'text-success' : 'text-danger'}`}>
+            {capacityStatusText}
           </div>
         </div>
 
@@ -205,6 +214,9 @@ function EventCard({ event, navigate, userRegistration }) {
               {isFreePrice(event.price) ? 'Free Registration' : 'Register'}
             </button>
           )}
+          <button className="btn btn-primary w-100" onClick={handleViewDetails}>
+            {remainingSeats <= 0 ? 'Sold out' : isFreePrice(event.price) ? 'Free Registration' : 'Register'}
+          </button>
         </div>
       </div>
     </div>
