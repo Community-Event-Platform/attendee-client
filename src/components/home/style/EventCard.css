@@ -20,7 +20,7 @@
 .event-image-container {
   position: relative;
   width: 100%;
-  height: 250px;
+  height: clamp(180px, 25vw, 250px);
   overflow: hidden;
   background: #f0f0f0;
 }
@@ -39,24 +39,24 @@
 /* Badges */
 .category-badge {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: clamp(8px, 2vw, 12px);
+  left: clamp(8px, 2vw, 12px);
   background: rgba(20, 174, 92, 0.9);
   color: white;
-  padding: 6px 12px;
+  padding: clamp(4px, 1vw, 6px) clamp(8px, 2vw, 12px);
   border-radius: 20px;
-  font-size: 12px;
+  font-size: clamp(11px, 1.5vw, 12px);
   font-weight: 600;
 }
 
 .event-type-badge {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: clamp(8px, 2vw, 12px);
+  right: clamp(8px, 2vw, 12px);
   color: white;
-  padding: 8px 14px;
+  padding: clamp(6px, 1.5vw, 8px) clamp(10px, 2vw, 14px);
   border-radius: 6px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -89,12 +89,12 @@
   background: linear-gradient(135deg, #14AE5C 0%, #0d9a4e 100%);
   color: white;
   border: none;
-  padding: 12px 24px;
+  padding: clamp(10px, 2vw, 12px) clamp(18px, 4vw, 24px);
   border-radius: 6px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 14px;
+  font-size: clamp(12px, 1.5vw, 14px);
 }
 
 .view-details-btn:hover {
@@ -107,14 +107,95 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  padding: clamp(12px, 3vw, 16px);
 }
 
 .event-title {
   font-weight: 700;
-  font-size: 16px;
+  font-size: clamp(14px, 2.5vw, 16px);
   color: #1a1a1a;
-  margin-bottom: 12px;
+  margin-bottom: clamp(8px, 2vw, 12px);
   line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@media (max-width: 992px) {
+  .event-image-container {
+    height: 200px;
+  }
+
+  .event-details {
+    padding: 14px;
+  }
+
+  .event-title {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .event-image-container {
+    height: 180px;
+  }
+
+  .event-details {
+    padding: 12px;
+  }
+
+  .event-title {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .category-badge {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+
+  .view-details-btn {
+    font-size: 12px;
+    padding: 8px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .event-card {
+    border-radius: 10px;
+  }
+
+  .event-image-container {
+    height: 160px;
+  }
+
+  .event-details {
+    padding: 10px;
+  }
+
+  .event-title {
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .category-badge {
+    font-size: 9px;
+    padding: 3px 6px;
+    top: 6px;
+    left: 6px;
+  }
+
+  .event-type-badge {
+    font-size: 9px;
+    top: 6px;
+    right: 6px;
+  }
+
+  .view-details-btn {
+    font-size: 11px;
+    padding: 6px 12px;
+  }
 }
 
 .event-location {

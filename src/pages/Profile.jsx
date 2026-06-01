@@ -102,7 +102,7 @@ function Profile({ addToast }) {
           </div>
           <div className="profile-header-info">
             <h1 className="profile-name">{profile.name || 'User'}</h1>
-            <p className="profile-email">{profile.email}</p>
+          
             <p className="profile-role">Attendee</p>
           </div>
         </div>

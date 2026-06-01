@@ -121,10 +121,31 @@ h2 {
 }
 
 /* Responsive typography */
+@media (max-width: 1024px) {
+  :root { font-size: 15px; }
+  h1 { font-size: 1.95rem; }
+  h2 { font-size: 1.15rem; }
+}
+
 @media (max-width: 768px) {
+  :root { font-size: 14px; }
   h1 { font-size: 1.6rem; margin: 16px 0; }
   h2 { font-size: 1.05rem; }
   .container { padding: 0 12px; }
+  body { font-size: 15px; }
+}
+
+@media (max-width: 480px) {
+  :root { font-size: 13px; }
+  h1 { font-size: 1.3rem; margin: 12px 0; }
+  h2 { font-size: 0.95rem; }
+  .container { padding: 0 10px; }
+  body { font-size: 14px; }
+  
+  html, body {
+    min-width: 320px;
+    overflow-x: hidden;
+  }
 }
 p {
   margin: 0;

@@ -56,11 +56,123 @@
 }
 
 @media (max-width: 768px) {
-  .header-container { justify-content: space-between; }
-  .header-logo { flex: 1 1 auto; }
-  .header-nav { width: 100%; justify-content: center; margin-top: 8px; gap: 10px; }
-  .header-auth { width: 100%; display: flex; justify-content: center; margin-top: 8px; }
-  .header-nav-item a { padding: 6px 10px; font-size: 14px; }
+  .header-container { 
+    justify-content: space-between; 
+    padding: 10px 16px;
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+  .header-logo { 
+    flex: 1 1 auto; 
+    min-width: 0;
+  }
+  .header-logo-text {
+    font-size: 18px;
+    display: none;
+  }
+  .header-logo-icon {
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+  }
+  .header-nav { 
+    width: 100%; 
+    justify-content: center; 
+    margin-top: 8px; 
+    gap: 8px;
+    order: 3;
+  }
+  .header-auth { 
+    width: auto;
+    display: flex; 
+    justify-content: flex-end; 
+    margin-top: 0; 
+  }
+  .header-nav-item a { 
+    padding: 6px 10px; 
+    font-size: 13px;
+    border-radius: 20px;
+  }
+  .btn-link {
+    padding: 6px 14px;
+    font-size: 13px;
+    border: 1.5px solid #14AE5C;
+  }
+  .user-profile {
+    gap: 8px;
+    padding: 6px 10px;
+  }
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+  }
+  .user-avatar-icon {
+    font-size: 16px;
+  }
+  .dropdown-arrow {
+    font-size: 10px;
+  }
+  .user-profile .fw-bold {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-container {
+    padding: 8px 12px;
+  }
+  .header-nav-item a {
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+  .btn-link {
+    padding: 5px 12px;
+    font-size: 12px;
+  }
+  .user-profile {
+    gap: 6px;
+    padding: 5px 8px;
+  }
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+  }
+  .user-avatar-icon {
+    font-size: 14px;
+  }
+  .header-auth {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .user-dropdown {
+    min-width: 320px;
+    max-width: 360px;
+    right: -5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-dropdown {
+    min-width: 280px;
+    max-width: 320px;
+    right: -10px;
+    top: calc(100% + 12px);
+  }
+  .dropdown-avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+  }
+  .dropdown-name {
+    font-size: 15px;
+  }
+  .dropdown-email {
+    font-size: 12px;
+  }
+  .dropdown-item {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
 }
 
 .header-nav-item a {
@@ -162,17 +274,27 @@
 /* Dropdown Menu */
 .user-dropdown {
   position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
+  top: calc(100% + 16px);
+  right: -10px;
+
   background-color: white;
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+
+  box-shadow:
+    0 20px 50px rgba(0,0,0,0.12),
+    0 6px 20px rgba(0,0,0,0.08);
+
   z-index: 1000;
-  min-width: 320px;
-  padding: 8px;
+  min-width: 360px;
+  max-width: 420px;
+
+  /* allow long names/emails to wrap inside the dropdown */
+  word-break: break-word;
+
+  padding: 16px 12px;
   overflow: hidden;
-  animation: dropdownFadeIn 0.25s ease-out;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+
+  border: 1px solid rgba(0,0,0,0.06);
 }
 
 @keyframes dropdownFadeIn {
@@ -189,26 +311,35 @@
 /* Dropdown Header */
 .dropdown-header {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  padding: 16px 20px;
-  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-  border-bottom: 1px solid #f1f5f9;
-  border-radius: 12px;
-  margin-bottom: 4px;
+  justify-content: center;
+
+  text-align: center;
+  padding: 12px 16px 18px 16px;
+  gap: 8px;
+  margin-bottom: 6px;
 }
 
 .dropdown-avatar {
-  width: 52px;
-  height: 52px;
+  width: 56px;
+  height: 56px;
   background: linear-gradient(135deg, #14AE5C, #0d8a3e);
   color: #ffffff;
   border-radius: 50%;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+
+  font-size: 22px;
   font-weight: 700;
-  margin-right: 16px;
+
+  margin-right: 0;
+  margin-bottom: 0;
+  line-height: 1;
+  text-align: center;
+
   box-shadow: 0 4px 12px rgba(20, 174, 92, 0.25);
   flex-shrink: 0;
 }
@@ -216,44 +347,55 @@
 .dropdown-info {
   display: flex;
   flex-direction: column;
-  flex: 1;
-  min-width: 0;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 8px;
 }
-
 .dropdown-name {
   font-size: 16px;
   font-weight: 600;
   color: #1a1a1a;
-  margin-bottom: 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  margin-bottom: 0;
+  /* allow wrapping for long names */
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .dropdown-email {
   font-size: 13px;
   color: #64748b;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* allow email to wrap instead of being truncated */
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  max-width: 100%;
 }
 
 /* Dropdown Divider */
 .dropdown-divider {
   height: 1px;
   background: linear-gradient(90deg, transparent, #f1f5f9, transparent);
-  margin: 6px 0;
+  margin: 10px 0;
+  width: 100%;
 }
 
 /* Dropdown Items */
 .dropdown-item {
   display: flex;
   align-items: center;
+  justify-content: center;
   width: 100%;
-  padding: 12px 18px;
+  padding: 14px 18px;
   background: none;
   border: none;
-  text-align: left;
+  text-align: center;
   font-size: 15px;
   font-weight: 500;
   color: #374151;
@@ -261,14 +403,16 @@
   cursor: pointer;
   transition: all 0.15s ease;
   border-radius: 10px;
-  margin: 2px 0;
+  margin: 4px 0;
 }
 
 .dropdown-item i {
   font-size: 18px;
-  margin-right: 14px;
+  margin-right: 10px;
+  margin-left: 0;
   color: #9ca3af;
   transition: color 0.15s ease;
+  flex-shrink: 0;
 }
 
 .dropdown-item:hover {
@@ -285,7 +429,7 @@
   color: #ef4444;
   font-weight: 600;
   padding: 14px 18px;
-  margin: 8px 0;
+  margin: 4px 0;
   border-radius: 10px;
   background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
   border: 1.5px solid #fee2e2;
@@ -294,8 +438,10 @@
 
 .dropdown-item.logout-item i {
   color: #ef4444;
-  margin-right: 12px;
+  margin-right: 10px;
+  margin-left: 0;
   font-size: 18px;
+  flex-shrink: 0;
 }
 
 .dropdown-item.logout-item:hover {
@@ -315,4 +461,10 @@
   font-size: 10px;
   min-width: 18px;
   height: 18px;
+}
+.user-profile .fw-bold {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

@@ -143,7 +143,7 @@ function Header({ addToast }) {
                   className="position-relative me-2 text-decoration-none"
                   style={{ color: '#6c757d' }}
                 >
-                  <i className="bi bi-bell-fill" style={{ fontSize: '22px' }}></i>
+                  <i className="bi bi-bell-fill" style={{ fontSize: '18px' }}></i>
                   {unreadCount > 0 && (
                     <span 
                       className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-flex align-items-center justify-content-center"
@@ -166,11 +166,8 @@ function Header({ addToast }) {
               {/* Dropdown menu */}
               {isDropdownOpen && (
                 <div className="user-dropdown" onClick={(e) => e.stopPropagation()}>
-                  <div className="dropdown-header">
-                    <div className="dropdown-avatar">{getInitials(user?.full_name || user?.name || 'U')}</div>
+                  <div className="dropdown-header">    
                     <div className="dropdown-info">
-                      <span className="dropdown-name">{user?.full_name || user?.name || 'User'}</span>
-                      <span className="dropdown-email">{user?.email || 'user@email.com'}</span>
                     </div>
                   </div>
                   <div className="dropdown-divider"></div>
