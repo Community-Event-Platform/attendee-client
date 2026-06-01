@@ -80,7 +80,7 @@
   border-radius: clamp(12px, 2vw, 16px) clamp(12px, 2vw, 16px) 0 0;
   box-sizing: border-box;
 }
-}
+
 
 .modal-title {
   font-size: 24px;
