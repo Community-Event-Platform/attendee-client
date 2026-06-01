@@ -21,6 +21,9 @@ function Home() {
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -44,16 +47,27 @@ function Home() {
 
   const handleSearch = (term) => {
     setSearchTerm(term);
-    filterEvents(term, selectedCategory);
+    filterEvents(term, selectedCategory, selectedDate);
   };
 
   const handleCategoryFilter = (categoryId) => {
     const category = categoryId === selectedCategory ? null : categoryId;
     setSelectedCategory(category);
-    filterEvents(searchTerm, category);
+    filterEvents(searchTerm, category, selectedDate);
   };
 
-  const filterEvents = (search, categoryId) => {
+  const handleDateFilter = (date) => {
+    setSelectedDate(date);
+    setShowDatePicker(false);
+    filterEvents(searchTerm, selectedCategory, date);
+  };
+
+  const clearDateFilter = () => {
+    setSelectedDate(null);
+    filterEvents(searchTerm, selectedCategory, null);
+  };
+
+  const filterEvents = (search, categoryId, dateFilter) => {
     let result = events;
 
     if (search) {
@@ -74,6 +88,15 @@ function Home() {
       });
     }
 
+    if (dateFilter) {
+      result = result.filter((event) => {
+        if (!event.date) return false;
+        const eventDate = new Date(event.date).toDateString();
+        const filterDate = new Date(dateFilter).toDateString();
+        return eventDate === filterDate;
+      });
+    }
+
     setFilteredEvents(result);
   };
 
@@ -86,12 +109,62 @@ function Home() {
           <p className="hero-subtitle">Search and join events that are right for you</p>
           <SearchBar onSearch={handleSearch} />
           <div className="hero-filters">
-            <button className="filter-btn">
-              <i className="bi bi-funnel"></i> Category
-            </button>
-            <button className="filter-btn">
-              <i className="bi bi-calendar3"></i> Date
-            </button>
+            <div className="filter-wrapper">
+              <button 
+                className={`filter-btn ${selectedCategory ? 'active' : ''}`}
+                onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
+              >
+                <i className="bi bi-funnel"></i> Category
+                {selectedCategory && <span className="filter-badge">1</span>}
+              </button>
+              {showCategoryDropdown && (
+                <div className="filter-dropdown">
+                  <div className="dropdown-item" onClick={() => handleCategoryFilter(null)}>
+                    All Categories
+                  </div>
+                  {categories.map((cat) => (
+                    <div 
+                      key={cat.id}
+                      className={`dropdown-item ${selectedCategory === cat.id ? 'active' : ''}`}
+                      onClick={() => {
+                        handleCategoryFilter(cat.id);
+                        setShowCategoryDropdown(false);
+                      }}
+                    >
+                      <i className={`bi ${cat.icon}`}></i> {cat.name}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="filter-wrapper">
+              <button 
+                className={`filter-btn ${selectedDate ? 'active' : ''}`}
+                onClick={() => setShowDatePicker(!showDatePicker)}
+              >
+                <i className="bi bi-calendar3"></i> Date
+                {selectedDate && <span className="filter-badge">1</span>}
+              </button>
+              {showDatePicker && (
+                <div className="filter-dropdown date-picker">
+                  <input 
+                    type="date" 
+                    className="date-input"
+                    onChange={(e) => handleDateFilter(e.target.value)}
+                    value={selectedDate || ''}
+                  />
+                  {selectedDate && (
+                    <button 
+                      className="clear-date-btn"
+                      onClick={clearDateFilter}
+                    >
+                      Clear date
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
           <div className="hero-image">
@@ -156,14 +229,20 @@ function Home() {
         <div className="container-fluid px-4 px-lg-5">
           <div className="section-header mb-5">
             <h2 className="section-title">All Events</h2>
-            {selectedCategory && (
+            {(selectedCategory || selectedDate) && (
               <p className="section-subtitle">
-                Filtering: {categories.find((c) => c.id === selectedCategory)?.name}
+                {selectedCategory && `Category: ${categories.find((c) => c.id === selectedCategory)?.name}`}
+                {selectedCategory && selectedDate && ' • '}
+                {selectedDate && `Date: ${new Date(selectedDate).toLocaleDateString()}`}
                 <button
                   className="btn-clear-filter ms-3"
-                  onClick={() => handleCategoryFilter(null)}
+                  onClick={() => {
+                    setSelectedCategory(null);
+                    setSelectedDate(null);
+                    filterEvents(searchTerm, null, null);
+                  }}
                 >
-                  Clear filter
+                  Clear all filters
                 </button>
               </p>
             )}

@@ -179,7 +179,7 @@ function Header({ addToast }) {
                     My Profile
                   </Link>
                   <div className="dropdown-divider"></div>
-                  <button className="dropdown-item" onClick={() => { handleLogout(); }}>
+                  <button className="dropdown-item logout-item" onClick={() => { handleLogout(); }}>
                     <i className="bi bi-box-arrow-right"></i>
                     Logout
                   </button>
