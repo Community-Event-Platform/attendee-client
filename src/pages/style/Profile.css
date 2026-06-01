@@ -316,6 +316,24 @@
   cursor: not-allowed;
 }
 
+.btn-details {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--primary-color);
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-details:hover {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+}
+
 /* --- Trạng thái trống & Loading --- */
 .empty-state {
   grid-column: 1 / -1;

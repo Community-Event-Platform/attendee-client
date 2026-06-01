@@ -65,16 +65,25 @@ function EventCard({ event, navigate, userRegistration }) {
     // If imageRef already looks like a full URL, return it
     if (imageRef.startsWith('http://') || imageRef.startsWith('https://')) return imageRef;
 
-    // If imageRef is a server path like '/storage/events/..', construct absolute URL from VITE_API_URL
+    // Construct base URL from VITE_API_URL
     const rawApiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, '');
     if (!rawApiUrl) return event01;
     const apiBase = rawApiUrl.replace(/\/api$/, '');
 
-    if (imageRef.startsWith('/')) {
-      return `${apiBase}${imageRef}`;
+    // Determine the image path
+    let imagePath;
+    if (imageRef.startsWith('/storage/')) {
+      // Already has /storage/ prefix
+      imagePath = imageRef;
+    } else if (imageRef.startsWith('/')) {
+      // Has leading slash but not storage (e.g., /events/abc.jpg)
+      imagePath = `/storage${imageRef}`;
+    } else {
+      // Just filename like 'abc.jpg', prepend full storage path
+      imagePath = `/storage/events/${imageRef}`;
     }
 
-    return `${apiBase}/${imageRef}`;
+    return `${apiBase}${imagePath}`;
   };
 
   const formatDate = (dateString) => {
@@ -112,7 +121,7 @@ function EventCard({ event, navigate, userRegistration }) {
       {/* Event Image Container */}
       <div className="event-image-container">
         <img 
-          src={getEventImage(event.image_url)} 
+          src={getEventImage(event.image || event.image_url)} 
           alt={event.name}
           className="event-image"
         />
@@ -214,9 +223,7 @@ function EventCard({ event, navigate, userRegistration }) {
               {isFreePrice(event.price) ? 'Free Registration' : 'Register'}
             </button>
           )}
-          <button className="btn btn-primary w-100" onClick={handleViewDetails}>
-            {remainingSeats <= 0 ? 'Sold out' : isFreePrice(event.price) ? 'Free Registration' : 'Register'}
-          </button>
+
         </div>
       </div>
     </div>

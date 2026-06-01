@@ -174,6 +174,7 @@ function Profile({ addToast }) {
                       status="confirmed"
                       onCancel={() => handleCancelRegistration(reg.id)}
                       isCanceling={cancelingId === reg.id}
+                      navigate={navigate}
                     />
                   ))
                 )}
@@ -227,7 +228,7 @@ function Profile({ addToast }) {
 }
 
 // Event Card Component
-function EventCard({ registration, status, onCancel, isCanceling }) {
+function EventCard({ registration, status, onCancel, isCanceling, navigate }) {
   const event = registration.event;
   
   const getStatusBadge = () => {
@@ -279,7 +280,7 @@ function EventCard({ registration, status, onCancel, isCanceling }) {
           </div>
         )}
       </div>
-      {(status === 'pending' || status === 'confirmed') && (
+      {status === 'pending' && (
         <div className="event-card-footer">
           <button 
             className="btn-cancel"
@@ -287,6 +288,16 @@ function EventCard({ registration, status, onCancel, isCanceling }) {
             disabled={isCanceling}
           >
             {isCanceling ? 'Canceling...' : 'Cancel Registration'}
+          </button>
+        </div>
+      )}
+      {status === 'confirmed' && (
+        <div className="event-card-footer">
+          <button 
+            className="btn-details"
+            onClick={() => navigate(`/events/${event.id}`)}
+          >
+            View Details
           </button>
         </div>
       )}

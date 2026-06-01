@@ -8,6 +8,34 @@ import { useAuth } from "../hooks/useAuth";
 import "./style/EventDetail.css";
 import eventImage from "../assets/event.png";
 
+// Helper function to get event image URL
+const getEventImage = (imageRef) => {
+  if (!imageRef) return eventImage;
+
+  // If imageRef already looks like a full URL, return it
+  if (imageRef.startsWith('http://') || imageRef.startsWith('https://')) return imageRef;
+
+  // Construct base URL from VITE_API_URL
+  const rawApiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, '');
+  if (!rawApiUrl) return eventImage;
+  const apiBase = rawApiUrl.replace(/\/api$/, '');
+
+  // Determine the image path
+  let imagePath;
+  if (imageRef.startsWith('/storage/')) {
+    // Already has /storage/ prefix
+    imagePath = imageRef;
+  } else if (imageRef.startsWith('/')) {
+    // Has leading slash but not storage (e.g., /events/abc.jpg)
+    imagePath = `/storage${imageRef}`;
+  } else {
+    // Just filename like 'abc.jpg', prepend full storage path
+    imagePath = `/storage/events/${imageRef}`;
+  }
+
+  return `${apiBase}${imagePath}`;
+};
+
 function EventDetail({ addToast }) {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -258,7 +286,7 @@ function EventDetail({ addToast }) {
       {/* Banner / Hero Section */}
       <section 
         className="event-detail-hero"
-        style={{ backgroundImage: `url(${eventImage})` }}
+        style={{ backgroundImage: `url(${getEventImage(event.image || event.image_url)})` }}
       >
         <div className="container-fluid px-4 px-lg-5">
           <div className="event-detail-hero-content">
