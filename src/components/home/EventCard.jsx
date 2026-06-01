@@ -95,6 +95,10 @@ function EventCard({ event, navigate, userRegistration }) {
     return price == null || Number(price) === 0;
   };
 
+  const isPaidPrice = (price) => {
+    return price != null && Number(price) > 0;
+  };
+
   const getPriceDisplay = (price) => {
     if (isFreePrice(price)) {
       return 'Free Registration';
@@ -214,13 +218,23 @@ function EventCard({ event, navigate, userRegistration }) {
                 className="btn w-100 fw-bold" 
                 style={{ backgroundColor: '#f1f5f9', color: '#64748b', border: '1px solid #cbd5e1' }} 
                 onClick={handleViewDetails}
+                disabled={isPaidPrice(event.price)}
               >
-                Cancel registration
+                {isPaidPrice(event.price) ? 'Cannot cancel (paid event)' : 'Cancel registration'}
               </button>
             </div>
           ) : (
-            <button className="btn btn-primary w-100" onClick={handleViewDetails}>
-              {isFreePrice(event.price) ? 'Free Registration' : 'Register'}
+            <button 
+              className="btn btn-primary w-100" 
+              onClick={handleViewDetails}
+              disabled={isPaidPrice(event.price) && remainingSeats <= 0}
+            >
+              {isPaidPrice(event.price) && remainingSeats <= 0 ? (
+                <>
+                  <i className="bi bi-prohibition" style={{ marginRight: '6px' }}></i>
+                  Sold out
+                </>
+              ) : isFreePrice(event.price) ? 'Free Registration' : 'Register'}
             </button>
           )}
 

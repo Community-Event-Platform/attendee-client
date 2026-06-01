@@ -563,6 +563,7 @@ function EventDetail({ addToast }) {
                       type="button"
                       className="btn-register-event"
                       onClick={handleOpenRegistration}
+                      disabled={isPaidEvent(event) && remainingSeats <= 0}
                     >
                       Register now
                     </button>

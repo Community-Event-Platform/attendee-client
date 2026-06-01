@@ -194,6 +194,19 @@
   background-color: #14AE5C;
 }
 
+.event-footer .btn:disabled {
+  background-color: #5a677a;
+  border-color: #5a677a;
+  color: white;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.event-footer .btn:disabled:hover {
+  background-color: #5a677a;
+  border-color: #5a677a;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .event-image-container {
