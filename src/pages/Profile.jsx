@@ -16,6 +16,9 @@ function Profile({ addToast }) {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('confirmed');
   const [cancelingId, setCancelingId] = useState(null);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [confirmCancelId, setConfirmCancelId] = useState(null);
+  const [confirmCancelEvent, setConfirmCancelEvent] = useState(null);
 
   useEffect(() => {
     if (!token) {
@@ -57,14 +60,19 @@ function Profile({ addToast }) {
     }
   };
 
-  const handleCancelRegistration = async (registrationId) => {
-    if (!window.confirm('Are you sure you want to cancel this registration?')) {
-      return;
-    }
+  const handleCancelRegistration = async (registrationId, eventName) => {
+    setConfirmCancelId(registrationId);
+    setConfirmCancelEvent(eventName);
+    setShowCancelConfirm(true);
+  };
 
+  const handleConfirmCancel = async () => {
+    if (!confirmCancelId) return;
+
+    setShowCancelConfirm(false);
     try {
-      setCancelingId(registrationId);
-      await cancelRegistration(registrationId);
+      setCancelingId(confirmCancelId);
+      await cancelRegistration(confirmCancelId);
       addToast('Registration cancelled successfully', 'success');
       fetchProfile(); // Refresh profile data
     } catch (error) {
@@ -72,6 +80,8 @@ function Profile({ addToast }) {
       addToast('Failed to cancel registration', 'error');
     } finally {
       setCancelingId(null);
+      setConfirmCancelId(null);
+      setConfirmCancelEvent(null);
     }
   };
 
@@ -172,7 +182,7 @@ function Profile({ addToast }) {
                       key={reg.id} 
                       registration={reg} 
                       status="confirmed"
-                      onCancel={() => handleCancelRegistration(reg.id)}
+                      onCancel={() => handleCancelRegistration(reg.id, reg.event?.name)}
                       isCanceling={cancelingId === reg.id}
                       navigate={navigate}
                     />
@@ -193,7 +203,7 @@ function Profile({ addToast }) {
                       key={reg.id} 
                       registration={reg} 
                       status="pending"
-                      onCancel={() => handleCancelRegistration(reg.id)}
+                      onCancel={() => handleCancelRegistration(reg.id, reg.event?.name)}
                       isCanceling={cancelingId === reg.id}
                     />
                   ))
@@ -213,7 +223,7 @@ function Profile({ addToast }) {
                       key={reg.id} 
                       registration={reg} 
                       status="rejected"
-                      onCancel={() => handleCancelRegistration(reg.id)}
+                      onCancel={() => handleCancelRegistration(reg.id, reg.event?.name)}
                       isCanceling={cancelingId === reg.id}
                     />
                   ))
@@ -223,6 +233,46 @@ function Profile({ addToast }) {
           </div>
         </div>
       </div>
+
+      {/* Cancel Registration Confirmation Modal */}
+      {showCancelConfirm && (
+        <div className="modal-overlay" onClick={() => setShowCancelConfirm(false)}>
+          <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Confirm Cancellation</h5>
+                <button 
+                  type="button" 
+                  className="btn-close" 
+                  onClick={() => setShowCancelConfirm(false)}
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body">
+                <p className="mb-0">
+                  Are you sure you want to cancel your registration for <strong>{confirmCancelEvent}</strong>? This action cannot be undone.
+                </p>
+              </div>
+              <div className="modal-footer">
+                <button 
+                  type="button" 
+                  className="btn btn-secondary" 
+                  onClick={() => setShowCancelConfirm(false)}
+                >
+                  Keep Registration
+                </button>
+                <button 
+                  type="button" 
+                  className="btn btn-danger" 
+                  onClick={handleConfirmCancel}
+                >
+                  Cancel Registration
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
