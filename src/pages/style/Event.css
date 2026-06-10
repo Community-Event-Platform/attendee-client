@@ -7,13 +7,13 @@
 .event-hero {
   background: #eef5ff;
   border-bottom: 1px solid #d7dee8;
-  padding: 42px 0;
+  padding: clamp(32px, 5vw, 42px) 0;
 }
 
 .event-hero-copy h1 {
   margin: 0 0 18px;
   color: #14AE5C;
-  font-size: clamp(2.1rem, 4vw, 3.3rem);
+  font-size: clamp(1.8rem, 5vw, 3.3rem);
   font-weight: 800;
   line-height: 1.1;
 }
@@ -21,7 +21,7 @@
 .event-hero-copy p {
   margin: 0 0 36px;
   color: #5a5260;
-  font-size: 1rem;
+  font-size: clamp(0.95rem, 2vw, 1rem);
   font-weight: 650;
   line-height: 1.55;
   max-width: 680px;
@@ -59,7 +59,7 @@
 .event-search-field i {
   flex: 0 0 auto;
   color: #5ec68d;
-  font-size: 22px;
+  font-size: clamp(18px, 2vw, 22px);
 }
 
 .event-search-field input,
@@ -70,7 +70,7 @@
   outline: 0;
   background: transparent;
   color: #6b6375;
-  font-size: 15px;
+  font-size: clamp(13px, 2vw, 15px);
   font-weight: 800;
 }
 
@@ -528,11 +528,16 @@
 
   .event-search-form {
     grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .event-search-button {
+    height: 48px;
   }
 
   .event-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    column-gap: 28px;
+    column-gap: 24px;
   }
 
   .event-hero-image {
@@ -541,39 +546,180 @@
 }
 
 @media (max-width: 768px) {
-  .event-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px;
-  }
-
-  .event-title {
-    font-size: 15px;
-  }
-
-  .price-text {
-    font-size: 16px;
-  }
-}
-
-@media (max-width: 640px) {
-  .event-content {
-    padding: 18px 18px 32px;
+  .event-hero {
+    padding: 32px 5%;
   }
 
   .event-search-form {
     grid-template-columns: 1fr;
+    gap: 12px;
+    max-width: 100%;
+  }
+
+  .event-search-field {
+    height: 48px;
+    padding: 0 14px;
+    border-radius: 8px;
+  }
+
+  .event-search-button {
+    height: 48px;
+    gap: 8px;
+  }
+
+  .event-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    column-gap: 16px;
+  }
+
+  .event-title {
+    font-size: 14px;
+  }
+
+  .price-text {
+    font-size: 15px;
+  }
+
+  .event-card {
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  .event-hero-copy h1 {
+    margin-bottom: 12px;
+  }
+
+  .event-hero-copy p {
+    margin-bottom: 24px;
+  }
+
+  .event-content {
+    padding: clamp(16px, 4vw, 24px);
+  }
+
+  .event-search-form {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .event-search-field {
+    height: 44px;
+    font-size: 13px;
+    gap: 10px;
+  }
+
+  .event-search-field i {
+    font-size: 18px;
+  }
+
+  .event-search-button {
+    height: 44px;
+    font-size: 13px;
+    padding: 0 18px;
   }
 
   .event-list-header {
     flex-direction: column;
+    gap: 12px;
   }
 
   .event-grid {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 14px;
+  }
+
+  .event-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .event-image-container {
+    height: 200px;
   }
 
   .event-pagination {
-    gap: 8px;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .event-hero {
+    padding: 24px 5%;
+  }
+
+  .event-hero-copy h1 {
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    margin-bottom: 10px;
+  }
+
+  .event-hero-copy p {
+    font-size: 0.85rem;
+    margin-bottom: 18px;
+  }
+
+  .event-content {
+    padding: clamp(12px, 3vw, 16px);
+  }
+
+  .event-search-field {
+    height: 40px;
+    font-size: 12px;
+    padding: 0 12px;
+    border-radius: 6px;
+  }
+
+  .event-search-button {
+    height: 40px;
+    font-size: 12px;
+    padding: 0 14px;
+    gap: 6px;
+    border-radius: 6px;
+  }
+
+  .event-search-button i {
+    font-size: 16px;
+  }
+
+  .event-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    row-gap: 12px;
+  }
+
+  .event-image-container {
+    height: 180px;
+  }
+
+  .event-title {
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+
+  .event-location {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+
+  .price-text {
+    font-size: 14px;
+  }
+
+  .event-card {
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  }
+
+  .category-badge {
+    top: 8px;
+    left: 8px;
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+
+  .pagination {
+    gap: 4px;
   }
 }
