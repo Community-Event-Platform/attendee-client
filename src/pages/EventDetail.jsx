@@ -45,6 +45,7 @@ function EventDetail({ addToast }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
 
   // AC3: Track user's registration status for this event
   const [hasRegistered, setHasRegistered] = useState(false);
@@ -69,6 +70,18 @@ function EventDetail({ addToast }) {
       try {
         setLoading(true);
         const data = await getEventDetail(id);
+        
+        // Check if event has already ended
+        const eventDate = new Date(data.date_time || data.date);
+        if (eventDate <= new Date()) {
+          setError("This event has already ended or registration deadline has passed.");
+          if (addToast) addToast("This event is no longer available.", "error");
+          setTimeout(() => {
+            navigate('/events');
+          }, 2000);
+          return;
+        }
+        
         setEvent(data);
 
         // AC3: Check if user has already registered for this event
@@ -235,6 +248,11 @@ function EventDetail({ addToast }) {
       return;
     }
 
+    setShowCancelConfirm(true);
+  };
+
+  const handleConfirmCancel = async () => {
+    setShowCancelConfirm(false);
     try {
       await cancelRegistration(registrationId);
       if (addToast) addToast("Registration cancelled successfully", "success");
@@ -583,6 +601,46 @@ function EventDetail({ addToast }) {
 
         </div>
       </div>
+
+      {/* Cancel Registration Confirmation Modal */}
+      {showCancelConfirm && (
+        <div className="modal-overlay" onClick={() => setShowCancelConfirm(false)}>
+          <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Confirm Cancellation</h5>
+                <button 
+                  type="button" 
+                  className="btn-close" 
+                  onClick={() => setShowCancelConfirm(false)}
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body">
+                <p className="mb-0">
+                  Are you sure you want to cancel your registration for <strong>{event?.name}</strong>? This action cannot be undone.
+                </p>
+              </div>
+              <div className="modal-footer">
+                <button 
+                  type="button" 
+                  className="btn btn-secondary" 
+                  onClick={() => setShowCancelConfirm(false)}
+                >
+                  Keep Registration
+                </button>
+                <button 
+                  type="button" 
+                  className="btn btn-danger" 
+                  onClick={handleConfirmCancel}
+                >
+                  Cancel Registration
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* AC3: Handle successful registration from modal */}
       {(() => {
