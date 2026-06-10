@@ -44,16 +44,16 @@
 }
 
 .profile-header-bg {
-  height: clamp(120px, 20vw, 180px);
+  height: clamp(120px, 20vw, 180px); /* Đảm bảo nền có đủ độ cao tối thiểu */
   background: linear-gradient(135deg, #7c3aed 0%, #22c55e 100%);
 }
 
 .profile-header-content {
   display: flex;
-  align-items: center;
+  align-items: flex-end; /* 1. Đổi từ center thành flex-end để chân chữ và chân avatar bằng nhau */
   justify-content: space-between;
   padding: 0 clamp(16px, 3vw, 32px) clamp(20px, 3vw, 28px);
-  margin-top: clamp(-40px, -8vw, -60px);
+  margin-top: -50px; /* 2. Dùng một con số cố định (hoặc fit với nửa vòng tròn avatar của bạn) */
   position: relative;
   z-index: 10;
   flex-wrap: wrap;
@@ -63,9 +63,9 @@
 .profile-header-info {
   flex: 1;
   padding-bottom: 8px;
+  margin-top: 50px; /* 3. BÙ LẠI khoảng margin-top âm ở trên để đẩy chữ xuống vùng màu trắng */
   min-width: 0;
 }
-
 .profile-avatar {
   width: clamp(80px, 12vw, 110px);
   height: clamp(80px, 12vw, 110px);
