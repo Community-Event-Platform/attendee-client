@@ -33,7 +33,12 @@ function Event({ addToast }) {
         };
 
         const data = await getEvents(params);
-        setEvents(data || []);
+        const now = new Date();
+        const validEvents = (data || []).filter((event) => {
+          const eventDate = new Date(event.date_time || event.date);
+          return eventDate > now;
+        });
+        setEvents(validEvents);
       } catch (err) {
         setError("Unable to load events");
       } finally {
@@ -66,8 +71,13 @@ function Event({ addToast }) {
 
   const filteredEvents = useMemo(() => {
     const normalizedSearch = searchTerm.trim().toLowerCase();
+    const now = new Date();
 
     return events
+      .filter((event) => {
+        const eventDate = new Date(event.date_time || event.date);
+        return eventDate > now;
+      })
       .filter((event) => {
         if (selectedCategory === "All categories") return true;
         const categoryName = event.category?.name || event.category;

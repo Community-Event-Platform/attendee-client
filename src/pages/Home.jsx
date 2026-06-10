@@ -31,8 +31,12 @@ function Home() {
       try {
         setLoading(true);
         const eventsData = await getEvents();
-        setEvents(eventsData || []);
-        setFilteredEvents(eventsData || []);
+        const validEvents = (eventsData || []).filter((event) => {
+          const eventDate = new Date(event.date_time || event.date);
+          return eventDate > new Date();
+        });
+        setEvents(validEvents);
+        setFilteredEvents(validEvents);
       } catch (error) {
         console.error('Error fetching events:', error);
         setEvents([]);
@@ -70,6 +74,9 @@ function Home() {
   const filterEvents = (search, categoryId, dateFilter) => {
     let result = events;
 
+    // Filter out expired events
+    result = result.filter((event) => isEventValid(event));
+
     if (search) {
       result = result.filter(
         (event) =>
@@ -90,14 +97,33 @@ function Home() {
 
     if (dateFilter) {
       result = result.filter((event) => {
-        if (!event.date) return false;
-        const eventDate = new Date(event.date).toDateString();
+        if (!event.date_time && !event.date) return false;
+        const eventDate = new Date(event.date_time || event.date).toDateString();
         const filterDate = new Date(dateFilter).toDateString();
         return eventDate === filterDate;
       });
     }
 
     setFilteredEvents(result);
+  };
+
+  const getUpcomingEvents = () => {
+    const now = new Date();
+    return events
+      .filter((event) => {
+        const eventDate = new Date(event.date_time || event.date);
+        return eventDate > now;
+      })
+      .sort((a, b) => {
+        const dateA = new Date(a.date_time || a.date);
+        const dateB = new Date(b.date_time || b.date);
+        return dateA - dateB;
+      });
+  };
+
+  const isEventValid = (event) => {
+    const eventDate = new Date(event.date_time || event.date);
+    return eventDate > new Date();
   };
 
   return (
@@ -192,7 +218,7 @@ function Home() {
             </div>
           ) : (
             <div className="row g-4">
-              {filteredEvents.slice(0, 4).map((event) => (
+              {getUpcomingEvents().slice(0, 4).map((event) => (
                 <div key={event.id} className="col-12 col-md-6 col-lg-3">
                   <EventCard event={event} navigate={navigate} />
                 </div>
@@ -262,14 +288,16 @@ function Home() {
                   </div>
                 ))}
               </div>
-              <div className="text-center mt-5">
-                <button 
-                  className="btn btn-primary btn-lg"
-                  onClick={() => navigate('/events')}
-                >
-                  View All Events
-                </button>
-              </div>
+              {filteredEvents.length > 6 && (
+                <div className="text-center mt-5">
+                  <button 
+                    className="btn btn-primary btn-lg"
+                    onClick={() => navigate('/events')}
+                  >
+                    View All Events
+                  </button>
+                </div>
+              )}
             </>
           )}
         </div>
