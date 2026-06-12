@@ -348,6 +348,9 @@
 .event-card.confirmed { border-top: 3px solid var(--success); }
 .status-badge.confirmed { background: var(--success-bg); color: var(--success); }
 
+.event-card.past { border-top: 3px solid #6366f1; }
+.status-badge.past { background: #eef2ff; color: #6366f1; }
+
 .event-card.pending { border-top: 3px solid var(--warning); }
 .status-badge.pending { background: var(--warning-bg); color: var(--warning); }
 
@@ -420,6 +423,16 @@
 .btn-details:hover {
   background-color: var(--primary-hover);
   border-color: var(--primary-hover);
+}
+
+.past-btn {
+  background-color: #6366f1;
+  border-color: #6366f1;
+}
+
+.past-btn:hover {
+  background-color: #4f46e5 !important;
+  border-color: #4f46e5 !important;
 }
 
 /* --- Trạng thái trống & Loading --- */

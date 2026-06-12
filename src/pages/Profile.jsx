@@ -9,12 +9,13 @@ function Profile({ addToast }) {
   const { user, token } = useAuth();
   const [profile, setProfile] = useState(null);
   const [registrations, setRegistrations] = useState({
-    confirmed: [],
+    upcoming: [],
     pending: [],
-    rejected: []
+    rejected: [],
+    past: []
   });
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('confirmed');
+  const [activeTab, setActiveTab] = useState('upcoming');
   const [cancelingId, setCancelingId] = useState(null);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const [confirmCancelId, setConfirmCancelId] = useState(null);
@@ -34,16 +35,25 @@ function Profile({ addToast }) {
       const data = await getProfileApi();
       setProfile(data.user);
       
-      // Group registrations by status
+      // Group registrations by status and date
+      const now = new Date();
       const grouped = {
-        confirmed: [],
+        upcoming: [],
         pending: [],
-        rejected: []
+        rejected: [],
+        past: []
       };
 
       data.registrations?.forEach(reg => {
+        const eventDate = new Date(reg.event?.date_time || reg.event?.date);
+        const isPast = eventDate < now;
+
         if (reg.status === 'Confirmed' || reg.status === 'Approved') {
-          grouped.confirmed.push(reg);
+          if (isPast) {
+            grouped.past.push(reg);
+          } else {
+            grouped.upcoming.push(reg);
+          }
         } else if (reg.status === 'Pending') {
           grouped.pending.push(reg);
         } else if (reg.status === 'Rejected') {
@@ -145,11 +155,18 @@ function Profile({ addToast }) {
           
           <div className="tabs-container">
             <button
-              className={`tab-btn ${activeTab === 'confirmed' ? 'active' : ''}`}
-              onClick={() => setActiveTab('confirmed')}
+              className={`tab-btn ${activeTab === 'upcoming' ? 'active' : ''}`}
+              onClick={() => setActiveTab('upcoming')}
             >
-              <i className="bi bi-check-circle"></i>
-              Participated ({registrations.confirmed.length})
+              <i className="bi bi-calendar-event"></i>
+              Upcoming ({registrations.upcoming.length})
+            </button>
+            <button
+              className={`tab-btn ${activeTab === 'past' ? 'active' : ''}`}
+              onClick={() => setActiveTab('past')}
+            >
+              <i className="bi bi-clock-history"></i>
+              Past ({registrations.past.length})
             </button>
             <button
               className={`tab-btn ${activeTab === 'pending' ? 'active' : ''}`}
@@ -169,21 +186,40 @@ function Profile({ addToast }) {
 
           {/* Events List */}
           <div className="events-list">
-            {activeTab === 'confirmed' && (
+            {activeTab === 'upcoming' && (
               <>
-                {registrations.confirmed.length === 0 ? (
+                {registrations.upcoming.length === 0 ? (
                   <div className="empty-state">
                     <i className="bi bi-calendar-x"></i>
-                    <p>No participated events yet</p>
+                    <p>No upcoming events</p>
                   </div>
                 ) : (
-                  registrations.confirmed.map(reg => (
+                  registrations.upcoming.map(reg => (
                     <EventCard 
                       key={reg.id} 
                       registration={reg} 
                       status="confirmed"
                       onCancel={() => handleCancelRegistration(reg.id, reg.event?.name)}
                       isCanceling={cancelingId === reg.id}
+                      navigate={navigate}
+                    />
+                  ))
+                )}
+              </>
+            )}
+            {activeTab === 'past' && (
+              <>
+                {registrations.past.length === 0 ? (
+                  <div className="empty-state">
+                    <i className="bi bi-clock-history"></i>
+                    <p>No past events</p>
+                  </div>
+                ) : (
+                  registrations.past.map(reg => (
+                    <EventCard 
+                      key={reg.id} 
+                      registration={reg} 
+                      status="past"
                       navigate={navigate}
                     />
                   ))
@@ -285,6 +321,8 @@ function EventCard({ registration, status, onCancel, isCanceling, navigate }) {
     switch (status) {
       case 'confirmed':
         return <span className="status-badge confirmed"><i className="bi bi-check-circle-fill"></i> Confirmed</span>;
+      case 'past':
+        return <span className="status-badge past"><i className="bi bi-clock-history"></i> Completed</span>;
       case 'pending':
         return <span className="status-badge pending"><i className="bi bi-hourglass-split"></i> Pending</span>;
       case 'rejected':
@@ -348,6 +386,16 @@ function EventCard({ registration, status, onCancel, isCanceling, navigate }) {
             onClick={() => navigate(`/events/${event.id}`)}
           >
             View Details
+          </button>
+        </div>
+      )}
+      {status === 'past' && (
+        <div className="event-card-footer">
+          <button 
+            className="btn-details past-btn"
+            onClick={() => navigate(`/events/${event.id}`)}
+          >
+            <i className="bi bi-eye"></i> View Details
           </button>
         </div>
       )}

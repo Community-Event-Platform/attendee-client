@@ -71,20 +71,9 @@ function EventDetail({ addToast }) {
         setLoading(true);
         const data = await getEventDetail(id);
         
-        // Check if event has already ended
-        const eventDate = new Date(data.date_time || data.date);
-        if (eventDate <= new Date()) {
-          setError("This event has already ended or registration deadline has passed.");
-          if (addToast) addToast("This event is no longer available.", "error");
-          setTimeout(() => {
-            navigate('/events');
-          }, 2000);
-          return;
-        }
-        
         setEvent(data);
 
-        // AC3: Check if user has already registered for this event
+        // Check if user has already registered for this event
         try {
           const statusData = await checkRegistrationStatus(id);
           setHasRegistered(statusData.has_registered);
@@ -564,27 +553,43 @@ function EventDetail({ addToast }) {
                   </div>
                 </div>
 
-                  {hasRegistered ? (
+                  {isEventEnded() ? (
                     <>
-                      <div className="registration-status-label">Status: {registrationStatus || "Registered"}</div>
-                      <button
-                        type="button"
-                        className="btn-register-event"
-                        onClick={handleCancelRegistration}
-                        disabled={!canCancelRegistration()}
-                      >
-                        {canCancelRegistration() ? "Cancel registration" : isPaidEvent(event) ? "Cannot cancel (paid event)" : "Cannot cancel"}
-                      </button>
+                      {hasRegistered ? (
+                        <div className="registration-status-label">
+                          <i className="bi bi-check-circle-fill text-success"></i> You attended this event
+                        </div>
+                      ) : (
+                        <div className="event-ended-notice">
+                          <i className="bi bi-clock-history"></i> This event has ended
+                        </div>
+                      )}
                     </>
                   ) : (
-                    <button
-                      type="button"
-                      className="btn-register-event"
-                      onClick={handleOpenRegistration}
-                      disabled={isPaidEvent(event) && remainingSeats <= 0}
-                    >
-                      Register now
-                    </button>
+                    <>
+                      {hasRegistered ? (
+                        <>
+                          <div className="registration-status-label">Status: {registrationStatus || "Registered"}</div>
+                          <button
+                            type="button"
+                            className="btn-register-event"
+                            onClick={handleCancelRegistration}
+                            disabled={!canCancelRegistration()}
+                          >
+                            {canCancelRegistration() ? "Cancel registration" : isPaidEvent(event) ? "Cannot cancel (paid event)" : "Cannot cancel"}
+                          </button>
+                        </>
+                      ) : (
+                        <button
+                          type="button"
+                          className="btn-register-event"
+                          onClick={handleOpenRegistration}
+                          disabled={isPaidEvent(event) && remainingSeats <= 0}
+                        >
+                          Register now
+                        </button>
+                      )}
+                    </>
                   )}
                   {hasRegistered && registrationStatus === "Waitlisted" && (
                     <p className="cancel-disabled-note">You are on the waitlist. You will be notified when a seat becomes available.</p>

@@ -384,6 +384,26 @@
   cursor: not-allowed;
 }
 
+.event-ended-notice {
+  background-color: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  padding: 14px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 15px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.event-ended-notice i {
+  font-size: 18px;
+  color: #94a3b8;
+}
+
 .status-badge-registered {
   background-color: rgba(20, 174, 92, 0.1);
   color: #14AE5C;
