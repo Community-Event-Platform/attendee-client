@@ -18,7 +18,6 @@ const categories = [
 function Home() {
   const navigate = useNavigate();
   const [events, setEvents] = useState([]);
-  const [filteredEvents, setFilteredEvents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -30,81 +29,47 @@ function Home() {
     const fetchEvents = async () => {
       try {
         setLoading(true);
-        const eventsData = await getEvents();
+
+        // Build params like Event.jsx
+        const params = {
+          search: searchTerm,
+          ...(selectedCategory && { category: categories.find(c => c.id === selectedCategory)?.name }),
+          ...(selectedDate && { date: selectedDate })
+        };
+
+        const eventsData = await getEvents(params);
         const validEvents = (eventsData || []).filter((event) => {
           const eventDate = new Date(event.date_time || event.date);
           return eventDate > new Date();
         });
         setEvents(validEvents);
-        setFilteredEvents(validEvents);
       } catch (error) {
         console.error('Error fetching events:', error);
         setEvents([]);
-        setFilteredEvents([]);
       } finally {
         setLoading(false);
       }
     };
 
     fetchEvents();
-  }, []);
+  }, [searchTerm, selectedCategory, selectedDate]);
 
   const handleSearch = (term) => {
     setSearchTerm(term);
-    filterEvents(term, selectedCategory, selectedDate);
   };
 
   const handleCategoryFilter = (categoryId) => {
     const category = categoryId === selectedCategory ? null : categoryId;
     setSelectedCategory(category);
-    filterEvents(searchTerm, category, selectedDate);
   };
 
   const handleDateFilter = (date) => {
     setSelectedDate(date);
     setShowDatePicker(false);
-    filterEvents(searchTerm, selectedCategory, date);
   };
 
   const clearDateFilter = () => {
     setSelectedDate(null);
-    filterEvents(searchTerm, selectedCategory, null);
-  };
-
-  const filterEvents = (search, categoryId, dateFilter) => {
-    let result = events;
-
-    // Filter out expired events
-    result = result.filter((event) => isEventValid(event));
-
-    if (search) {
-      result = result.filter(
-        (event) =>
-          event.name?.toLowerCase().includes(search.toLowerCase()) ||
-          event.description?.toLowerCase().includes(search.toLowerCase()) ||
-          event.location?.toLowerCase().includes(search.toLowerCase()) ||
-          (event.category?.name || event.category)?.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-
-    if (categoryId) {
-      const category = categories.find((c) => c.id === categoryId);
-      result = result.filter((event) => {
-        const categoryName = event.category?.name || event.category;
-        return categoryName === category.name;
-      });
-    }
-
-    if (dateFilter) {
-      result = result.filter((event) => {
-        if (!event.date_time && !event.date) return false;
-        const eventDate = new Date(event.date_time || event.date).toDateString();
-        const filterDate = new Date(dateFilter).toDateString();
-        return eventDate === filterDate;
-      });
-    }
-
-    setFilteredEvents(result);
   };
 
   const getUpcomingEvents = () => {
@@ -119,11 +84,6 @@ function Home() {
         const dateB = new Date(b.date_time || b.date);
         return dateA - dateB;
       });
-  };
-
-  const isEventValid = (event) => {
-    const eventDate = new Date(event.date_time || event.date);
-    return eventDate > new Date();
   };
 
   return (
@@ -265,7 +225,6 @@ function Home() {
                   onClick={() => {
                     setSelectedCategory(null);
                     setSelectedDate(null);
-                    filterEvents(searchTerm, null, null);
                   }}
                 >
                   Clear all filters
@@ -274,7 +233,7 @@ function Home() {
             )}
           </div>
 
-          {filteredEvents.length === 0 ? (
+          {events.length === 0 ? (
             <div className="text-center py-5">
               <i className="bi bi-search fs-1 text-muted mb-3 d-block"></i>
               <p className="text-muted fs-5">No events found</p>
@@ -282,13 +241,13 @@ function Home() {
           ) : (
             <>
               <div className="row g-4">
-                {filteredEvents.slice(0, 6).map((event) => (
+                {events.slice(0, 6).map((event) => (
                   <div key={event.id} className="col-12 col-md-6 col-lg-4">
                     <EventCard event={event} navigate={navigate} />
                   </div>
                 ))}
               </div>
-              {filteredEvents.length > 6 && (
+              {events.length > 6 && (
                 <div className="text-center mt-5">
                   <button 
                     className="btn btn-primary btn-lg"

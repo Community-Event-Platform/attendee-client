@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getEvents, getMyRegistrations } from "../services/api";
 import EventCard from "../components/home/EventCard";
-import eventImage from "../assets/event.png";
+import EventHeroSection from "../components/home/EventHeroSection";
 import "./style/Event.css";
 
 function Event({ addToast }) {
@@ -30,6 +30,7 @@ function Event({ addToast }) {
             selectedCategory === "All categories"
               ? ""
               : selectedCategory,
+          ...(selectedDate && { date: selectedDate })
         };
 
         const data = await getEvents(params);
@@ -47,7 +48,7 @@ function Event({ addToast }) {
     };
 
     loadEvents();
-  }, [searchTerm, selectedCategory]);
+  }, [searchTerm, selectedCategory, selectedDate]);
 
   useEffect(() => {
     const loadRegistrations = async () => {
@@ -112,68 +113,18 @@ function Event({ addToast }) {
     setCurrentPage(1);
   }, [searchTerm, selectedCategory, selectedDate, sortOrder]);
 
-  const handleSearch = (event) => {
-    event.preventDefault();
-    setCurrentPage(1);
-  };
-
   return (
     <main className="event-page-shell">
-      <section className="event-hero">
-        <div className="container-fluid px-4 px-lg-5">
-          <div className="row align-items-center g-4">
-            <div className="col-lg-7">
-              <div className="event-hero-copy">
-                <h1>Discover Events</h1>
-                <p>Search and join events that are right for you</p>
-
-                <form className="event-search-form" onSubmit={handleSearch}>
-                  <label className="event-search-field event-search-text">
-                    <i className="bi bi-search"></i>
-                    <input
-                      type="search"
-                      placeholder="Search by name, location..."
-                      value={searchTerm}
-                      onChange={(event) => setSearchTerm(event.target.value)}
-                    />
-                  </label>
-
-                  <label className="event-search-field">
-                    <select
-                      value={selectedCategory}
-                      onChange={(event) => setSelectedCategory(event.target.value)}
-                    >
-                      {categories.map((category) => (
-                        <option key={category} value={category}>
-                          {category}
-                        </option>
-                      ))}
-                    </select>
-                    <i className="bi bi-chevron-down"></i>
-                  </label>
-
-                  <label className="event-search-field">
-                    <i className="bi bi-calendar3"></i>
-                    <input
-                      type="date"
-                      value={selectedDate}
-                      onChange={(event) => setSelectedDate(event.target.value)}
-                    />
-                  </label>
-                </form>
-              </div>
-            </div>
-
-            <div className="col-lg-5">
-              <img
-                src={eventImage}
-                alt="Community event illustration"
-                className="event-hero-image"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
+      <EventHeroSection 
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
+        selectedDate={selectedDate}
+        onDateChange={setSelectedDate}
+        onClearDate={() => setSelectedDate('')}
+        availableCategories={categories}
+      />
 
       <section className="event-content">
         <div className="event-category-bar">
