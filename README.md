@@ -1,16 +1,75 @@
-# React + Vite
+# EventHub — Attendee Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Mô tả
+-
+Frontend dành cho người tham dự (attendee) của nền tảng EventHub. Ứng dụng được xây dựng bằng React + Vite, dùng Tailwind/Bootstrap cho giao diện, kết nối đến API Laravel của dự án.
 
-Currently, two official plugins are available:
+Tính năng chính
+-
+- Hiển thị danh sách sự kiện, tìm kiếm và lọc theo danh mục
+- Xem chi tiết sự kiện, đăng ký tham dự và trạng thái đăng ký
+- Xác thực người dùng (OAuth / local auth) và quản lý phiên
+- Thông báo và danh sách thông báo cho người dùng
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Tech stack
+-
+- React (v19) + Vite
+- TailwindCSS / Bootstrap
+- Axios để gọi API
+- Zustand cho state management (nếu có)
 
-## React Compiler
+Yêu cầu môi trường
+-
+- Node.js 18+ và npm
+- Một backend API sẵn có (ví dụ: https://api.example.com)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Cài đặt & chạy (phát triển)
+-
+1. Cài phụ thuộc:
 
-## Expanding the ESLint configuration
+```bash
+npm install
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+2. Tạo file môi trường `.env` (copy từ `.env.example` nếu có) và chỉnh `VITE_API_URL`:
+
+```env
+# Đặt endpoint API (ví dụ: https://api.example.com). KHÔNG commit giá trị thật.
+VITE_API_URL=<API_BASE_URL>
+```
+
+3. Chạy dev server:
+
+```bash
+npm run dev
+```
+
+Lệnh hữu ích
+-
+- `npm run dev` — chạy môi trường phát triển (HMR)
+- `npm run build` — build production
+- `npm run preview` — preview build
+- `npm run lint` — chạy ESLint
+
+Hướng dẫn build và deploy
+-
+- Xây dựng tĩnh: `npm run build` sẽ tạo thư mục `dist/`.
+- Triển khai `dist/` lên hosting tĩnh hoặc phục vụ thông qua backend (ví dụ: Laravel `public/` hoặc Nginx).
+
+Tài nguyên & liên kết
+-
+- API docs / Postman collection: xem `community-event-api/Community Event Platform.postman_collection.json`
+- Thiết kế (Figma): (nếu có, thêm link tại đây)
+
+Đóng góp
+-
+1. Fork → tạo branch tính năng → PR vào `main` (chỉ merge lên `main` sau review).
+2. Tuân thủ quy tắc lint và format trước khi mở PR.
+
+Liên hệ
+-
+Nếu cần trợ giúp, liên hệ với nhóm dự án hoặc mở issue trong kho chứa.
+
+License
+-
+Miễn trừ trách nhiệm: kiểm tra file `LICENSE` (nếu có) hoặc mặc định sử dụng MIT.
