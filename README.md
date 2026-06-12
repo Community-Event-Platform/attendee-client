@@ -1,75 +1,184 @@
-# EventHub — Attendee Client
+# EventHub - Attendee Client
 
-Mô tả
--
-Frontend dành cho người tham dự (attendee) của nền tảng EventHub. Ứng dụng được xây dựng bằng React + Vite, dùng Tailwind/Bootstrap cho giao diện, kết nối đến API Laravel của dự án.
+## Overview
 
-Tính năng chính
--
-- Hiển thị danh sách sự kiện, tìm kiếm và lọc theo danh mục
-- Xem chi tiết sự kiện, đăng ký tham dự và trạng thái đăng ký
-- Xác thực người dùng (OAuth / local auth) và quản lý phiên
-- Thông báo và danh sách thông báo cho người dùng
+EventHub Attendee Client is a React-based web application that allows users to discover events, register for participation, manage registrations, and share event experiences through reviews and ratings.
 
-Tech stack
--
-- React (v19) + Vite
-- TailwindCSS / Bootstrap
-- Axios để gọi API
-- Zustand cho state management (nếu có)
+The application is optimized for event discovery and attendee engagement.
 
-Yêu cầu môi trường
--
-- Node.js 18+ và npm
-- Một backend API sẵn có (ví dụ: https://api.example.com)
+---
 
-Cài đặt & chạy (phát triển)
--
-1. Cài phụ thuộc:
+## Features
+
+### Authentication
+
+* User Registration
+* User Login
+* Google OAuth Login
+* Persistent Authentication
+* Protected Routes
+
+### Event Discovery
+
+* Browse Public Events
+* Search Events
+* Filter by Category
+* Event Detail Pages
+* Responsive Event Cards
+
+### Event Registration
+
+* Register for Events
+* Dynamic Registration Forms
+* Registration Status Tracking
+* Waitlist Participation
+* Registration Cancellation
+
+### Reviews
+
+* Submit Reviews
+* Rate Events
+* View User Feedback
+
+### Notifications
+
+* Registration Updates
+* Waitlist Promotion Alerts
+* Event Status Notifications
+
+---
+
+## Tech Stack
+
+| Technology      | Purpose            |
+| --------------- | ------------------ |
+| React 19        | Frontend Framework |
+| Vite            | Build Tool         |
+| React Router v7 | Routing            |
+| Zustand         | State Management   |
+| Axios           | API Communication  |
+| Bootstrap 5     | UI Components      |
+| Tailwind CSS    | Styling            |
+| React Icons     | Icons              |
+| React Toastify  | Notifications      |
+
+---
+
+## Project Structure
+
+```text
+src/
+├── assets/
+├── components/
+├── pages/
+├── routes/
+├── services/
+├── stores/
+├── hooks/
+├── utils/
+└── layouts/
+```
+
+---
+
+## Main User Flows
+
+### Event Discovery
+
+```text
+Homepage
+   ↓
+Search Event
+   ↓
+Event Details
+   ↓
+Register
+```
+
+### Registration Flow
+
+```text
+Open Event
+   ↓
+Fill Registration Form
+   ↓
+Submit Registration
+   ↓
+Pending / Approved / Waitlisted
+```
+
+---
+
+## Installation
+
+### Clone Repository
+
+```bash
+git clone https://github.com/Community-Event-Platform/attendee-client.git
+
+cd attendee-client
+```
+
+### Install Dependencies
 
 ```bash
 npm install
 ```
 
-2. Tạo file môi trường `.env` (copy từ `.env.example` nếu có) và chỉnh `VITE_API_URL`:
+### Configure Environment
 
 ```env
-# Đặt endpoint API (ví dụ: https://api.example.com). KHÔNG commit giá trị thật.
-VITE_API_URL=<API_BASE_URL>
+VITE_API_URL=(ex: https://api.example.com)
 ```
 
-3. Chạy dev server:
+### Start Development Server
 
 ```bash
 npm run dev
 ```
 
-Lệnh hữu ích
--
-- `npm run dev` — chạy môi trường phát triển (HMR)
-- `npm run build` — build production
-- `npm run preview` — preview build
-- `npm run lint` — chạy ESLint
+### Build Production Version
 
-Hướng dẫn build và deploy
--
-- Xây dựng tĩnh: `npm run build` sẽ tạo thư mục `dist/`.
-- Triển khai `dist/` lên hosting tĩnh hoặc phục vụ thông qua backend (ví dụ: Laravel `public/` hoặc Nginx).
+```bash
+npm run build
+```
 
-Tài nguyên & liên kết
--
-- API docs / Postman collection: xem `community-event-api/Community Event Platform.postman_collection.json`
-- Thiết kế (Figma): (nếu có, thêm link tại đây)
+---
 
-Đóng góp
--
-1. Fork → tạo branch tính năng → PR vào `main` (chỉ merge lên `main` sau review).
-2. Tuân thủ quy tắc lint và format trước khi mở PR.
+## Screens
 
-Liên hệ
--
-Nếu cần trợ giúp, liên hệ với nhóm dự án hoặc mở issue trong kho chứa.
+### Attendee Features
 
-License
--
-Miễn trừ trách nhiệm: kiểm tra file `LICENSE` (nếu có) hoặc mặc định sử dụng MIT.
+* Login Page
+* Register Page
+* Event Listing
+* Event Details
+* Search & Filter
+* Registration Form
+* My Registrations
+* Reviews & Ratings
+
+---
+
+## Connected Services
+
+This application communicates with:
+
+```text
+community-event-api
+```
+
+using RESTful APIs and Bearer Token Authentication.
+
+---
+
+## Team
+
+### Group 5 – Advanced Web Application Development
+
+* Nguyễn Thị Dung
+* Nguyễn Tiến Nhựt
+* Hồ Thị Vãi
+* Hồ Văn Tiết
+
+Passerelles Numériques Vietnam (PNV)
